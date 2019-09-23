@@ -67,29 +67,29 @@ return [
         ],
 
         // Heroku
-        // 'pgsql' => [
-        //     'driver' => 'pgsql',
-        //     'host' => 'ec2-107-22-211-248.compute-1.amazonaws.com',
-        //     'port' => '5432',
-        //     'database' => 'd490e9ul8jgfbs',
-        //     'username' => 'uebwrgonreqiqq',
-        //     'password' => '287376a99bdf84320a9d035c540c740a4f257cce6bbbc36be99306f63498ab8d',
-        //     'charset' => 'utf8',
-        //     'prefix' => '',
-        //     'schema' => 'public',
-        // ],
-
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST'),
-            'port' => env('DB_PORT'),
-            'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
+            'host' => 'ec2-107-22-211-248.compute-1.amazonaws.com',
+            'port' => '5432',
+            'database' => 'd490e9ul8jgfbs',
+            'username' => 'uebwrgonreqiqq',
+            'password' => '287376a99bdf84320a9d035c540c740a4f257cce6bbbc36be99306f63498ab8d',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
         ],
+
+        // 'pgsql' => [
+        //     'driver' => 'pgsql',
+        //     'host' => env('DB_HOST'),
+        //     'port' => env('DB_PORT'),
+        //     'database' => env('DB_DATABASE'),
+        //     'username' => env('DB_USERNAME'),
+        //     'password' => env('DB_PASSWORD'),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'schema' => 'public',
+        // ],
 
     ],
 
