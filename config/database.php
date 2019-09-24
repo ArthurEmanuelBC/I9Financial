@@ -69,11 +69,11 @@ return [
         // Heroku
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => 'ec2-174-129-41-127.compute-1.amazonaws.com',
+            'host' => 'ec2-54-235-92-244.compute-1.amazonaws.com',
             'port' => '5432',
-            'database' => 'dalsvdpsurg762',
-            'username' => 'qrllsqmbimxgyl',
-            'password' => '367a734b7310cfcd91d3fde2cbae767de5f637dfa473485ccf849127344e2665',
+            'database' => 'de37co4clbj9e9',
+            'username' => 'jvyzgsexdywurb',
+            'password' => '702f1f17c85bc4f126fbd78e23745e052ee7aaa6dbbe08ae91ac9b23cc4c0101',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
