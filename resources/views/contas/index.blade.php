@@ -92,7 +92,7 @@
         
         <div class="col-md-4 col-sm-12 col-xs-12 form-group filtro-search">
             <div class="pull-right">
-                <div class="pull-right"><a href="{{ route('contas.create', ['tipo' => $tipo]) }}" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Nova Conta {{substr_replace("Contas", "", -1)}} @if($tipo == '0') a Pagar @else a Receber @endif</a></div>
+                <div class="pull-right"><a href="{{ route('contas.create', ['tipo' => $tipo]) }}" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Nova Conta @if($tipo == '0') a Pagar @else a Receber @endif</a></div>
             </div>
         </div>
     </div>

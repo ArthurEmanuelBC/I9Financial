@@ -29,7 +29,7 @@ class CreateContasTable extends Migration {
             $table->integer('user_id')->unsigned();
             $table->integer('paciente_id')->nullable()->unsigned();
             $table->integer('pai_id')->nullable()->unsigned();
-            $table->integer('empresa_id')->unsigned();
+            $table->integer('empresa_id')->nullable()->unsigned();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

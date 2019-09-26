@@ -100,7 +100,7 @@
         
         <div class="col-md-4 col-sm-12 col-xs-12 form-group filtro-search">
             <div class="pull-right">
-                <div class="pull-right"><a href="<?php echo e(route('contas.create', ['tipo' => $tipo])); ?>" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Nova Conta <?php echo e(substr_replace("Contas", "", -1)); ?> <?php if($tipo == '0'): ?> a Pagar <?php else: ?> a Receber <?php endif; ?></a></div>
+                <div class="pull-right"><a href="<?php echo e(route('contas.create', ['tipo' => $tipo])); ?>" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Nova Conta <?php if($tipo == '0'): ?> a Pagar <?php else: ?> a Receber <?php endif; ?></a></div>
             </div>
         </div>
     </div>

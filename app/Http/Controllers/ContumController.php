@@ -156,7 +156,7 @@ class ContumController extends Controller {
 					$contum->user_id = Auth::user()->id;
 					$contum->paciente_id = $request->paciente_id;
 					if(!is_null($pai_id)) $contum->pai_id = $pai_id;
-					$contum->empresa_id = Empresa::first()->id;
+					// $contum->empresa_id = Empresa::first()->id;
 					$contum->save();
 					
 					if($key == 0) $pai_id = $contum->id;
