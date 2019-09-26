@@ -25,7 +25,7 @@ Route::post('password/email', 'Auth\PasswordController@sendResetLinkEmail');
 Route::get('password/reset/{token}', 'Auth\PasswordController@showResetForm');
 Route::post('password/reset', 'Auth\PasswordController@reset');
 
-// Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => 'auth'], function() {
 	Route::get('/', 'IndexController@index');
 
 	Route::resource("users","UserController");
@@ -37,8 +37,7 @@ Route::post('password/reset', 'Auth\PasswordController@reset');
 	Route::resource("contas","ContumController");
 	Route::get("parcelas", ['as' => 'contas.parcelas', 'uses' => 'ContumController@parcelas']);
 	Route::post("parcelas_pagar", ['as' => 'parcelas.pagar', 'uses' => 'ContumController@pagar']);
-// });
-
+});
 // Storage
 // Route::get('storage/{model}/{id}/{filename}', function ($model,$id,$filename){
 // 	$path = storage_path("app/$model/$id/$filename");
