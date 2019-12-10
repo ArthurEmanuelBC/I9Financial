@@ -41,80 +41,8 @@
                     {!! Form::email('email', $user->email, ['required' => 'true', 'class' => 'form-control']) !!}
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('nascimento', 'Data de Nascimento <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::date('nascimento', $user->nascimento, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('cpf', 'CPF <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::text('cpf', $user->cpf, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('rg', 'RG <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::text('rg', $user->rg, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('telefone', 'Telefone', ['class' => 'control-label'])) !!}
-                    {!! Form::text('telefone', $user->telefone, ['class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('celular', 'Celular <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::text('celular', $user->celular, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('operadora', 'Operadora <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::select('operadora', ["OI" => "OI", "TIM" => "TIM", "CLARO" => "CLARO", "VIVO" => "VIVO"], $user->operadora, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('funcao', 'Função <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::text('funcao', $user->funcao, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('sexo', 'Sexo <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::select('sexo', ["Masculino" => "Masculino", "Feminino" => "Feminino"], $user->sexo, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('estado_civil', 'Estado Civil <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::select('estado_civil', ["Solteiro" => "Solteiro", "Casado" => "Casado", "Divorciado" => "Divorciado", "Viúvo" => "Viúvo", "União Estável" => "União Estável", "Outro" => "Outro"], $user->estado_civil, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('endereco', 'Endereço <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::text('endereco', $user->endereco, ['required' => 'true', 'class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 col-sm-12 form-group">
-                    {!! Html::decode(Form::label('observacoes', 'Observações', ['class' => 'control-label'])) !!}
-                    {!! Form::textarea('observacoes', $user->observacoes, ['class' => 'form-control', 'rows' => 4]) !!}
-                </div>
-            </div>
         </div>     
     </div>
-
-    @if(!$config)
-    <div class="panel panel-default no-border">
-        <div class="panel-heading border-radius-10">
-            <h2>Módulos</h2>
-        </div>
-        <div class="panel-body">
-            @foreach(modulos() as $key => $value)
-            <div class="row">
-                <div class="col-md-12 col-sm-12">
-                    <input type="checkbox" name="modulos[]" id="{{$key}}" value="{{$key}}" @if(in_array($key, $user->permissoes()->pluck('modulo')->toArray())) checked @endif> 
-                    <label for="{{$key}}" class="font-weight-400"><span></span>{{$value['label']}}</label> 
-                </div>
-            </div>
-            @endforeach
-        </div>     
-    </div>
-    @endif
 
     @if($config || Request::is('users/create'))
     <div class="panel panel-default no-border">
@@ -131,30 +59,26 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 col-sm-12 col-login @if($method == 'post') has-error @else has-success @endif">
-                    {!! Html::decode(Form::label('email', 'Login <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::email('email', $user->email, ['required' => 'true', 'class' => 'form-control', 'disabled' => 'true']) !!}
-                </div>
-                <div class="col-md-6 col-sm-12 form-group col-password has-error">
+            @endif
+            <div class="row has-error">
+                @if($config)
+                <div class="col-md-4 col-sm-12 form-group col-password has-error">
                     {!! Html::decode(Form::label('password_antigo', 'Senha Antiga <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
                     <input type="password" required="true" class="form-control" disabled="true" name="password_antigo" type="password_antigo" value="" id="password_antigo">
                 </div>
-            </div>
-            @endif
-            <div class="row row-password has-error">
-                <div class="col-md-6 col-sm-12 form-group">
+                @endif
+                <div class="col-md-4 col-sm-12 row-password form-group">
                     {!! Html::decode(Form::label('password', 'Nova Senha <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
                     {!! Form::password('password', ['required' => 'true', 'class' => 'form-control', 'disabled' => 'true']) !!}
                 </div>
-                <div class="col-md-6 col-sm-12 form-group">
+                <div class="col-md-4 col-sm-12 row-password form-group">
                     {!! Html::decode(Form::label('password_confirmation', 'Repetir Nova Antiga <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
                     {!! Form::password('password_confirmation', ['required' => 'true', 'class' => 'form-control', 'disabled' => 'true']) !!}
                 </div>
             </div>
-        </div>     
+        </div> 
+        @endif
     </div>
-    @endif
     <div class="form-group text-right">
         <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
         @if(empty($config))
@@ -199,11 +123,11 @@
             });
         } else {
             if($("#password").val() == $("#password_confirmation").val()){
-                $(".row-password").removeClass('has-error');
-                $(".row-password").addClass('has-success');
+                $("").removeClass('has-error');
+                $("").addClass('has-success');
             } else {
-                $(".row-password").removeClass('has-success');
-                $(".row-password").addClass('has-error');
+                $("").removeClass('has-success');
+                $("").addClass('has-error');
             }
         }
     });

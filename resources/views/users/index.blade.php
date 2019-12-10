@@ -61,39 +61,12 @@
                     @endif
                     @endif
                     @if(is_null($param))
-                    <th><a href="{{ Request::fullUrl() }}{{ $signal }}order=celular" class="white-text templatemo-sort-by">Celular <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @else
-                    @if(strpos($param,'desc') !== false)
-                    <th><a href="{{ str_replace(str_replace(' ','%20',$param),'celular',Request::fullUrl()) }}" class="white-text templatemo-sort-by @if(strpos($param,'celular') !== false)active @endif">Celular <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @else
-                    <th><a href="{{ str_replace('order='.$param,'order=celular',Request::fullUrl()) }} @if($param == 'celular')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'celular') !== false)active @endif">Celular <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @endif
-                    @endif
-                    @if(is_null($param))
                     <th><a href="{{ Request::fullUrl() }}{{ $signal }}order=email" class="white-text templatemo-sort-by">Email <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     @if(strpos($param,'desc') !== false)
                     <th><a href="{{ str_replace(str_replace(' ','%20',$param),'email',Request::fullUrl()) }}" class="white-text templatemo-sort-by @if(strpos($param,'email') !== false)active @endif">Email <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     <th><a href="{{ str_replace('order='.$param,'order=email',Request::fullUrl()) }} @if($param == 'email')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'email') !== false)active @endif">Email <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @endif
-                    @endif
-                    @if(is_null($param))
-                    <th><a href="{{ Request::fullUrl() }}{{ $signal }}order=cpf" class="white-text templatemo-sort-by">CPF <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @else
-                    @if(strpos($param,'desc') !== false)
-                    <th><a href="{{ str_replace(str_replace(' ','%20',$param),'cpf',Request::fullUrl()) }}" class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @else
-                    <th><a href="{{ str_replace('order='.$param,'order=cpf',Request::fullUrl()) }} @if($param == 'cpf')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @endif
-                    @endif
-                    @if(is_null($param))
-                    <th><a href="{{ Request::fullUrl() }}{{ $signal }}order=funcao" class="white-text templatemo-sort-by">Função <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @else
-                    @if(strpos($param,'desc') !== false)
-                    <th><a href="{{ str_replace(str_replace(' ','%20',$param),'funcao',Request::fullUrl()) }}" class="white-text templatemo-sort-by @if(strpos($param,'funcao') !== false)active @endif">Função <span class="fa fa-caret-{{$caret}}"></span></a></th>
-                    @else
-                    <th><a href="{{ str_replace('order='.$param,'order=funcao',Request::fullUrl()) }} @if($param == 'funcao')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'funcao') !== false)active @endif">Função <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @endif
                     @endif
                     <th colspan="2"></th>
@@ -104,10 +77,7 @@
                 <tr>
                     <td>{{$user->id}}</td>
                     <td>{{$user->name}}</td>
-                    <td>{{$user->celular}}</td>
                     <td>{{$user->email}}</td>
-                    <td>{{$user->cpf}}</td>
-                    <td>{{$user->funcao}}</td>
                     <td class="small" align="center" alt="Editar Usuário">
                         <a href="{{ route('users.edit', $user->id) }}">
                             {!! Html::image("/images/icons/edit.png", "Editar Usuário") !!}

@@ -52,11 +52,11 @@
 				<nav class="templatemo-left-nav">
 					<ul>
 						<li><a href="/" class="@if(Request::is('/')) active @endif"><i class="fa fa-home fa-fw"></i>Início</a></li>
-						<li><a href="/pacientes" class="@if(Request::is('pacientes*')) active @endif"><i class="fa fa-user fa-fw"></i>Pacientes</a></li>
-						<li><a href="/empresas" class="@if(Request::is('empresas*')) active @endif"><i class="fa fa-briefcase fa-fw"></i>Empresas</a></li>
-						<li><a href="/parcelas" class="@if(Request::is('parcelas*')) active @endif"><i class="fa fa-dollar fa-fw"></i>Fluxo de Caixa</a></li>
-						<li><a href="/contas?tipo=0" class="@if(Request::is('contas*') && @$tipo == '0') active @endif"><i class="fa fa-mail-forward fa-fw"></i>Contas a Pagar</a></li>
-						<li><a href="/contas?tipo=1" class="@if(Request::is('contas*') && @$tipo == '1') active @endif"><i class="fa fa-mail-reply fa-fw"></i>Contas a Receber</a></li>
+						<li><a href="/users" class="@if(Request::is('users*')) active @endif"><i class="fa fa-user fa-fw"></i>Usuários</a></li>
+						<li><a href="/pacientes" class="@if(Request::is('pacientes*')) active @endif"><i class="fa fa-users fa-fw"></i>Pacientes</a></li>
+						<li><a href="/empresas" class="@if(Request::is('empresas*')) active @endif"><i class="fa fa-briefcase fa-fw"></i>Médicos</a></li>
+						<li><a href="/contas?tipo=0" class="@if(Request::is('contas*') && @$tipo == '0') active @endif"><i class="fa fa-mail-forward fa-fw"></i>Receita</a></li>
+						<li><a href="/contas?tipo=1" class="@if(Request::is('contas*') && @$tipo == '1') active @endif"><i class="fa fa-mail-reply fa-fw"></i>Despesa</a></li>
 						<li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i class="fa fa-eject fa-fw"></i>Sair</a></li>
 					</ul>  
 				</nav>

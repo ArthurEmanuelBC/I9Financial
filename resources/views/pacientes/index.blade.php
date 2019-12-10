@@ -21,8 +21,7 @@
                     <select class="form-control search-filtro" name="filtro">
                         <option>Limpar</option>
                         <option value="nome" @if ($filtro == "nome") selected @endif>Nome</option>
-                    <option value="cpf" @if ($filtro == "cpf") selected @endif>Cpf</option>
-                    <option value="email" @if ($filtro == "email") selected @endif>Email</option>
+                    <option value="cpf" @if ($filtro == "cpf") selected @endif>CPF</option>
                     </select>
                     <input type="text" class="form-control search-valor" name="valor" value="{{$valor}}">
                     <span class="input-group-btn">
@@ -57,22 +56,22 @@
 @endif
 
                         @if(is_null($param))
-<th><a href="{{Request::fullUrl()}}{{$signal}}order=cpf" class="white-text templatemo-sort-by">Cpf <span class="fa fa-caret-{{$caret}}"></span></a></th>
+<th><a href="{{Request::fullUrl()}}{{$signal}}order=cpf" class="white-text templatemo-sort-by">CPF <span class="fa fa-caret-{{$caret}}"></span></a></th>
 @else
 @if(strpos($param,'desc') !== false)
-<th><a href="{{str_replace(str_replace(' ','%20',$param),'cpf',Request::fullUrl())}}" class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">Cpf <span class="fa fa-caret-{{$caret}}"></span></a></th>
+<th><a href="{{str_replace(str_replace(' ','%20',$param),'cpf',Request::fullUrl())}}" class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF <span class="fa fa-caret-{{$caret}}"></span></a></th>
 @else
-<th><a href="{{str_replace('order='.$param,'order=cpf',Request::fullUrl())}} @if($param == 'cpf')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">Cpf <span class="fa fa-caret-{{$caret}}"></span></a></th>
+<th><a href="{{str_replace('order='.$param,'order=cpf',Request::fullUrl())}} @if($param == 'cpf')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF <span class="fa fa-caret-{{$caret}}"></span></a></th>
 @endif
 @endif
 
                         @if(is_null($param))
-<th><a href="{{Request::fullUrl()}}{{$signal}}order=email" class="white-text templatemo-sort-by">Email <span class="fa fa-caret-{{$caret}}"></span></a></th>
+<th><a href="{{Request::fullUrl()}}{{$signal}}order=pagador" class="white-text templatemo-sort-by">Pagador <span class="fa fa-caret-{{$caret}}"></span></a></th>
 @else
 @if(strpos($param,'desc') !== false)
-<th><a href="{{str_replace(str_replace(' ','%20',$param),'email',Request::fullUrl())}}" class="white-text templatemo-sort-by @if(strpos($param,'email') !== false)active @endif">Email <span class="fa fa-caret-{{$caret}}"></span></a></th>
+<th><a href="{{str_replace(str_replace(' ','%20',$param),'pagador',Request::fullUrl())}}" class="white-text templatemo-sort-by @if(strpos($param,'pagador') !== false)active @endif">Pagador <span class="fa fa-caret-{{$caret}}"></span></a></th>
 @else
-<th><a href="{{str_replace('order='.$param,'order=email',Request::fullUrl())}} @if($param == 'email')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'email') !== false)active @endif">Email <span class="fa fa-caret-{{$caret}}"></span></a></th>
+<th><a href="{{str_replace('order='.$param,'order=pagador',Request::fullUrl())}} @if($param == 'pagador')desc @endif" class="white-text templatemo-sort-by @if(strpos($param,'pagador') !== false)active @endif">Pagador <span class="fa fa-caret-{{$caret}}"></span></a></th>
 @endif
 @endif
 
@@ -85,7 +84,7 @@
                 <tr>
                     <td>{{$paciente->nome}}</td>
                     <td>{{$paciente->cpf}}</td>
-                    <td>{{$paciente->email}}</td>
+                    <td>{{@$paciente->pagador()->nome}}</td>
                     <td class="small" align="center" alt="Editar Paciente">
                         <a href="{{ route('pacientes.edit', $paciente->id) }}">
                             {!! Html::image("images/icons/edit.png", "Editar Paciente") !!}

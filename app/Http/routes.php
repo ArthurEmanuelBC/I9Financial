@@ -39,16 +39,16 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post("parcelas_pagar", ['as' => 'parcelas.pagar', 'uses' => 'ContumController@pagar']);
 });
 // Storage
-// Route::get('storage/{model}/{id}/{filename}', function ($model,$id,$filename){
-// 	$path = storage_path("app/$model/$id/$filename");
+Route::get('storage/{model}/{id}/{filename}', function ($model,$id,$filename){
+	$path = storage_path("app/$model/$id/$filename");
 
-// 	if (!File::exists($path))
-// 		abort(404);
+	if (!File::exists($path))
+		abort(404);
 
-// 	$file = File::get($path);
-// 	$type = File::mimeType($path);
+	$file = File::get($path);
+	$type = File::mimeType($path);
 
-// 	$response = Response::make($file, 200);
-// 	$response->header("Content-Type", $type);
-// 	return $response;
-// });
+	$response = Response::make($file, 200);
+	$response->header("Content-Type", $type);
+	return $response;
+});

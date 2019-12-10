@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Empresa;
 use Illuminate\Http\Request;
 
+use Storage;
+
 class EmpresaController extends Controller {
 
 	/**
@@ -65,15 +67,23 @@ class EmpresaController extends Controller {
 	{
 		$empresa = new Empresa();
 		$empresa->nome = $request->input("nome");
-        $empresa->tipo = $request->input("tipo");
-        $empresa->cnpj = $request->input("cnpj");
+		$empresa->cpf = $request->input("cpf");
+		$empresa->crm = $request->input("crm");
         $empresa->cep = $request->input("cep");
         $empresa->logradouro = $request->input("logradouro");
         $empresa->bairro = $request->input("bairro");
         $empresa->cidade = $request->input("cidade");
         $empresa->estado = $request->input("estado");
         $empresa->numero = $request->input("numero");
-        $empresa->complemento = $request->input("complemento");
+		$empresa->complemento = $request->input("complemento");
+		$empresa->telefone = $request->input("telefone");
+		$empresa->save();
+
+		if(!is_null($request->file('anexo'))){
+			$empresa->anexo = $request->file('anexo')->getClientOriginalName();
+			Storage::put("empresas/$empresa->id/".$request->file('anexo')->getClientOriginalName(), file_get_contents($request->file('anexo')->getRealPath()));
+		}
+
 		$empresa->save();
 		return redirect()->route('empresas.index')->with('message', 'Empresa cadastrado com sucesso!');
 	}
@@ -101,15 +111,23 @@ class EmpresaController extends Controller {
 	{
 		$empresa = Empresa::findOrFail($id);
 		$empresa->nome = $request->input("nome");
-        $empresa->tipo = $request->input("tipo");
-        $empresa->cnpj = $request->input("cnpj");
+		$empresa->cpf = $request->input("cpf");
+		$empresa->crm = $request->input("crm");
         $empresa->cep = $request->input("cep");
         $empresa->logradouro = $request->input("logradouro");
         $empresa->bairro = $request->input("bairro");
         $empresa->cidade = $request->input("cidade");
         $empresa->estado = $request->input("estado");
         $empresa->numero = $request->input("numero");
-        $empresa->complemento = $request->input("complemento");
+		$empresa->complemento = $request->input("complemento");
+		$empresa->telefone = $request->input("telefone");
+		
+		if(!is_null($request->file('anexo'))){
+			Storage::delete("empresas/$empresa->id/$empresa->anexo");
+			$empresa->anexo = $request->file('anexo')->getClientOriginalName();
+			Storage::put("empresas/$empresa->id/".$request->file('anexo')->getClientOriginalName(), file_get_contents($request->file('anexo')->getRealPath()));
+		}
+
 		$empresa->save();
 		return redirect()->route('empresas.index')->with('message', 'Empresa atualizado com sucesso!');
 	}
@@ -123,6 +141,7 @@ class EmpresaController extends Controller {
 	public function destroy($id)
 	{
 		$empresa = Empresa::findOrFail($id);
+		Storage::delete("empresas/$empresa->id/$empresa->anexo");
 		$empresa->delete();
 		return redirect()->route('empresas.index')->with('message', 'Empresa deletado com sucesso!');
 	}

@@ -52,7 +52,8 @@ class PacienteController extends Controller {
 	public function create()
 	{
 		$paciente = new Paciente();
-		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.store", "method" => "post"]);
+		$pacientes = Paciente::lists('nome','id')->all();
+		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.store", "method" => "post", "pacientes" => $pacientes]);
 	}
 
 	/**
@@ -65,8 +66,9 @@ class PacienteController extends Controller {
 	{
 		$paciente = new Paciente();
 		$paciente->nome = $request->input("nome");
-        $paciente->cpf = $request->input("cpf");
-        $paciente->email = $request->input("email");
+		$paciente->cpf = $request->input("cpf");
+		if($request->pagador)
+        	$paciente->pagador_id = $request->input("pagador_id");
 		$paciente->save();
 		return redirect()->route('pacientes.index')->with('message', 'Paciente cadastrado com sucesso!');
 	}
@@ -80,7 +82,8 @@ class PacienteController extends Controller {
 	public function edit($id)
 	{
 		$paciente = Paciente::findOrFail($id);
-		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.update", "method" => "put"]);
+		$pacientes = Paciente::lists('nome','id')->all();
+		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.update", "method" => "put", "pacientes" => $pacientes]);
 	}
 
 	/**
@@ -95,7 +98,8 @@ class PacienteController extends Controller {
 		$paciente = Paciente::findOrFail($id);
 		$paciente->nome = $request->input("nome");
         $paciente->cpf = $request->input("cpf");
-        $paciente->email = $request->input("email");
+        if($request->pagador)
+        	$paciente->pagador_id = $request->input("pagador_id");
 		$paciente->save();
 		return redirect()->route('pacientes.index')->with('message', 'Paciente atualizado com sucesso!');
 	}

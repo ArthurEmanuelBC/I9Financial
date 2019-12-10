@@ -18,29 +18,22 @@
 
 <div class="templatemo-content-widget white-bg">
     <h2 class="margin-bottom-10">
-        Novo {{substr_replace("Empresas", "", -1)}}
+        Novo {{substr_replace("Médicos", "", -1)}}
     </h2>
 
-    {!! Form::open(['route' => [$url, $empresa->id], 'method' => $method, 'class' => 'form-horizontal']) !!}
+    {!! Form::open(['route' => [$url, $empresa->id], 'method' => $method, 'class' => 'form-horizontal', 'enctype' => 'multipart/form-data']) !!}
     <div class="row form-group">
-                    <div class="col-md-5 col-sm-12 col-xs-12">
-                    {!! Html::decode(Form::label('nome', 'Nome Fantasia <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                    {!! Html::decode(Form::label('nome', 'Nome <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
                     {!! Form::text('nome', $empresa->nome, ['class' => 'form-control','required' => 'true']) !!}
                     </div>
-                    <div class="col-md-2 col-sm-12 col-xs-12">
-                    {!! Html::decode(Form::label('tipo', 'Tipo <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    <div class="templatemo-block">
-                      <input type="radio" name="tipo" id="tipo_cnpj" value="CNPJ" @if($empresa->tipo != "CPF") checked @endif>
-                      <label for="tipo_cnpj" class="font-weight-400"><span></span>CNPJ</label>
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                    {!! Html::decode(Form::label('cpf', 'CPF <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
+                    {!! Form::text('cpf', $empresa->cpf, ['class' => 'form-control cpf','required' => 'true']) !!}
                     </div>
-                    <div class="templatemo-block">
-                      <input type="radio" name="tipo" id="tipo_cpf" value="CPF" @if($empresa->tipo == "CPF") checked @endif>
-                      <label for="tipo_cpf" class="font-weight-400"><span></span>CPF</label>
-                    </div>
-                    </div>
-                    <div class="col-md-5 col-sm-12 col-xs-12">
-                    {!! Html::decode(Form::label('cnpj', 'CNPJ <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
-                    {!! Form::text('cnpj', $empresa->cnpj, ['class' => 'form-control cnpj','required' => 'true','id' => 'cnpj_cpf']) !!}
+                    <div class="col-md-3 col-sm-12 col-xs-12">
+                    {!! Html::decode(Form::label('crm', 'CRM <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
+                    {!! Form::text('crm', $empresa->crm, ['class' => 'form-control','required' => 'true']) !!}
                     </div>
                     </div>
                     <div class="row form-group">
@@ -77,6 +70,20 @@
                     {!! Form::text('complemento', $empresa->complemento, ['class' => 'form-control',]) !!}
                     </div>
                     </div>
+                    <div class="row form-group">
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                    {!! Html::decode(Form::label('telefone', 'Telefone <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
+                    {!! Form::text('telefone', $empresa->telefone, ['class' => 'form-control telefone','required' => 'true']) !!}
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                    {!! Html::decode(Form::label('anexo', 'Assinatura digitalizada', ['class' => 'control-label'])) !!}
+                    @if($method == "post")
+                    {!! Form::file('anexo', ['class' => 'filestyle']) !!}
+                    @else
+                    {!! Form::file('anexo', ['class' => 'filestyle', 'data-placeholder' => $empresa->anexo]) !!}
+                    @endif
+                    </div>
+                    </div>
         <div class="form-group text-right">
             <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
             <a class="templatemo-white-button" href="{{ route('empresas.index') }}"><i class="fa fa-arrow-left"></i> Voltar</a>
@@ -102,20 +109,6 @@
             $("input#logradouro").val( result.address );
             $("input#estado").val( result.state );
             });
-    });
-
-    // Altera o campo de CPF/CNPJ de acordo com o tipo selecionado
-    $("input[name=tipo]").change(function(){
-        $("#cnpj_cpf").val("");
-        if($(this).val() == "CNPJ"){
-            $("#cnpj_cpf").removeClass("cpf");
-            $("#cnpj_cpf").addClass("cnpj");
-            $("#label_tipo").html("CNPJ <span class='obrigatorio'>*</span>");
-        } else {
-            $("#cnpj_cpf").removeClass("cnpj");
-            $("#cnpj_cpf").addClass("cpf");
-            $("#label_tipo").html("CPF <span class='obrigatorio'>*</span>");
-        }
     });
 </script>
 @endsection

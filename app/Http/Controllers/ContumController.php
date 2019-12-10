@@ -27,74 +27,30 @@ class ContumController extends Controller {
 		(isset($request->order)) ? $order = $request->order : $order = "id";
 		
 		// Cláusuras
-		// $where = "empresa_id = ".current_empresa()->id." and tipo = $request->tipo";
 		$where = "tipo = ".($request->tipo ? 'true' : 'false');
-		if(blank($request->tipo_relatorio)) $request->tipo_relatorio = "0";
-		if(blank($request->tipo_data)){
-			$where .= " and date = CURRENT_DATE";
-		} else {
-			$data1 = Date::parse($request->data1);
-			$data2 = Date::parse($request->data2);
-			$where .= " and $request->tipo_data between '$data1' and '$data2'";
-		}
+		if(!isset($request->data1)) $request->data1 = date('Y-m-d');
+		if(!isset($request->data2)) $request->data2 = date('Y-m-d');
+		$where .= " and date between '$request->data1' and '$request->data2'";
 		(isset($request->ocultas)) ? $ocultas = $request->ocultas : $ocultas = [];
 		
-		$ids = [];
 		if(!blank($request->filtro) && !blank($request->valor)){
 			foreach ($request->filtro_avancado as $key => $filtro) {
 				$tipo = $request->tipo_avancado[$key];
 				$valor = $request->valor_avancado[$key];
 
-				if(in_array($filtro, ["tipo_pagamento","descricao"])) $tipo = 'like';
+				if(in_array($filtro, ["descricao"])) $tipo = 'like';
 				if($tipo == 'like') $valor = "%$valor%";
 				
-				if($filtro == "total") {
-					$valor = str_replace(",", ".", str_replace(".", "", $valor));
-					$where .= " and valor-desconto $tipo $valor";
+				if($filtro == "valor") {
+					$where .= " and valor $tipo $valor";
 				} else {
 					$where .= " and UPPER($filtro) $tipo '".strtoupper($valor)."'";
 				}
 			}
 
-			if($request->tipo_relatorio == "1") $contas = Contum::join("parcelas","parcelas.conta_id","=","contas.id")->selectRaw("parcelas.id, lancamento, vencimento, pagamento, recebimento, tipo_pagamento, num_doc, qtd_parcelas, parcelas.valor as total, descricao")->whereRaw($where)->get()->keyBy("id")->toArray();
-			else $contas = Contum::selectRaw("contas.id, date as lancamento, tipo_pagamento, num_doc, qtd_parcelas, valor-desconto as total, descricao")->whereRaw($where)->get()->keyBy("id")->toArray();
-			
-			// foreach ($contas as $id => $conta) {
-			// 	foreach ($request->filtro_avancado as $key => $filtro) {
-			// 		switch ($request->filtro_avancado[$key]) {
-			// 			case 'total':
-			// 			if($request->tipo_avancado[$key] == ">"){
-			// 				if(floatval($conta[$filtro]) <= floatval(str_replace(",", ".", str_replace(".", "", $request->valor_avancado[$key])))) $ids[] = $id;
-			// 			} elseif($request->tipo_avancado[$key] == "<"){
-			// 				if(floatval($conta[$filtro]) >= floatval(str_replace(",", ".", str_replace(".", "", $request->valor_avancado[$key])))) $ids[] = $id;
-			// 			} else {
-			// 				if(abs(floatval($conta[$filtro]) - floatval(str_replace(",", ".", str_replace(".", "", $request->valor_avancado[$key])))) > 0.01) $ids[] = $id;
-			// 			}
-			// 			break;
-						
-			// 			default:
-			// 			if($request->tipo_avancado[$key] == "="){
-			// 				if(strtoupper($conta[$filtro]) != strtoupper($request->valor_avancado[$key]))
-			// 				$ids[] = $id;
-			// 			} else {
-			// 				if(strpos(strtoupper($conta[$filtro]), strtoupper($request->valor_avancado[$key])) === false)
-			// 				$ids[] = $id;
-			// 			}
-			// 			break;
-			// 		}
-			// 	}
-			// }
 		}
 
-		$ids = array_unique($ids);
-		
-		if(empty($ids)){
-			if($request->tipo_relatorio == "1") $contas = Contum::join("parcelas","parcelas.conta_id","=","contas.id")->selectRaw("contas.id, lancamento, vencimento, pagamento, recebimento, tipo_pagamento, num_doc, qtd_parcelas, parcelas.valor as total, descricao, parcelas.pago, cartao, pai_id")->whereRaw($where)->orderBy("lancamento","DESC");
-			else $contas = Contum::selectRaw("contas.id, date as lancamento, tipo_pagamento, num_doc, qtd_parcelas, valor-desconto as total, descricao, cartao, pai_id")->whereRaw($where)->orderBy("date","DESC");
-		} else {
-			if($request->tipo_relatorio == "1") $contas = Contum::join("parcelas","parcelas.conta_id","=","contas.id")->selectRaw("contas.id, lancamento, vencimento, pagamento, recebimento, tipo_pagamento, num_doc, qtd_parcelas, parcelas.valor as total, descricao, parcelas.pago, cartao, pai_id")->whereRaw("$where and parcelas.id NOT IN (".join(",",$ids).")")->orderBy("lancamento","DESC");
-			else $contas = Contum::selectRaw("contas.id, date as lancamento, tipo_pagamento, num_doc, qtd_parcelas, valor-desconto as total, descricao, cartao, pai_id")->whereRaw("$where and contas.id NOT IN (".join(",",$ids).")")->orderBy("date","DESC");
-		}
+		$contas = Contum::whereRaw($where)->orderBy("date","DESC");
 		
 		$parametros = [];
 		$parametros["tipo"] = $request->tipo;
@@ -124,8 +80,6 @@ class ContumController extends Controller {
 			{
 				$contum = new Contum();
 				$contum->date = Date::today();
-				$contum->qtd_parcelas = 1;
-				$contum->desconto = 0;
 				$pacientes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
 				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo]);
 			}
@@ -138,54 +92,17 @@ class ContumController extends Controller {
 			*/
 			public function store(Request $request)
 			{
-				$pai_id = NULL;
-				foreach ($request->date as $key => $value) {
-					$contum = new Contum();
-					$contum->date = Date::parse($request->date[$key]);
-					$contum->tipo_pagamento = $request->tipo_pagamento[$key];
-					$contum->num_doc = $request->num_doc;
-					$contum->qtd_parcelas = $request->qtd_parcelas[$key];
-					$contum->cartao = $request->cartao[$key];
-					$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
-					if($key == 0) $contum->desconto = str_replace(",", ".", str_replace(".", "", $request->desconto));
-					else $contum->desconto = 0;
-					$contum->pago = str_replace(",", ".", str_replace(".", "", $request->pago[$key]));
-					$contum->descricao = $request->descricao;
-					$contum->tipo = $request->tipo;
-					$contum->morto = 0;
-					$contum->user_id = Auth::user()->id;
-					$contum->paciente_id = $request->paciente_id;
-					if(!is_null($pai_id)) $contum->pai_id = $pai_id;
-					// $contum->empresa_id = Empresa::first()->id;
-					$contum->save();
-					
-					if($key == 0) $pai_id = $contum->id;
-					
-					// Parcelas
-					if(!isset($request->qtd_parcelas[$key])) $request->qtd_parcelas = 1;
-					$vencimento = new Date($contum->date);
-					foreach (range(1,$request->qtd_parcelas[$key]) as $num_parcela) {
-						if($contum->tipo_pagamento == "Crédito"){
-							$vencimento->addMonths(1);
-						} elseif ($contum->tipo_pagamento == "Débito") {
-							$vencimento->addDays(1);
-						} elseif (in_array($contum->tipo_pagamento, ["Boleto","Cheque Pré-Datado"])) {
-							$vencimento = Date::createFromFormat('d/m/Y', $request->vencimento[$key][$num_parcela-1]);
-						}
-						
-						if(in_array($contum->tipo_pagamento, ["Boleto","Cheque Pré-Datado"]))
-						$valor_parcela = str_replace(",", ".", str_replace(".","", $request->parcela_valor[$key][$num_parcela-1]));
-						else
-						$valor_parcela = $contum->pago/$request->qtd_parcelas[$key];
-						
-						$parcela = new Parcela();
-						$parcela->lancamento = $contum->date;
-						$parcela->vencimento = $vencimento;
-						$parcela->valor = $valor_parcela;
-						$parcela->conta_id = $contum->id;
-						$parcela->save();
-					}
-				}
+				$contum = new Contum();
+				$contum->date = Date::parse($request->date);
+				$contum->fornecedor = $request->fornecedor;
+				$contum->num_doc = $request->num_doc;
+				$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
+				$contum->descricao = $request->descricao;
+				$contum->tipo = $request->tipo;
+				$contum->user_id = Auth::user()->id;
+				$contum->paciente_id = $request->paciente_id;
+				// $contum->empresa_id = Empresa::first()->id;
+				$contum->save();
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta cadastrada com sucesso!');
 			}
 			
@@ -211,47 +128,15 @@ class ContumController extends Controller {
 			*/
 			public function update(Request $request, $id)
 			{
-				foreach ($request->date as $key => $value) {
-					($key == 0) ? $conta_id = $id : $conta_id = $request->ids[$key];
-					$contum = Contum::findOrFail($conta_id);
-					$contum->date = $request->date[$key];
-					$contum->tipo_pagamento = $request->tipo_pagamento[$key];
-					$contum->num_doc = $request->num_doc;
-					$contum->qtd_parcelas = $request->qtd_parcelas[$key];
-					$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
-					if($key == 0) $contum->desconto = str_replace(",", ".", str_replace(".", "", $request->desconto));
-					else $contum->desconto = 0;
-					$contum->pago = str_replace(",", ".", str_replace(".", "", $request->pago[$key]));
-					$contum->descricao = $request->descricao;
-					// $contum->morto = false;
-					$contum->save();
+				$contum = Contum::findOrFail($id);
+				$contum->date = $request->date;
+				$contum->fornecedor = $request->fornecedor;
+				$contum->num_doc = $request->num_doc;
+				$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
+				$contum->descricao = $request->descricao;
+				$contum->paciente_id = $request->paciente_id;
+				$contum->save();
 					
-					// Parcelas
-					$contum->parcelas()->delete();
-					if(!isset($request->qtd_parcelas[$key])) $request->qtd_parcelas = 1;
-					$vencimento = new Date($contum->date);
-					foreach (range(1,$request->qtd_parcelas[$key]) as $num_parcela) {
-						if(in_array($contum->tipo_pagamento, ["Crédito","Cheque"])){
-							$vencimento->addMonths(1);
-						} elseif ($contum->tipo_pagamento == "Débito") {
-							$vencimento->addDays(1);
-						} elseif (in_array($contum->tipo_pagamento, ["Boleto","Cheque Pré-Datado"])) {
-							$vencimento = Date::createFromFormat('d/m/Y', $request->vencimento[$key][$num_parcela-1]);
-						}
-						
-						if(in_array($contum->tipo_pagamento, ["Boleto","Cheque Pré-Datado"]))
-						$valor_parcela = str_replace(",", ".", str_replace(".","", $request->parcela_valor[$key][$num_parcela-1]));
-						else
-						$valor_parcela = $contum->pago/$request->qtd_parcelas[$key];
-						
-						$parcela = new Parcela();
-						$parcela->lancamento = $contum->date;
-						$parcela->vencimento = $vencimento;
-						$parcela->valor = $valor_parcela;
-						$parcela->conta_id = $contum->id;
-						$parcela->save();
-					}
-				}
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta atualizada com sucesso!');
 			}
 			
@@ -264,7 +149,6 @@ class ContumController extends Controller {
 			public function destroy(Request $request, $id)
 			{
 				$contum = Contum::findOrFail($id);
-				$contum->parcelas()->delete();
 				$contum->delete();
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta deletada com sucesso!');
 			}
