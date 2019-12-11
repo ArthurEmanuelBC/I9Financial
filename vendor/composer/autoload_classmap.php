@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddTipoToContas' => $baseDir . '/database/migrations/2019_12_11_171938_add_tipo_to_contas.php',
     'ChangeEmpresaToMedico' => $baseDir . '/database/migrations/2019_12_09_122022_change_empresa_to_medico.php',
     'ChangePacienteComPagador' => $baseDir . '/database/migrations/2019_12_09_124906_change_paciente_com_pagador.php',
     'ContumTableSeeder' => $baseDir . '/database/seeds/ContumTableSeeder.php',

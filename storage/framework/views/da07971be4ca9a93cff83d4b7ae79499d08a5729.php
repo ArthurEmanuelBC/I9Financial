@@ -49,13 +49,35 @@
 
                 <?php endif; ?>
             </div>
-            <div class="col-md-2 col-sm-12 col-xs-12">
+            <div class="col-md-4 col-sm-12 col-xs-12">
                 <?php echo Form::label('num_doc', 'Núm Documento', ['class' => 'control-label']); ?>
 
                 <?php echo Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc',]); ?>
 
             </div>
-            <div class="col-md-2 col-sm-12 col-xs-12">
+        </div>
+        <div class="row form-group row-multiple">
+            <?php if($tipo == '1'): ?>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <?php echo Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+
+                <div class="templatemo-block">
+                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" <?php if($contum->opcao == "Livro Caixa"): ?> checked <?php endif; ?>>
+                    <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
+                </div>
+                <div class="templatemo-block">
+                    <input type="radio" name="opcao" id="imposto_de_renda" value="Imposto de Renda" <?php if($contum->opcao == "Imposto de Renda"): ?> checked <?php endif; ?>>
+                    <label for="imposto_de_renda" class="font-weight-400"><span></span>Imposto de Renda</label>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <?php echo Html::decode(Form::label('tipo_conta', 'Tipo <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+
+                <?php echo Form::select("tipo_conta", $opcoes, $contum->tipo_conta, ['id' => 'tipo_conta', 'class' => 'form-control select2-search paciente_id', 'required' => 'true']); ?>
+
+            </div>
+            <div class="col-md-4 col-sm-12 col-xs-12">
                 <?php echo Html::decode(Form::label('valor', 'Valor Total <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
 
                 <?php if($method == 'post'): ?> <?php echo Form::text('valor', NULL, ['class' => 'form-control valor','onKeyDown' => 'Formata(this,20,event,2)', 'required' => 'true']); ?> <?php else: ?> <?php echo Form::text('valor', number_format($contum->valor,2,',','.'), ['class' => 'form-control', 'onKeyDown' => 'Formata(this,20,event,2)', 'required' => 'true']); ?> <?php endif; ?>
@@ -108,35 +130,22 @@
 </style>
 
 <script type="text/javascript">
-    // Oculta/exibe o campo de desconto
-    $(document).on('change','select.tipo_pagamento',function(){
-        $formulario = $(this).parent().parent().parent();
-        switch ($(this).val()) {
-            case "Crédito":
-            $formulario.find("select.cartao").parent().removeClass('hide');
-            $formulario.find("input.qtd_parcelas").prop("readonly",false);
-            break;
-            
-            case "Boleto":
-            case "Cheque Pré-Datado":
-            $formulario.find("select.cartao").parent().addClass('hide');
-            $formulario.find("input.qtd_parcelas").prop("readonly",false);
-            break;
-            
-            default:
-            $formulario.find("select.cartao").parent().addClass('hide');
-            $formulario.find("input.qtd_parcelas").prop("readonly",true);
-            break;
-        }
-        // $formulario.find("input.qtd_parcelas").val(1);
+    // Altera o campo de CPF/CNPJ de acordo com o tipo selecionado
+    <?php if($tipo == '1'): ?>
+    $("input[name=opcao]").change(function(){
+        $("#tipo_conta").val("");
+
+        if($(this).val() == "Livro Caixa")
+            opcoes = ['Emissão de Recibo','Aluguel','Salário','Convênio','Pró-labore','Outros'];
+        else
+            opcoes = ['INSS','IRPF','Despesas Dedutíveis','Saúde'];
+        
+        $("#tipo_conta > option").remove();
+
+        for (const key in opcoes) 
+            $("#tipo_conta").append(`<option value='${opcoes[key]}'>${opcoes[key]}</option>`);
     });
-    $("select.tipo_pagamento").change();
-    
-    
-    // Popula o form de confirmação de pagamento da parcela
-    function confirm_pagar(url) {
-        $('#form-pagar').attr('action', url);
-    }
+    <?php endif; ?>
 </script>
 
 <?php $__env->stopSection(); ?>

@@ -322,6 +322,7 @@ class ComposerStaticInit018b1dfb20e15106679976a389f811ef
     );
 
     public static $classMap = array (
+        'AddTipoToContas' => __DIR__ . '/../..' . '/database/migrations/2019_12_11_171938_add_tipo_to_contas.php',
         'ChangeEmpresaToMedico' => __DIR__ . '/../..' . '/database/migrations/2019_12_09_122022_change_empresa_to_medico.php',
         'ChangePacienteComPagador' => __DIR__ . '/../..' . '/database/migrations/2019_12_09_124906_change_paciente_com_pagador.php',
         'ContumTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ContumTableSeeder.php',

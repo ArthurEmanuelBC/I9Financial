@@ -81,7 +81,13 @@ class ContumController extends Controller {
 				$contum = new Contum();
 				$contum->date = Date::today();
 				$pacientes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
-				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo]);
+
+				if($request->tipo == '1')
+					$opcoes = ['Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
+				else
+					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
+
+				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
 			}
 			
 			/**
@@ -99,6 +105,8 @@ class ContumController extends Controller {
 				$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
 				$contum->descricao = $request->descricao;
 				$contum->tipo = $request->tipo;
+				$contum->tipo_conta = $request->tipo_conta;
+				$contum->opcao = $request->opcao;
 				$contum->user_id = Auth::user()->id;
 				$contum->paciente_id = $request->paciente_id;
 				// $contum->empresa_id = Empresa::first()->id;
@@ -116,7 +124,16 @@ class ContumController extends Controller {
 			{
 				$contum = Contum::findOrFail($id);
 				$pacientes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
-				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo]);
+				
+				if($request->tipo == '1')
+					if($contum->opcao == 'Livro Caixa')
+						$opcoes = ['Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
+					else
+						$opcoes = ['INSS' => 'INSS', 'IRPF' => 'IRPF', 'Despesas Dedutíveis' => 'Despesas Dedutíveis', 'Saúde' => 'Saúde'];
+				else
+					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
+
+				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
 			}
 			
 			/**
@@ -135,6 +152,8 @@ class ContumController extends Controller {
 				$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
 				$contum->descricao = $request->descricao;
 				$contum->paciente_id = $request->paciente_id;
+				$contum->tipo_conta = $request->tipo_conta;
+				$contum->opcao = $request->opcao;
 				$contum->save();
 					
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta atualizada com sucesso!');
