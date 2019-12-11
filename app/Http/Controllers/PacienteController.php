@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Paciente;
+use App\Pagador;
 use Illuminate\Http\Request;
 
 class PacienteController extends Controller {
@@ -52,8 +53,7 @@ class PacienteController extends Controller {
 	public function create()
 	{
 		$paciente = new Paciente();
-		$pacientes = Paciente::lists('nome','id')->all();
-		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.store", "method" => "post", "pacientes" => $pacientes]);
+		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.store", "method" => "post"]);
 	}
 
 	/**
@@ -67,8 +67,10 @@ class PacienteController extends Controller {
 		$paciente = new Paciente();
 		$paciente->nome = $request->input("nome");
 		$paciente->cpf = $request->input("cpf");
-		if($request->pagador)
-        	$paciente->pagador_id = $request->input("pagador_id");
+		if($request->pagador) {
+			$pagador = Pagador::create(['nome' => $request->pagador_nome, 'cpf' => $request->pagador_cpf]);
+			$paciente->pagador_id = $pagador->id;
+		}
 		$paciente->save();
 		return redirect()->route('pacientes.index')->with('message', 'Paciente cadastrado com sucesso!');
 	}
@@ -82,8 +84,7 @@ class PacienteController extends Controller {
 	public function edit($id)
 	{
 		$paciente = Paciente::findOrFail($id);
-		$pacientes = Paciente::lists('nome','id')->all();
-		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.update", "method" => "put", "pacientes" => $pacientes]);
+		return view('pacientes.form', ["paciente" => $paciente, "url" => "pacientes.update", "method" => "put"]);
 	}
 
 	/**
@@ -95,12 +96,25 @@ class PacienteController extends Controller {
 	 */
 	public function update(Request $request, $id)
 	{
+		$pagador = null;
 		$paciente = Paciente::findOrFail($id);
+		
+		if($paciente->pagador_id)
+			$pagador = Pagador::find($paciente->pagador_id);
+		
 		$paciente->nome = $request->input("nome");
-        $paciente->cpf = $request->input("cpf");
-        if($request->pagador)
-        	$paciente->pagador_id = $request->input("pagador_id");
+		$paciente->cpf = $request->input("cpf");
+		$paciente->pagador_id = null;
 		$paciente->save();
+
+		if($pagador)
+			$pagador->delete();
+		
+		if($request->pagador) {
+			$pagador = Pagador::create(['nome' => $request->pagador_nome, 'cpf' => $request->pagador_cpf]);
+			$paciente->update(['pagador_id' => $pagador->id]);
+		}
+
 		return redirect()->route('pacientes.index')->with('message', 'Paciente atualizado com sucesso!');
 	}
 
@@ -114,6 +128,10 @@ class PacienteController extends Controller {
 	{
 		$paciente = Paciente::findOrFail($id);
 		$paciente->delete();
+
+		if($paciente->pagador_id)
+			Pagador::find($paciente->pagador_id)->delete();
+
 		return redirect()->route('pacientes.index')->with('message', 'Paciente deletado com sucesso!');
 	}
 

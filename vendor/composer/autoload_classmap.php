@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddPagadorIdToPacientes' => $baseDir . '/database/migrations/2019_12_11_191215_add_pagador_id_to_pacientes.php',
     'AddTipoToContas' => $baseDir . '/database/migrations/2019_12_11_171938_add_tipo_to_contas.php',
     'ChangeEmpresaToMedico' => $baseDir . '/database/migrations/2019_12_09_122022_change_empresa_to_medico.php',
     'ChangePacienteComPagador' => $baseDir . '/database/migrations/2019_12_09_124906_change_paciente_com_pagador.php',
@@ -13,6 +14,7 @@ return array(
     'CreateContasTable' => $baseDir . '/database/migrations/2019_08_06_181719_create_contas_table.php',
     'CreateEmpresasTable' => $baseDir . '/database/migrations/2019_08_06_181559_create_empresas_table.php',
     'CreatePacientesTable' => $baseDir . '/database/migrations/2019_08_06_181658_create_pacientes_table.php',
+    'CreatePagadorsTable' => $baseDir . '/database/migrations/2019_12_11_190759_create_pagadors_table.php',
     'CreateParcelasTable' => $baseDir . '/database/migrations/2019_08_06_181856_create_parcelas_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
@@ -498,6 +500,7 @@ return array(
     'PacienteTableSeeder' => $baseDir . '/database/seeds/PacienteTableSeeder.php',
     'ParcelaTableSeeder' => $baseDir . '/database/seeds/ParcelaTableSeeder.php',
     'RemoveFieldsFromContasTable' => $baseDir . '/database/migrations/2019_12_10_145445_remove_fields_from_contas_table.php',
+    'RemovePagadorIdToPacientes' => $baseDir . '/database/migrations/2019_12_11_191052_remove_pagador_id_to_pacientes.php',
     'SebastianBergmann\\Comparator\\ArrayComparator' => $vendorDir . '/sebastian/comparator/src/ArrayComparator.php',
     'SebastianBergmann\\Comparator\\Comparator' => $vendorDir . '/sebastian/comparator/src/Comparator.php',
     'SebastianBergmann\\Comparator\\ComparisonFailure' => $vendorDir . '/sebastian/comparator/src/ComparisonFailure.php',

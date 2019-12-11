@@ -45,10 +45,16 @@
             </div>
         </div>
         <div id="row_pagador" class="row form-group hide">
-            <div class="col-md-12">
-                <?php echo Html::decode(Form::label('pagador_id', 'Nome <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+            <div class="col-md-8">
+                <?php echo Html::decode(Form::label('pagador_nome', 'Nome do Pagador <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
 
-                <?php echo Form::select('pagador_id', $pacientes, $paciente->pagador_id, ['class' => 'form-control select2-search','required' => 'true']); ?>
+                <?php echo Form::text('pagador_nome', @$paciente->pagador()->nome, ['class' => 'form-control','required' => $paciente->pagador_id]); ?>
+
+            </div>
+            <div class="col-md-4">
+                <?php echo Html::decode(Form::label('pagador_cpf', 'CPF do Pagador <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+
+                <?php echo Form::text('pagador_cpf', @$paciente->pagador()->cpf, ['class' => 'form-control cpf','required' => $paciente->pagador_id]); ?>
 
             </div>
         </div>
@@ -63,16 +69,23 @@
 
 <script type="text/javascript">
     <?php if($paciente->pagador_id): ?>
-    $("#row_pagador").show();
+    $("#row_pagador").removeClass('hide');
     <?php endif; ?>
 
     // Exibe/oculta a área de selecionar o pagador
     $("#pagador").change(function(){
-        console.log($(this));
         if($(this).attr('checked'))
             $("#row_pagador").removeClass('hide');
         else
             $("#row_pagador").addClass('hide');
+    });
+
+    // obriga/não obriga os dados de pagador
+    $("#pagador").change(function(){
+        if($(this).attr('checked'))
+            $("#row_pagador").find("input").attr('required', true);
+        else
+            $("#row_pagador").find("input").attr('required', false);
     });
 </script>
 <?php $__env->stopSection(); ?>
