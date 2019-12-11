@@ -52,7 +52,7 @@
             <div class="col-md-4 col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
                 <div class="templatemo-block">
-                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao == "Livro Caixa") checked @endif>
+                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao != "Imposto de Renda") checked @endif>
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
