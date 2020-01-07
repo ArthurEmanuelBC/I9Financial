@@ -32,5 +32,15 @@ class Contum extends Model
     {
         return $this->belongsTo('App\Paciente','paciente_id')->first();
     }
-    
+
+    /**
+    * Obtém o Medico da Conta.
+    *
+    * @return Empresa
+    */
+    public function medico()
+    {
+        return $this->belongsTo('App\Empresa','empresa_id')->first();
+    }
+
 }

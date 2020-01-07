@@ -10,9 +10,10 @@ use App\Paciente;
 use Jenssegers\Date\Date;
 use Illuminate\Http\Request;
 use Auth;
+use Redirect;
 
 class ContumController extends Controller {
-	
+
 	/**
 	* Display a listing of the resource.
 	*
@@ -25,14 +26,23 @@ class ContumController extends Controller {
 		(strpos($request->fullUrl(),'?')) ? $signal = '&' : $signal = '?';
 		(strpos($param,'desc')) ? $caret = 'up' : $caret = 'down';
 		(isset($request->order)) ? $order = $request->order : $order = "id";
-		
+
 		// Cláusuras
 		$where = "tipo = ".($request->tipo ? 'true' : 'false');
 		if(!isset($request->data1)) $request->data1 = date('Y-m-d');
 		if(!isset($request->data2)) $request->data2 = date('Y-m-d');
 		$where .= " and date between '$request->data1' and '$request->data2'";
+		if(!blank($request->paciente_id) && $request->paciente_id != 'Todos') $where .= " and paciente_id = $request->paciente_id";
+		if(!blank($request->opcao) && $request->opcao != 'Todos') $where .= " and opcao = '$request->opcao'";
+		if(!blank($request->tipo_conta) && $request->tipo_conta != 'Todos') $where .= " and tipo_conta = '$request->tipo_conta'";
+
+		if(blank($request->medico_id) || $request->medico_id == 'Nenhum')
+			$where .= " and empresa_id IS NULL";
+		else
+			$where .= " and empresa_id = $request->medico_id";
+
 		(isset($request->ocultas)) ? $ocultas = $request->ocultas : $ocultas = [];
-		
+
 		if(!blank($request->filtro) && !blank($request->valor)){
 			foreach ($request->filtro_avancado as $key => $filtro) {
 				$tipo = $request->tipo_avancado[$key];
@@ -40,7 +50,7 @@ class ContumController extends Controller {
 
 				if(in_array($filtro, ["descricao"])) $tipo = 'like';
 				if($tipo == 'like') $valor = "%$valor%";
-				
+
 				if($filtro == "valor") {
 					$where .= " and valor $tipo $valor";
 				} else {
@@ -51,9 +61,13 @@ class ContumController extends Controller {
 		}
 
 		$contas = Contum::whereRaw($where)->orderBy("date","DESC");
-		
+
 		$parametros = [];
 		$parametros["tipo"] = $request->tipo;
+		$parametros["opcao"] = $request->opcao;
+		$parametros["tipo_conta"] = $request->tipo_conta;
+		if(!blank($request->paciente_id) && $request->paciente_id != 'Todos') $parametros["paciente"] = Paciente::findOrFail($request->paciente_id)->nome;
+		if(!blank($request->medico_id) && $request->medico_id != 'Nenhum') $parametros["medico"] = Empresa::findOrFail($request->medico_id);
 		$parametros["tipo_relatorio"] = $request->tipo_relatorio;
 		(isset($request->data1)) ? $parametros["data1"] = $request->data1 : $parametros["data1"] = Date::now();
 		(isset($request->data2)) ? $parametros["data2"] = $request->data2 : $parametros["data2"] = Date::now();
@@ -62,15 +76,23 @@ class ContumController extends Controller {
 		$parametros["filtro_avancado"] = $request->filtro_avancado;
 		$parametros["tipo_avancado"] = $request->tipo_avancado;
 		$parametros["valor_avancado"] = $request->valor_avancado;
-		
-		// if(isset($request->pdf)){
-			// 	($request->tipo == "0") ? $titulo = "Contas a Receber" : $titulo = "Contas a Pagar";
-			// 	return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), "tipo" => $request->tipo, "tipo_relatorio" => $request->tipo_relatorio, "ocultas" => $ocultas, 'titulo' => $titulo])->inline();
-			// } else {
-				return view('contas.index', ["contas" => $contas->paginate(30), "parametros" => $parametros, "tipo" => $request->tipo]);
-				// }
+		$parametros["pacientes"] = [NULL => "Todos"] + Paciente::lists('nome','id')->all();
+		$parametros["medicos"] = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
+
+		if($request->tipo == '1')
+					$parametros["opcoes"] = ['Todos' => 'Todos', 'Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
+				else
+					$parametros["opcoes"] = ['Todos' => 'Todos', 'Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
+
+		if(isset($request->pdf)){
+			($request->tipo == "0") ? $titulo = "Relatório de Receitas" : $titulo = "Relatório de Despesas";
+			$cabecalho = ["Data Inicial" => date_format(date_create_from_format('Y-m-d', $parametros["data1"]), 'd/m/Y'), "Data Final" => date_format(date_create_from_format('Y-m-d', $parametros["data2"]), 'd/m/Y'), "Médico" => @$parametros["medico"]->nome, "Paciente" => @$parametros["paciente"], "Opção" => $parametros["opcao"], "Tipo" => $parametros["tipo_conta"]];
+			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'parametros' => $cabecalho])->inline();
+		} else {
+			return view('contas.index', ["contas" => $contas->paginate(30), "parametros" => $parametros, "tipo" => $request->tipo]);
 			}
-			
+		}
+
 			/**
 			* Show the form for creating a new resource.
 			*
@@ -81,15 +103,22 @@ class ContumController extends Controller {
 				$contum = new Contum();
 				$contum->date = Date::today();
 				$pacientes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
+				$medicos = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
+
+				$contum->num_doc = Contum::max('num_doc');
+				if(is_null($contum->num_doc))
+					$contum->num_doc = 1501;
+				else
+					$contum->num_doc += 1;
 
 				if($request->tipo == '1')
 					$opcoes = ['Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
 				else
 					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
 
-				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
+				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
 			}
-			
+
 			/**
 			* Store a newly created resource in storage.
 			*
@@ -98,6 +127,10 @@ class ContumController extends Controller {
 			*/
 			public function store(Request $request)
 			{
+				$medico = Empresa::findOrFail($request->empresa_id);
+				if($medico->margem_atual() < floatval(str_replace(",", ".", str_replace(".", "", $request->valor))))
+					return Redirect::back()->withErrors(['Não há margem suficiente!']);
+
 				$contum = new Contum();
 				$contum->date = Date::parse($request->date);
 				$contum->fornecedor = $request->fornecedor;
@@ -109,11 +142,11 @@ class ContumController extends Controller {
 				$contum->opcao = $request->opcao;
 				$contum->user_id = Auth::user()->id;
 				$contum->paciente_id = $request->paciente_id;
-				// $contum->empresa_id = Empresa::first()->id;
+				$contum->empresa_id = $request->empresa_id;
 				$contum->save();
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta cadastrada com sucesso!');
 			}
-			
+
 			/**
 			* Show the form for editing the specified resource.
 			*
@@ -124,7 +157,8 @@ class ContumController extends Controller {
 			{
 				$contum = Contum::findOrFail($id);
 				$pacientes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
-				
+				$medicos = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
+
 				if($request->tipo == '1')
 					if($contum->opcao == 'Livro Caixa')
 						$opcoes = ['Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
@@ -133,9 +167,9 @@ class ContumController extends Controller {
 				else
 					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
 
-				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
+				return view('contas.form', ["contum" => $contum, "pacientes" => $pacientes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
 			}
-			
+
 			/**
 			* Update the specified resource in storage.
 			*
@@ -155,10 +189,10 @@ class ContumController extends Controller {
 				$contum->tipo_conta = $request->tipo_conta;
 				$contum->opcao = $request->opcao;
 				$contum->save();
-					
+
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta atualizada com sucesso!');
 			}
-			
+
 			/**
 			* Remove the specified resource from storage.
 			*
@@ -171,7 +205,7 @@ class ContumController extends Controller {
 				$contum->delete();
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta deletada com sucesso!');
 			}
-			
+
 			/**
 			* Listagem de parcelas.
 			*
@@ -192,18 +226,18 @@ class ContumController extends Controller {
 				}
 				$where = "1=1";
 				$where .= " and lancamento between '".$data1->format("Y-m-d")."' and '".$data2->format("Y-m-d")."'";
-				
+
 				if(!blank($request->operacao)) $where .= " and tipo = $request->operacao";
 				if(!blank($request->filtro) && !blank($request->valor)){
 					if(in_array($request->filtro, ["vencimento","pagamento"])) $valor = Date::createFromFormat('d/m/Y', $request->valor)->format("Y-m-d");
 					elseif(in_array($request->filtro, ["valor","desconto"])) $valor = str_replace(",", ".", str_replace(".", "", $request->valor));
 					else $valor = $request->valor;
-					
+
 					if(in_array($request->filtro, ["num_doc","descricao"])) $where .= " and $request->filtro LIKE '%$valor%'";
 					// elseif($request->filtro == "valor") $where .= " and (valor-desconto) = '$valor'";
 					else $where .= " and $request->filtro = '$valor'";
 				}
-				
+
 				$parametros["tipo"] = $request->tipo;
 				// $parametros["status"] = $status;
 				$parametros["data1"] = $data1->format("d/m/Y");
@@ -237,7 +271,7 @@ class ContumController extends Controller {
 							return view('contas.parcelas', ["parcelas" => $parcelas, "parametros" => $parametros, "data1" => $data1, "data2" => $data2]);
 							// }
 						}
-						
+
 						/**
 						* Pagar a parcela.
 						*
@@ -249,11 +283,10 @@ class ContumController extends Controller {
 							$parcelas = Parcela::whereIn("id",$request->ids);
 							if(isset($request->desfazer)) $parcelas->update(['pago' => false, 'pagamento' => NULL]);
 							else $parcelas->update(['pago' => true, 'pagamento' => date("Y-m-d")]);
-							
+
 							if(isset($request->data1) && isset($request->data2)) return redirect()->route('parcelas.index', ["tipo" => $request->tipo, "data1" => $request->data1, "data2" => $request->data2, "paciente_ids" => $request->paciente_ids])->with('message', 'Pagamento realizado com sucesso.')->with('type', 'success');
 							else return redirect()->route('contas.edit', ["id" => $parcelas->first()->conta_id, "tipo" => $request->tipo])->with('message', 'Pagamento realizado com sucesso.')->with('type', 'success');
 						}
-		
+
 }
 
-					

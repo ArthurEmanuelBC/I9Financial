@@ -62,6 +62,7 @@ class UserController extends Controller
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->permissao = $request->permissao;
         $user->password = bcrypt($request->password);
         $user->save();
         return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
@@ -93,6 +94,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->permissao = $request->permissao;
         if($request->alterar_credenciais == "true"){
             if(Hash::check($request->password_antigo,$user->password) && $request->password == $request->password_confirmation && !User::where("email",$request->email)->where("id","!=",$user->id)->count()){
                 $user->password = bcrypt($request->password);

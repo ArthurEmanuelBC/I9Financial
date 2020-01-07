@@ -69,14 +69,15 @@ class EmpresaController extends Controller {
 		$empresa->nome = $request->input("nome");
 		$empresa->cpf = $request->input("cpf");
 		$empresa->crm = $request->input("crm");
-        $empresa->cep = $request->input("cep");
-        $empresa->logradouro = $request->input("logradouro");
-        $empresa->bairro = $request->input("bairro");
-        $empresa->cidade = $request->input("cidade");
-        $empresa->estado = $request->input("estado");
-        $empresa->numero = $request->input("numero");
+    $empresa->cep = $request->input("cep");
+    $empresa->logradouro = $request->input("logradouro");
+    $empresa->bairro = $request->input("bairro");
+    $empresa->cidade = $request->input("cidade");
+    $empresa->estado = $request->input("estado");
+    $empresa->numero = $request->input("numero");
 		$empresa->complemento = $request->input("complemento");
 		$empresa->telefone = $request->input("telefone");
+		$empresa->margem = str_replace(",", ".", str_replace(".", "", $request->margem));
 		$empresa->save();
 
 		if(!is_null($request->file('anexo'))){
@@ -113,15 +114,16 @@ class EmpresaController extends Controller {
 		$empresa->nome = $request->input("nome");
 		$empresa->cpf = $request->input("cpf");
 		$empresa->crm = $request->input("crm");
-        $empresa->cep = $request->input("cep");
-        $empresa->logradouro = $request->input("logradouro");
-        $empresa->bairro = $request->input("bairro");
-        $empresa->cidade = $request->input("cidade");
-        $empresa->estado = $request->input("estado");
-        $empresa->numero = $request->input("numero");
+    $empresa->cep = $request->input("cep");
+    $empresa->logradouro = $request->input("logradouro");
+    $empresa->bairro = $request->input("bairro");
+    $empresa->cidade = $request->input("cidade");
+    $empresa->estado = $request->input("estado");
+    $empresa->numero = $request->input("numero");
 		$empresa->complemento = $request->input("complemento");
 		$empresa->telefone = $request->input("telefone");
-		
+		$empresa->margem = str_replace(",", ".", str_replace(".", "", $request->margem));
+
 		if(!is_null($request->file('anexo'))){
 			Storage::delete("empresas/$empresa->id/$empresa->anexo");
 			$empresa->anexo = $request->file('anexo')->getClientOriginalName();
@@ -144,6 +146,18 @@ class EmpresaController extends Controller {
 		Storage::delete("empresas/$empresa->id/$empresa->anexo");
 		$empresa->delete();
 		return redirect()->route('empresas.index')->with('message', 'Empresa deletado com sucesso!');
+	}
+
+	/**
+	 * Verifica a margem de um médico.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function margem($id)
+	{
+		$medico = Empresa::findOrFail($id);
+		return $medico->margem_atual();
 	}
 
 }

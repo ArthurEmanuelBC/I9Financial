@@ -23,12 +23,4 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-
-    /**
-     * Get the time record associated with the user.
-     */
-    public function permissoes()
-    {
-        return $this->hasMany('App\UserPermission')->get();
-    }
 }

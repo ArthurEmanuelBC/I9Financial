@@ -322,7 +322,9 @@ class ComposerStaticInit018b1dfb20e15106679976a389f811ef
     );
 
     public static $classMap = array (
+        'AddMargemToMedico' => __DIR__ . '/../..' . '/database/migrations/2019_12_26_184911_add_margem_to_medico.php',
         'AddPagadorIdToPacientes' => __DIR__ . '/../..' . '/database/migrations/2019_12_11_191215_add_pagador_id_to_pacientes.php',
+        'AddPermissaoToUser' => __DIR__ . '/../..' . '/database/migrations/2019_12_26_183059_add_permissao_to_user.php',
         'AddTipoToContas' => __DIR__ . '/../..' . '/database/migrations/2019_12_11_171938_add_tipo_to_contas.php',
         'ChangeEmpresaToMedico' => __DIR__ . '/../..' . '/database/migrations/2019_12_09_122022_change_empresa_to_medico.php',
         'ChangePacienteComPagador' => __DIR__ . '/../..' . '/database/migrations/2019_12_09_124906_change_paciente_com_pagador.php',

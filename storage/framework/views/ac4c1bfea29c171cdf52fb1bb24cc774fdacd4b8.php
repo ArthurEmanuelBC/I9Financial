@@ -1,109 +1,136 @@
 <?php $__env->startSection('content'); ?>
 <?php if($errors->any()): ?>
 <div class="templatemo-content-widget yellow-bg">
-    <i class="fa fa-times"></i>                
-    <div class="media">
-        <div class="media-body">
-            <ul>
-                <?php foreach($errors->all() as $error): ?>
-                <li><h2><?php echo e($error); ?></h2></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>        
-    </div>           
-</div>     
+  <i class="fa fa-times"></i>
+  <div class="media">
+    <div class="media-body">
+      <ul>
+        <?php foreach($errors->all() as $error): ?>
+        <li>
+          <h2><?php echo e($error); ?></h2>
+        </li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  </div>
+</div>
 <?php endif; ?>
 
 <div class="templatemo-content-widget white-bg">
-    <h2 class="margin-bottom-10">
-        <?php if(Request::is('users/create')): ?>
-        Novo <?php echo e(substr_replace("Usuários", "", -1)); ?>
+  <h2 class="margin-bottom-10">
+    <?php if(Request::is('users/create')): ?>
+    Novo <?php echo e(substr_replace("Usuários", "", -1)); ?>
 
-        <?php else: ?>
-        Editar <?php echo e(substr_replace("Usuários", "", -1)); ?> #<?php echo e($user->id); ?>
+    <?php else: ?>
+    Editar <?php echo e(substr_replace("Usuários", "", -1)); ?> #<?php echo e($user->id); ?>
 
-        <?php endif; ?>
-    </h2>
-    <?php echo Form::open(['route' => [$url, $user->id], 'method' => $method, 'enctype' => 'multipart/form-data']); ?>
+    <?php endif; ?>
+  </h2>
+  <?php echo Form::open(['route' => [$url, $user->id], 'method' => $method, 'enctype' => 'multipart/form-data']); ?>
 
-    <div class="panel panel-default no-border">
-        <div class="panel-heading border-radius-10">
-            <h2>Usuário</h2>
+  <div class="panel panel-default no-border">
+    <div class="panel-heading border-radius-10">
+      <h2>Dados</h2>
+    </div>
+    <div class="panel-body">
+      <input type="hidden" name="config" value="true">
+      <div class="row">
+        <div class="col-md-8 col-sm-12 form-group">
+          <?php echo Html::decode(Form::label('name', 'Nome <span class="obrigatorio">*</span>', ['class' =>
+          'control-label'])); ?>
+
+          <?php echo Form::text('name', $user->name, ['required' => 'true', 'class' => 'form-control']); ?>
+
         </div>
-        <div class="panel-body">
-            <input type="hidden" name="config" value="true">
-            <div class="row">
-                <div class="col-md-8 col-sm-12 form-group">
-                    <?php echo Html::decode(Form::label('name', 'Nome <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+        <div class="col-md-4 col-sm-12 form-group">
+          <?php echo Html::decode(Form::label('email', 'Email <span class="obrigatorio">*</span>', ['class' =>
+          'control-label'])); ?>
 
-                    <?php echo Form::text('name', $user->name, ['required' => 'true', 'class' => 'form-control']); ?>
+          <?php echo Form::email('email', $user->email, ['required' => 'true', 'class' => 'form-control']); ?>
 
-                </div>
-                <div class="col-md-4 col-sm-12 form-group">
-                    <?php echo Html::decode(Form::label('email', 'Email <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
-
-                    <?php echo Form::email('email', $user->email, ['required' => 'true', 'class' => 'form-control']); ?>
-
-                </div>
-            </div>
-        </div>     
-    </div>
-
-    <?php if($config || Request::is('users/create')): ?>
-    <div class="panel panel-default no-border">
-        <div class="panel-heading border-radius-10">
-            <h2>Credenciais</h2>
         </div>
-        <div class="panel-body panel-credenciais">
-            <?php if($config): ?>
-            <div class="row">
-                <div class="col-md-6 col-sm-12 form-group">
-                    <div class="templatemo-block margin-bottom-5">
-                        <input type="checkbox" name="alterar_credenciais" id="credenciais" value="true"> 
-                        <label for="credenciais" class="font-weight-400"><span></span>Alterar Credenciais</label> 
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-            <div class="row has-error">
-                <?php if($config): ?>
-                <div class="col-md-4 col-sm-12 form-group col-password has-error">
-                    <?php echo Html::decode(Form::label('password_antigo', 'Senha Antiga <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+      </div>
+      <div class="row">
+        <?php echo Html::decode(Form::label('permissao', 'Permiss?o <span class="obrigatorio">*</span>', ['class' =>
+        'control-label'])); ?>
 
-                    <input type="password" required="true" class="form-control" disabled="true" name="password_antigo" type="password_antigo" value="" id="password_antigo">
-                </div>
-                <?php endif; ?>
-                <div class="col-md-4 col-sm-12 row-password form-group">
-                    <?php echo Html::decode(Form::label('password', 'Nova Senha <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
-
-                    <?php echo Form::password('password', ['required' => 'true', 'class' => 'form-control', 'disabled' => 'true']); ?>
-
-                </div>
-                <div class="col-md-4 col-sm-12 row-password form-group">
-                    <?php echo Html::decode(Form::label('password_confirmation', 'Repetir Nova Antiga <span class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
-
-                    <?php echo Form::password('password_confirmation', ['required' => 'true', 'class' => 'form-control', 'disabled' => 'true']); ?>
-
-                </div>
-            </div>
-        </div> 
-        <?php endif; ?>
+        <div class="col-md-12 col-sm-12 form-group">
+          <input type="radio" name="permissao" id="gerencial" value="Gerencial" <?php if($user->permissao ==
+          'Gerencial'): ?> checked <?php endif; ?>>
+          <label for="gerencial" class="font-weight-400"><span></span>Gerencial</label>
+          <br>
+          <input type="radio" name="permissao" id="tecnico" value="T?cnico" <?php if($user->permissao == 'T?cnico'): ?>
+          checked <?php endif; ?>>
+          <label for="tecnico" class="font-weight-400"><span></span>T?cnico</label>
+        </div>
+      </div>
     </div>
-    <div class="form-group text-right">
-        <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
-        <?php if(empty($config)): ?>
-        <a href="<?php echo e(route('users.index')); ?>" class="templatemo-white-button"><i class="fa fa-arrow-left"></i> Cancelar</a>
-        <?php endif; ?>
+  </div>
+
+  <?php if($config || Request::is('users/create')): ?>
+  <div class="panel panel-default no-border">
+    <div class="panel-heading border-radius-10">
+      <h2>Credenciais</h2>
     </div>
+    <div class="panel-body panel-credenciais">
+      <?php if($config): ?>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 form-group">
+          <div class="templatemo-block margin-bottom-5">
+            <input type="checkbox" name="alterar_credenciais" id="credenciais" value="true">
+            <label for="credenciais" class="font-weight-400"><span></span>Alterar Credenciais</label>
+          </div>
+        </div>
+      </div>
+      <?php endif; ?>
+      <div class="row has-error">
+        <?php if($config): ?>
+        <div class="col-md-4 col-sm-12 form-group col-password has-error">
+          <?php echo Html::decode(Form::label('password_antigo', 'Senha Antiga <span class="obrigatorio">*</span>',
+          ['class' => 'control-label'])); ?>
+
+          <input type="password" required="true" class="form-control" disabled="true" name="password_antigo"
+            type="password_antigo" value="" id="password_antigo">
+        </div>
+        <?php endif; ?>
+        <div class="col-md-4 col-sm-12 row-password form-group">
+          <?php echo Html::decode(Form::label('password', 'Nova Senha <span class="obrigatorio">*</span>', ['class'
+          => 'control-label'])); ?>
+
+          <?php echo Form::password('password', ['required' => 'true', 'class' => 'form-control', 'disabled' =>
+          'true']); ?>
+
+        </div>
+        <div class="col-md-4 col-sm-12 row-password form-group">
+          <?php echo Html::decode(Form::label('password_confirmation', 'Repetir Nova Antiga <span
+            class="obrigatorio">*</span>', ['class' => 'control-label'])); ?>
+
+          <?php echo Form::password('password_confirmation', ['required' => 'true', 'class' => 'form-control',
+          'disabled' => 'true']); ?>
+
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+  </div>
+  <div class="form-group text-right">
+    <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
+    <?php if(empty($config)): ?>
+    <a href="<?php echo e(route('users.index')); ?>" class="templatemo-white-button"><i class="fa fa-arrow-left"></i>
+      Cancelar</a>
+    <?php endif; ?>
+  </div>
 </div>
 <?php echo Form::close(); ?>
 
 </div>
 <style type="text/css">
-.panel-empresas { border-bottom: 1px solid #ddd; }
+  .panel-empresas {
+    border-bottom: 1px solid #ddd;
+  }
 </style>
 <script type="text/javascript">
-    // Habilita e desabilita as credenciais
+  // Habilita e desabilita as credenciais
     $("#credenciais").change(function(){
         if($(this).is(':checked'))
             $(".panel-credenciais .form-group input").attr("disabled",false);
@@ -160,7 +187,7 @@
                 }
             }
         });
-    });        
+    });
 
     // Alterna o campo entre CNPJ e CPF
     $( document ).ready(function() {

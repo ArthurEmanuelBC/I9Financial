@@ -115,3 +115,16 @@ if (! function_exists('blank')) {
             return true;
     }
 }
+
+if (! function_exists('margem_atual')) {
+    /**
+     * Return if param is nill or empty
+     *
+     * @param date $param
+     *
+     * @return boolean
+     */
+    function margem_atual($medico_id) {
+        return App\Empresa::findOrFail($medico_id)->margem_atual();
+    }
+}

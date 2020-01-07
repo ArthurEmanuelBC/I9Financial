@@ -6,7 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddMargemToMedico' => $baseDir . '/database/migrations/2019_12_26_184911_add_margem_to_medico.php',
     'AddPagadorIdToPacientes' => $baseDir . '/database/migrations/2019_12_11_191215_add_pagador_id_to_pacientes.php',
+    'AddPermissaoToUser' => $baseDir . '/database/migrations/2019_12_26_183059_add_permissao_to_user.php',
     'AddTipoToContas' => $baseDir . '/database/migrations/2019_12_11_171938_add_tipo_to_contas.php',
     'ChangeEmpresaToMedico' => $baseDir . '/database/migrations/2019_12_09_122022_change_empresa_to_medico.php',
     'ChangePacienteComPagador' => $baseDir . '/database/migrations/2019_12_09_124906_change_paciente_com_pagador.php',

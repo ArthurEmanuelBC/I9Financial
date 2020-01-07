@@ -35,9 +35,11 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource("pacientes","PacienteController");
 	Route::resource("empresas","EmpresaController");
 	Route::resource("contas","ContumController");
-	Route::get("parcelas", ['as' => 'contas.parcelas', 'uses' => 'ContumController@parcelas']);
 	Route::post("parcelas_pagar", ['as' => 'parcelas.pagar', 'uses' => 'ContumController@pagar']);
+
+	Route::get('empresas/{id}/margem', 'EmpresaController@margem');
 });
+
 // Storage
 Route::get('storage/{model}/{id}/{filename}', function ($model,$id,$filename){
 	$path = storage_path("app/$model/$id/$filename");
