@@ -88,15 +88,6 @@
                 'form-control select2-search paciente_id', 'required' => 'true']); ?>
 
             </div>
-            <div class="col-md-<?php echo e($col); ?> col-sm-12 col-xs-12">
-                <?php echo Html::decode(Form::label('valor', 'Valor Total <span class="obrigatorio">*</span>', ['class' =>
-                'control-label'])); ?>
-
-                <?php if($method == 'post'): ?> <?php echo Form::text('valor', NULL, ['class' => 'form-control valor','onKeyDown' =>
-                'Formata(this,20,event,2)', 'required' => 'true']); ?> <?php else: ?> <?php echo Form::text('valor',
-                number_format($contum->valor,2,',','.'), ['class' => 'form-control', 'onKeyDown' =>
-                'Formata(this,20,event,2)', 'required' => 'true']); ?> <?php endif; ?>
-            </div>
             <?php if($method == 'post'): ?>
             <div class="col-md-<?php echo e($col); ?> col-sm-12 col-xs-12">
                 <?php echo Html::decode(Form::label('empresa_id', 'Médico <span class="obrigatorio">*</span>', ['class' =>
@@ -115,6 +106,15 @@
                 </div>
             </div>
             <?php endif; ?>
+            <div class="col-md-<?php echo e($col); ?> col-sm-12 col-xs-12">
+                <?php echo Html::decode(Form::label('valor', 'Valor Total <span class="obrigatorio">*</span>', ['class' =>
+                'control-label'])); ?>
+
+                <?php if($method == 'post'): ?> <?php echo Form::text('valor', NULL, ['class' => 'form-control valor','onKeyDown' =>
+                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor']); ?> <?php else: ?> <?php echo Form::text('valor',
+                number_format($contum->valor,2,',','.'), ['class' => 'form-control', 'onKeyDown' =>
+                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor']); ?> <?php endif; ?>
+            </div>
         </div>
         <div class="row form-group">
             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -127,7 +127,8 @@
     </div>
 
     <div class="form-group text-right">
-        <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
+        <button type="submit" class="templatemo-blue-button" disabled style="background-color: gray"><i
+                class="fa fa-plus"></i> Salvar</button>
         <a class="templatemo-white-button" href="<?php echo e(route('contas.index', ['tipo' => $tipo])); ?>"><i
                 class="fa fa-arrow-left"></i> Voltar</a>
     </div>
@@ -250,8 +251,8 @@
     	return parseFloat($valor);
     }
 
-    async function verifica_margem(){
-        $val = parseFloat($('#modal_valor').val().replace(/\./g,'').replace(',','.'));
+    async function tem_margem(id){
+        $val = parseFloat($(`#${id}`).val().replace(/\./g,'').replace(',','.'));
         if(isNaN($val))
             $val = 0;
 
@@ -260,11 +261,28 @@
 
         if($margem){
             if($val <= $margem)
-                alert('Há margem disponível!');
+                return true;
             else
-                alert('Não há margem suficiente!');
+                return false;
         }
     }
+
+    async function verifica_margem(){
+        if(tem_margem('modal_valor'))
+            alert('Há margem disponível!');
+        else
+            alert('Não há margem suficiente!');
+    }
+
+    $("#valor").keyup(async function(){
+        if(await tem_margem('valor')){
+            $('.templatemo-blue-button').attr('disabled', false);
+            $('.templatemo-blue-button').css('background-color', '#39ADB4');
+        } else {
+            $('.templatemo-blue-button').attr('disabled', true);
+            $('.templatemo-blue-button').css('background-color', 'gray');
+        }
+    });
 
 </script>
 

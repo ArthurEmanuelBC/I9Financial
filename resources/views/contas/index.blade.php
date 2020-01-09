@@ -33,6 +33,7 @@
                 {!! Form::select("medico_id", $parametros["medicos"], NULL, ['id' => 'medico_id', 'class' =>
                 'form-control']) !!}
             </div>
+            <p id="doctor-warning">Selecione um médico</p>
         </div>
     </div>
     <div class="row form-group">
@@ -288,6 +289,13 @@
     .linha_filho {
         background: #F0F8FF
     }
+
+    #doctor-warning {
+        color: red;
+        text-align: center;
+        width: 100%;
+        margin: 0;
+    }
 </style>
 
 <script type="text/javascript">
@@ -330,6 +338,23 @@
         $("#tipo_conta").append(`<option value='${opcoes[key]}'>${opcoes[key]}</option>`);
     });
     @endif
+
+    // Oculta/exibe o warning de selecionar médico
+    $("#medico_id").change(function(){
+        if($(this).val())
+            $("#doctor-warning").addClass('hide');
+        else
+            $("#doctor-warning").removeClass('hide');
+    });
+    $("#medico_id").change();
+
+    // Verifica se existe algum médico selecionado ao criar relatório
+    $('#form-print').submit(function(event) {
+        if(!$("#medico_id").val()){
+            event.preventDefault();
+            alert('Selecione um médico!');
+        }
+    });
 </script>
 
 @endsection

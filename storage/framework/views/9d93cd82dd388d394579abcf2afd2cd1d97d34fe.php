@@ -16,7 +16,7 @@
       <?php endforeach; ?>
 
     <tr>
-      <td align="right" colspan="5"><strong>Valor Real da Margem: </strong></td>
+      <td align="right" colspan="5"><strong>Valor Real da Margem Atual: </strong></td>
       <td><?php echo e(number_format(@$medico->margem_atual(),2,',','.')); ?></td>
     </tr>
   </tbody>
