@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::post("parcelas_pagar", ['as' => 'parcelas.pagar', 'uses' => 'ContumController@pagar']);
 
 	Route::get('empresas/{id}/margem', 'EmpresaController@margem');
+	Route::get('contas/{id}/recibo', 'ContumController@recibo');
 });
 
 // Storage

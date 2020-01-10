@@ -68,6 +68,11 @@
             font-size: 12px;
         }
 
+        table.no-border tr th,
+        table.no-border tr td {
+            border: 0;
+        }
+
         #footer {
             color: #DDD;
             font-weight: bold;

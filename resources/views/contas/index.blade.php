@@ -224,7 +224,7 @@
                     <th class="tipo">Tipo</th>
                     <th class="valor">Valor</th>
                     <th class="descricao">Descrição</th>
-                    <th colspan="2"></th>
+                    <th colspan="3"></th>
                 </tr>
             </thead>
 
@@ -241,6 +241,11 @@
                     <td class="tipo">{{$contum->tipo_conta}}</td>
                     <td class="valor">{{number_format($contum->valor,2,',','.')}}</td>
                     <td class="descricao">{{$contum->descricao}}</td>
+                    @if(!$tipo)
+                    <td class="table_actions" align="center" title="Recibo">
+                        <a href="contas/{{$contum->id}}/recibo" target="_blank"><i class="fa fa-file"></i></a>
+                    </td>
+                    @endif
                     <td class="table_actions" align="center" title="Editar Contum">
                         <a href="{{ route('contas.edit', ['id' => $contum->id, 'tipo' => $tipo]) }}"><i
                                 class="fa fa-edit"></i></a>

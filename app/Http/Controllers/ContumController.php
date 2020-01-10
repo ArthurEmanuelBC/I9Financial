@@ -288,5 +288,17 @@ class ContumController extends Controller {
 							else return redirect()->route('contas.edit', ["id" => $parcelas->first()->conta_id, "tipo" => $request->tipo])->with('message', 'Pagamento realizado com sucesso.')->with('type', 'success');
 						}
 
+						/**
+						* Pagar a parcela.
+						*
+						* @param Request $request
+						* @return Response
+						*/
+						public function recibo($id)
+						{
+							$conta = Contum::findOrFail($id);
+							return \PDF::loadView('contas.recibo_pdf', ["conta" => $conta, 'titulo' => 'Recibo'])->inline();
+						}
+
 }
 
