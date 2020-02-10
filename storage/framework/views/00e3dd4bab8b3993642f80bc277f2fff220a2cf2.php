@@ -39,17 +39,17 @@
             <p id="doctor-warning">Selecione um médico</p>
         </div>
     </div>
+    <?php if($tipo == '1'): ?>
     <div class="row form-group">
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
-                <span class="input-group-addon">Paciente: </span>
-                <?php echo Form::select("paciente_id", $parametros["pacientes"], NULL, ['id' => 'paciente_id', 'class' =>
+                <span class="input-group-addon">Fornecedor: </span>
+                <?php echo Form::select("paciente_id", $parametros["fornecedores"], NULL, ['id' => 'paciente_id', 'class' =>
                 'form-control']); ?>
 
             </div>
         </div>
     </div>
-    <?php if($tipo == '1'): ?>
     <div class="row form-group">
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
@@ -57,6 +57,17 @@
                 <?php echo Form::select("opcao", ['Todos' => 'Todos', 'Livro Caixa' => 'Livro Caixa', 'Imposto de Renda' =>
                 'Imposto de
                 Renda'], NULL, ['id' => 'opcao', 'class' => 'form-control']); ?>
+
+            </div>
+        </div>
+    </div>
+    <?php else: ?>
+    <div class="row form-group">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon">Paciente: </span>
+                <?php echo Form::select("paciente_id", $parametros["pacientes"], NULL, ['id' => 'paciente_id', 'class' =>
+                'form-control']); ?>
 
             </div>
         </div>
@@ -257,7 +268,7 @@
                     <td class="lancamento"><?php echo e(@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')); ?>
 
                     </td>
-                    <td class="paciente_id"><?php echo e(@$contum->paciente()->nome); ?></td>
+                    <td class="paciente_id"><?php echo e(@$contum->paciente_ou_fornecedor()->nome); ?></td>
                     <td class="num_doc"><?php echo e($contum->num_doc); ?></td>
                     <?php if($tipo == '1'): ?>
                     <td class="opcao"><?php echo e($contum->opcao); ?></td>

@@ -36,16 +36,16 @@
             <p id="doctor-warning">Selecione um médico</p>
         </div>
     </div>
+    @if($tipo == '1')
     <div class="row form-group">
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
-                <span class="input-group-addon">Paciente: </span>
-                {!! Form::select("paciente_id", $parametros["pacientes"], NULL, ['id' => 'paciente_id', 'class' =>
+                <span class="input-group-addon">Fornecedor: </span>
+                {!! Form::select("paciente_id", $parametros["fornecedores"], NULL, ['id' => 'paciente_id', 'class' =>
                 'form-control']) !!}
             </div>
         </div>
     </div>
-    @if($tipo == '1')
     <div class="row form-group">
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
@@ -53,6 +53,16 @@
                 {!! Form::select("opcao", ['Todos' => 'Todos', 'Livro Caixa' => 'Livro Caixa', 'Imposto de Renda' =>
                 'Imposto de
                 Renda'], NULL, ['id' => 'opcao', 'class' => 'form-control']) !!}
+            </div>
+        </div>
+    </div>
+    @else
+    <div class="row form-group">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon">Paciente: </span>
+                {!! Form::select("paciente_id", $parametros["pacientes"], NULL, ['id' => 'paciente_id', 'class' =>
+                'form-control']) !!}
             </div>
         </div>
     </div>
@@ -233,7 +243,7 @@
                 <tr>
                     <td class="lancamento">{{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}}
                     </td>
-                    <td class="paciente_id">{{@$contum->paciente()->nome}}</td>
+                    <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
                     <td class="num_doc">{{$contum->num_doc}}</td>
                     @if($tipo == '1')
                     <td class="opcao">{{$contum->opcao}}</td>

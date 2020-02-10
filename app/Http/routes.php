@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource("pacientes","PacienteController");
 	Route::resource("empresas","EmpresaController");
 	Route::resource("contas","ContumController");
+	Route::resource("fornecedors","FornecedorController");
 	Route::post("parcelas_pagar", ['as' => 'parcelas.pagar', 'uses' => 'ContumController@pagar']);
 
 	Route::get('empresas/{id}/margem', 'EmpresaController@margem');

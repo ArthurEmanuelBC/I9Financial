@@ -42,7 +42,8 @@
       @if(!in_array('lancamento', $ocultas)) <td class="lancamento">
         {{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}} @endif
       </td>
-      @if(!in_array('paciente_id', $ocultas)) <td class="paciente_id">{{@$contum->paciente()->nome}}</td> @endif
+      @if(!in_array('paciente_id', $ocultas)) <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
+      @endif
       @if(!in_array('num_doc', $ocultas)) <td class="num_doc">{{$contum->num_doc}}</td> @endif
       @if($tipo == '1')
       @if(!in_array('opcao', $ocultas)) <td class="opcao">{{$contum->opcao}}</td> @endif

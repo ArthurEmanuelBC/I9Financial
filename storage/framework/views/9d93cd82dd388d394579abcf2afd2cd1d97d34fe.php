@@ -41,7 +41,8 @@
       <?php if(!in_array('lancamento', $ocultas)): ?> <td class="lancamento">
         <?php echo e(@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')); ?> <?php endif; ?>
       </td>
-      <?php if(!in_array('paciente_id', $ocultas)): ?> <td class="paciente_id"><?php echo e(@$contum->paciente()->nome); ?></td> <?php endif; ?>
+      <?php if(!in_array('paciente_id', $ocultas)): ?> <td class="paciente_id"><?php echo e(@$contum->paciente_ou_fornecedor()->nome); ?></td>
+      <?php endif; ?>
       <?php if(!in_array('num_doc', $ocultas)): ?> <td class="num_doc"><?php echo e($contum->num_doc); ?></td> <?php endif; ?>
       <?php if($tipo == '1'): ?>
       <?php if(!in_array('opcao', $ocultas)): ?> <td class="opcao"><?php echo e($contum->opcao); ?></td> <?php endif; ?>

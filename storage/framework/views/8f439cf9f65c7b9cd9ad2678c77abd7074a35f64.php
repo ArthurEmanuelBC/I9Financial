@@ -61,6 +61,8 @@
 					<?php endif; ?>
 					<li><a href="/pacientes" class="<?php if(Request::is('pacientes*')): ?> active <?php endif; ?>"><i
 								class="fa fa-users fa-fw"></i>Pacientes</a></li>
+					<li><a href="/fornecedors" class="<?php if(Request::is('fornecedors*')): ?> active <?php endif; ?>"><i
+								class="fa fa-truck fa-fw"></i>Fornecedores</a></li>
 					<li><a href="/empresas" class="<?php if(Request::is('empresas*')): ?> active <?php endif; ?>"><i
 								class="fa fa-briefcase fa-fw"></i>Médicos</a></li>
 					<li><a href="/contas?tipo=0" class="<?php if(Request::is('contas*') && @$tipo == '0'): ?> active <?php endif; ?>"><i

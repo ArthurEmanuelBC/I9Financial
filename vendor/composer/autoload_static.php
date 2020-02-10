@@ -322,6 +322,7 @@ class ComposerStaticInit018b1dfb20e15106679976a389f811ef
     );
 
     public static $classMap = array (
+        'AddFornecedorIdToConta' => __DIR__ . '/../..' . '/database/migrations/2020_02_10_113300_add_fornecedor_id_to_conta.php',
         'AddMargemToMedico' => __DIR__ . '/../..' . '/database/migrations/2019_12_26_184911_add_margem_to_medico.php',
         'AddPagadorIdToPacientes' => __DIR__ . '/../..' . '/database/migrations/2019_12_11_191215_add_pagador_id_to_pacientes.php',
         'AddPermissaoToUser' => __DIR__ . '/../..' . '/database/migrations/2019_12_26_183059_add_permissao_to_user.php',
@@ -331,6 +332,7 @@ class ComposerStaticInit018b1dfb20e15106679976a389f811ef
         'ContumTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ContumTableSeeder.php',
         'CreateContasTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_06_181719_create_contas_table.php',
         'CreateEmpresasTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_06_181559_create_empresas_table.php',
+        'CreateFornecedorsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_10_112725_create_fornecedors_table.php',
         'CreatePacientesTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_06_181658_create_pacientes_table.php',
         'CreatePagadorsTable' => __DIR__ . '/../..' . '/database/migrations/2019_12_11_190759_create_pagadors_table.php',
         'CreateParcelasTable' => __DIR__ . '/../..' . '/database/migrations/2019_08_06_181856_create_parcelas_table.php',
@@ -341,6 +343,7 @@ class ComposerStaticInit018b1dfb20e15106679976a389f811ef
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
+        'FornecedorTableSeeder' => __DIR__ . '/../..' . '/database/seeds/FornecedorTableSeeder.php',
         'Hamcrest\\Arrays\\IsArray' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
         'Hamcrest\\Arrays\\IsArrayContaining' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
         'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',

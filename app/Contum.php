@@ -28,9 +28,12 @@ class Contum extends Model
     *
     * @return Paciente
     */
-    public function paciente()
+    public function paciente_ou_fornecedor()
     {
-        return $this->belongsTo('App\Paciente','paciente_id')->first();
+        if($this->tipo == 1)
+            return $this->belongsTo('App\Fornecedor','fornecedor_id')->first();
+        else
+            return $this->belongsTo('App\Paciente','paciente_id')->first();
     }
 
     /**

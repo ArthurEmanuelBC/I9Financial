@@ -40,7 +40,7 @@
             <div class="col-md-4 col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('paciente_id', 'Nome <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
-                {!! Form::select("paciente_id", $pacientes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
+                {!! Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
                 'form-control select2-search paciente_id', 'required' => 'true']) !!}
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">

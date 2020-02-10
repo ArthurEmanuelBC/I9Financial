@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddFornecedorIdToConta' => $baseDir . '/database/migrations/2020_02_10_113300_add_fornecedor_id_to_conta.php',
     'AddMargemToMedico' => $baseDir . '/database/migrations/2019_12_26_184911_add_margem_to_medico.php',
     'AddPagadorIdToPacientes' => $baseDir . '/database/migrations/2019_12_11_191215_add_pagador_id_to_pacientes.php',
     'AddPermissaoToUser' => $baseDir . '/database/migrations/2019_12_26_183059_add_permissao_to_user.php',
@@ -15,6 +16,7 @@ return array(
     'ContumTableSeeder' => $baseDir . '/database/seeds/ContumTableSeeder.php',
     'CreateContasTable' => $baseDir . '/database/migrations/2019_08_06_181719_create_contas_table.php',
     'CreateEmpresasTable' => $baseDir . '/database/migrations/2019_08_06_181559_create_empresas_table.php',
+    'CreateFornecedorsTable' => $baseDir . '/database/migrations/2020_02_10_112725_create_fornecedors_table.php',
     'CreatePacientesTable' => $baseDir . '/database/migrations/2019_08_06_181658_create_pacientes_table.php',
     'CreatePagadorsTable' => $baseDir . '/database/migrations/2019_12_11_190759_create_pagadors_table.php',
     'CreateParcelasTable' => $baseDir . '/database/migrations/2019_08_06_181856_create_parcelas_table.php',
@@ -25,6 +27,7 @@ return array(
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/src/Factory.php',
+    'FornecedorTableSeeder' => $baseDir . '/database/seeds/FornecedorTableSeeder.php',
     'Hamcrest\\Arrays\\IsArray' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArray.php',
     'Hamcrest\\Arrays\\IsArrayContaining' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContaining.php',
     'Hamcrest\\Arrays\\IsArrayContainingInAnyOrder' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Arrays/IsArrayContainingInAnyOrder.php',

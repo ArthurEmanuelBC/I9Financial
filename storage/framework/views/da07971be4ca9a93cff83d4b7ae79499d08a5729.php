@@ -44,7 +44,7 @@
                 <?php echo Html::decode(Form::label('paciente_id', 'Nome <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])); ?>
 
-                <?php echo Form::select("paciente_id", $pacientes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
+                <?php echo Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
                 'form-control select2-search paciente_id', 'required' => 'true']); ?>
 
             </div>

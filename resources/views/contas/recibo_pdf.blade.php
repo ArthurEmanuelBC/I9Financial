@@ -32,10 +32,12 @@
 <p style="text-align: right">R$ {{number_format($conta->valor,2,',','.')}}</p>
 
 <p>
-  Recebemos do(a) Sr(a). @if($conta->paciente()->pagador()) {{$conta->paciente()->pagador()->nome}}, CPF nº
-  {{$conta->paciente()->pagador()->cpf}}, @else
-  {{$conta->paciente()->nome}}, CPF nº {{$conta->paciente()->cpf}}, @endif a importância de R$
+  Recebemos do(a) Sr(a). @if($conta->paciente_ou_fornecedor()->pagador())
+  {{$conta->paciente_ou_fornecedor()->pagador()->nome}}, CPF nº
+  {{$conta->paciente_ou_fornecedor()->pagador()->cpf}}, @else
+  {{$conta->paciente_ou_fornecedor()->nome}}, CPF nº {{$conta->paciente_ou_fornecedor()->cpf}}, @endif a importância de
+  R$
   {{number_format($conta->valor,2,',','.')}}, referente a(s) despesa(s) decorrente do atendimento do paciente
-  {{$conta->paciente()->nome}}, neste estabelecimento.
+  {{$conta->paciente_ou_fornecedor()->nome}}, neste estabelecimento.
 </p>
 @endsection
