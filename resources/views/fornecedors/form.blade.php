@@ -26,9 +26,9 @@
     {!! Form::open(['route' => [$url, $fornecedor->id], 'method' => $method, 'class' => 'form-horizontal']) !!}
     <div class="row form-group">
         <div class="col-md-6">
-            {!! Html::decode(Form::label('name', 'Nome <span class="obrigatorio">*</span>', ['class' =>
+            {!! Html::decode(Form::label('nome', 'Nome <span class="obrigatorio">*</span>', ['class' =>
             'control-label'])) !!}
-            {!! Form::text('name', $fornecedor->name, ['class' => 'form-control','required' => 'true']) !!}
+            {!! Form::text('nome', $fornecedor->nome, ['class' => 'form-control','required' => 'true']) !!}
         </div>
         <div class="col-md-6">
             {!! Html::decode(Form::label('cnpj', 'CNPJ <span class="obrigatorio">*</span>', ['class' =>

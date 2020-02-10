@@ -20,7 +20,7 @@
                 <div class="input-group">
                     <select class="form-control search-filtro" name="filtro">
                         <option>Limpar</option>
-                        <option value="name" @if ($filtro=="name" ) selected @endif>Nome</option>
+                        <option value="nome" @if ($filtro=="nome" ) selected @endif>Nome</option>
                         <option value="cnpj" @if ($filtro=="cnpj" ) selected @endif>Cnpj</option>
                     </select>
                     <input type="text" class="form-control search-valor" name="valor" value="{{$valor}}">
@@ -49,16 +49,16 @@
             <thead>
                 <tr>
                     @if(is_null($param))
-                    <th><a href="{{Request::fullUrl()}}{{$signal}}order=name" class="white-text templatemo-sort-by">Nome
+                    <th><a href="{{Request::fullUrl()}}{{$signal}}order=nome" class="white-text templatemo-sort-by">Nome
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     @if(strpos($param,'desc') !== false)
-                    <th><a href="{{str_replace(str_replace(' ','%20',$param),'name',Request::fullUrl())}}"
-                            class="white-text templatemo-sort-by @if(strpos($param,'name') !== false)active @endif">Nome
+                    <th><a href="{{str_replace(str_replace(' ','%20',$param),'nome',Request::fullUrl())}}"
+                            class="white-text templatemo-sort-by @if(strpos($param,'nome') !== false)active @endif">Nome
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
-                    <th><a href="{{str_replace('order='.$param,'order=name',Request::fullUrl())}} @if($param == 'name')desc @endif"
-                            class="white-text templatemo-sort-by @if(strpos($param,'name') !== false)active @endif">Nome
+                    <th><a href="{{str_replace('order='.$param,'order=nome',Request::fullUrl())}} @if($param == 'nome')desc @endif"
+                            class="white-text templatemo-sort-by @if(strpos($param,'nome') !== false)active @endif">Nome
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @endif
                     @endif
@@ -85,7 +85,7 @@
             <tbody>
                 @foreach($fornecedors as $fornecedor)
                 <tr>
-                    <td>{{$fornecedor->name}}</td>
+                    <td>{{$fornecedor->nome}}</td>
                     <td>{{$fornecedor->cnpj}}</td>
                     <td class="small" align="center" alt="Editar Fornecedor">
                         <a href="{{ route('fornecedors.edit', $fornecedor->id) }}">

@@ -64,7 +64,7 @@ class FornecedorController extends Controller {
 	public function store(Request $request)
 	{
 		$fornecedor = new Fornecedor();
-		$fornecedor->name = $request->input("name");
+		$fornecedor->nome = $request->input("nome");
         $fornecedor->cnpj = $request->input("cnpj");
 		$fornecedor->save();
 		return redirect()->route('fornecedors.index')->with('message', 'Fornecedor cadastrado com sucesso!');
@@ -92,7 +92,7 @@ class FornecedorController extends Controller {
 	public function update(Request $request, $id)
 	{
 		$fornecedor = Fornecedor::findOrFail($id);
-		$fornecedor->name = $request->input("name");
+		$fornecedor->nome = $request->input("nome");
         $fornecedor->cnpj = $request->input("cnpj");
 		$fornecedor->save();
 		return redirect()->route('fornecedors.index')->with('message', 'Fornecedor atualizado com sucesso!');
