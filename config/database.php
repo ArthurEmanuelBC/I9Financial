@@ -66,13 +66,26 @@ return [
             'engine' => null,
         ],
 
+        // 'pgsql' => [
+        //     'driver' => 'pgsql',
+        //     'host' => env('DB_HOST', 'localhost'),
+        //     'port' => env('DB_PORT', '5432'),
+        //     'database' => env('DB_DATABASE'),
+        //     'username' => env('DB_USERNAME'),
+        //     'password' => env('DB_PASSWORD'),
+        //     'charset' => 'utf8',
+        //     'prefix' => '',
+        //     'schema' => 'public',
+        // ],
+
+        // Heroku
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
+            'host' => 'ec2-174-129-43-40.compute-1.amazonaws.com',
+            'port' => '5432',
+            'database' => 'dcr59k7rl252ut',
+            'username' => 'qutysdkqyudswb',
+            'password' => '7ea0aa51d872cf4c95c8014c0a686532638e1c4ad58fe054c067bc9790578358',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
