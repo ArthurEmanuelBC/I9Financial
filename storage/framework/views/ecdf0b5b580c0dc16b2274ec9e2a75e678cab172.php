@@ -18,7 +18,7 @@
                 <div class="input-group">
                     <select class="form-control search-filtro" name="filtro">
                         <option>Limpar</option>
-                        <option value="name" <?php if($filtro=="name" ): ?> selected <?php endif; ?>>Nome</option>
+                        <option value="nome" <?php if($filtro=="nome" ): ?> selected <?php endif; ?>>Nome</option>
                         <option value="cnpj" <?php if($filtro=="cnpj" ): ?> selected <?php endif; ?>>Cnpj</option>
                     </select>
                     <input type="text" class="form-control search-valor" name="valor" value="<?php echo e($valor); ?>">
@@ -47,16 +47,16 @@
             <thead>
                 <tr>
                     <?php if(is_null($param)): ?>
-                    <th><a href="<?php echo e(Request::fullUrl()); ?><?php echo e($signal); ?>order=name" class="white-text templatemo-sort-by">Nome
+                    <th><a href="<?php echo e(Request::fullUrl()); ?><?php echo e($signal); ?>order=nome" class="white-text templatemo-sort-by">Nome
                             <span class="fa fa-caret-<?php echo e($caret); ?>"></span></a></th>
                     <?php else: ?>
                     <?php if(strpos($param,'desc') !== false): ?>
-                    <th><a href="<?php echo e(str_replace(str_replace(' ','%20',$param),'name',Request::fullUrl())); ?>"
-                            class="white-text templatemo-sort-by <?php if(strpos($param,'name') !== false): ?>active <?php endif; ?>">Nome
+                    <th><a href="<?php echo e(str_replace(str_replace(' ','%20',$param),'nome',Request::fullUrl())); ?>"
+                            class="white-text templatemo-sort-by <?php if(strpos($param,'nome') !== false): ?>active <?php endif; ?>">Nome
                             <span class="fa fa-caret-<?php echo e($caret); ?>"></span></a></th>
                     <?php else: ?>
-                    <th><a href="<?php echo e(str_replace('order='.$param,'order=name',Request::fullUrl())); ?> <?php if($param == 'name'): ?>desc <?php endif; ?>"
-                            class="white-text templatemo-sort-by <?php if(strpos($param,'name') !== false): ?>active <?php endif; ?>">Nome
+                    <th><a href="<?php echo e(str_replace('order='.$param,'order=nome',Request::fullUrl())); ?> <?php if($param == 'nome'): ?>desc <?php endif; ?>"
+                            class="white-text templatemo-sort-by <?php if(strpos($param,'nome') !== false): ?>active <?php endif; ?>">Nome
                             <span class="fa fa-caret-<?php echo e($caret); ?>"></span></a></th>
                     <?php endif; ?>
                     <?php endif; ?>
@@ -83,7 +83,7 @@
             <tbody>
                 <?php foreach($fornecedors as $fornecedor): ?>
                 <tr>
-                    <td><?php echo e($fornecedor->name); ?></td>
+                    <td><?php echo e($fornecedor->nome); ?></td>
                     <td><?php echo e($fornecedor->cnpj); ?></td>
                     <td class="small" align="center" alt="Editar Fornecedor">
                         <a href="<?php echo e(route('fornecedors.edit', $fornecedor->id)); ?>">

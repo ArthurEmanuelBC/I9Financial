@@ -37,11 +37,16 @@ class Empresa extends Model
     {
         $ano = date('Y');
         $margem = [];
+        $meses = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+        $index = 0;
 
-        foreach (['01','02','03','04','05','06','07','08','09','10','11','12'] as $mes) {
+        foreach ($meses as $mes) {
             $data_inicio = "$ano-$mes-01";
             $data_fim = new DateTime($data_inicio);
             $margem["$mes/$ano"] = $this->margem;
+
+            if($index > 0)
+                $margem["$mes/$ano"] += $margem[$meses[$index-1]."/$ano"];
 
             foreach(Contum::where('empresa_id', $this->id)->whereBetween('date',[$data_inicio, $data_fim->format('Y-m-t')])->get() as $contum) {
                 if($contum->tipo)
@@ -49,6 +54,7 @@ class Empresa extends Model
                 else
                     $margem["$mes/$ano"] -= $contum->valor;
             }
+            $index++;
         }
 
         return $margem;

@@ -46,16 +46,16 @@
         </div>
       </div>
       <div class="row">
-        {!! Html::decode(Form::label('permissao', 'Permiss?o <span class="obrigatorio">*</span>', ['class' =>
+        {!! Html::decode(Form::label('permissao', 'Permiss&atilde;o <span class="obrigatorio">*</span>', ['class' =>
         'control-label'])) !!}
         <div class="col-md-12 col-sm-12 form-group">
           <input type="radio" name="permissao" id="gerencial" value="Gerencial" @if($user->permissao ==
           'Gerencial') checked @endif>
           <label for="gerencial" class="font-weight-400"><span></span>Gerencial</label>
           <br>
-          <input type="radio" name="permissao" id="tecnico" value="T?cnico" @if($user->permissao == 'T?cnico')
+          <input type="radio" name="permissao" id="tecnico" value="T&eacute;cnico" @if(strpos($user->permissao,'cnico'))
           checked @endif>
-          <label for="tecnico" class="font-weight-400"><span></span>T?cnico</label>
+          <label for="tecnico" class="font-weight-400"><span></span>T&eacute;cnico</label>
         </div>
       </div>
     </div>
@@ -93,8 +93,8 @@
           'true']) !!}
         </div>
         <div class="col-md-4 col-sm-12 row-password form-group">
-          {!! Html::decode(Form::label('password_confirmation', 'Repetir Nova Antiga <span
-            class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
+          {!! Html::decode(Form::label('password_confirmation', 'Confirmar Senha <span class="obrigatorio">*</span>',
+          ['class' => 'control-label'])) !!}
           {!! Form::password('password_confirmation', ['required' => 'true', 'class' => 'form-control',
           'disabled' => 'true']) !!}
         </div>

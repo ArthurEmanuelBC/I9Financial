@@ -38,8 +38,13 @@
                 true]) !!}
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
+                @if($tipo == '0')
                 {!! Html::decode(Form::label('paciente_id', 'Nome <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
+                @else
+                {!! Html::decode(Form::label('paciente_id', 'Fornecedor <span class="obrigatorio">*</span>', ['class' =>
+                'control-label'])) !!}
+                @endif
                 {!! Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
                 'form-control select2-search paciente_id', 'required' => 'true']) !!}
             </div>
@@ -153,18 +158,18 @@
             </div>
             <div class="modal-body">
                 <div class="row form-group">
-                    <div class="col-md-4">
-                        <label for="modal_margem">Margem Atual</label>
+                    <div class="col-md-3">
+                        <label for="modal_margem">Emitir recibo até:</label>
                         <input id="modal_margem" name="modal_margem" class="form-control" type="text" disabled>
                     </div>
-                    <div class="col-md-4">
-                        <label for="modal_valor">Valor da margem para checagem</label>
+                    <div class="col-md-5">
+                        <label for="modal_valor">Valor maior que o disponível, checar permissão aqui:</label>
                         <input id="modal_valor" name="modal_valor" class="form-control" type="text"
                             onKeyDown="Formata(this,20,event,2)">
                     </div>
                     <div class="col-md-4">
                         <button onclick="verifica_margem()" class="btn btn-success" style="margin-top: 23px"><i
-                                class="fa fa-check"></i> Checar Margem</button>
+                                class="fa fa-check"></i> Checar emissão de recibo</button>
                     </div>
                 </div>
             </div>
@@ -189,7 +194,7 @@
         $("#tipo_conta").val("");
 
         if($(this).val() == "Livro Caixa")
-            opcoes = ['Emissão de Recibo','Aluguel','Salário','Convênio','Pró-labore','Outros'];
+            opcoes = ['Pessoal','Material Médico','Material de Custeio','Marketing/divulgação','Outros'];
         else
             opcoes = ['INSS','IRPF','Despesas Dedutíveis','Saúde'];
 
@@ -251,10 +256,10 @@
     }
 
     async function verifica_margem(){
-        if(tem_margem('modal_valor'))
-            alert('Há margem disponível!');
+        if(await tem_margem('modal_valor'))
+            alert('Emitir recibo!');
         else
-            alert('Não há margem suficiente!');
+            alert('Não emitir recibo!');
     }
 
     $("#valor").keyup(async function(){
