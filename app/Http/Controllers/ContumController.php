@@ -12,7 +12,6 @@ use Jenssegers\Date\Date;
 use Illuminate\Http\Request;
 use Auth;
 use Redirect;
-use DB;
 
 class ContumController extends Controller {
 
@@ -23,9 +22,6 @@ class ContumController extends Controller {
 	*/
 	public function index(Request $request)
 	{
-		DB::table('contas')->truncate();
-
-
 		// Ordenação
 		(strpos($request->fullUrl(),'order=')) ? $param = $request->order : $param = null;
 		(strpos($request->fullUrl(),'?')) ? $signal = '&' : $signal = '?';
