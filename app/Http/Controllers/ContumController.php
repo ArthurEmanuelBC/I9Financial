@@ -319,5 +319,47 @@ class ContumController extends Controller {
 							return \PDF::loadView('contas.recibo_pdf', ["conta" => $conta, 'titulo' => 'Recibo'])->inline();
 						}
 
+						/**
+						* Relatório de parcelas por mês.
+						*
+						* @param Request $request
+						* @return Response
+						*/
+						public function controle(Request $request)
+						{
+							$medicos = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
+							$tipos = [NULL => 'Todos', 0 => 'Receita', 1 => 'Despesa'];
+							$meses = ['01' => 'Janeiro','02' => 'Fevereiro','03' => 'Março','04' => 'Abril','05' => 'Maio','06' => 'Junho','07' => 'Julho','08' => 'Agosto','09' => 'Setembro','10' => 'Outubro','11' => 'Novembro','12' => 'Dezembro'];
+
+							isset($request->ano) ? $ano = $request->ano : $ano = date('Y');
+							if($request->mes) {
+								$data1 = Date::parse("$ano-$request->mes-01");
+								$data2 = Date::parse("$ano-$request->mes-01")->endOfMonth();
+							} else {
+								$data1 = Date::parse("$ano-01-01");
+								$data2 = Date::parse("$ano-12-31");
+							}
+
+							$parcelas = Contum::whereRaw('1=2');
+							$medico = NULL;
+							if(isset($request->medico_id)) {
+								$medico = Empresa::findOrFail($request->medico_id);
+								$parcelas = Contum::whereBetween('date',[$data1,$data2])->where('empresa_id',$request->medico_id);
+
+								if(isset($request->tipo) && isset($parcelas))
+									$parcelas = $parcelas->where('tipo',$request->tipo);
+								// dd($parcelas->get());
+							}
+
+							if(isset($request->pdf)){
+								$titulo = "Relatório de Controle de Receitas/Despesas";
+								$request->tipo == '1' ? $tipo = 'Despesa' : $tipo = 'Receita';
+								$cabecalho = ["Período" => $data1->format('d/m/Y')." à ".$data2->format('d/m/Y'), "Tipo" => $tipo, "Médico" => $medico->nome, "Margem Atual" => "R$ ".number_format($medico->margem_atual(),2,',','.')];
+								return \PDF::loadView('contas.controle_pdf', ["parcelas" => $parcelas->get(), 'meses' => $meses, "ano" => $ano, 'mes' => $request->mes, 'medicos' => $medicos, 'medico' => $medico, 'tipos' => $tipos, 'tipo' => $request->tipo, 'titulo' => $titulo, 'parametros' => $cabecalho])->inline();
+							} else {
+								return view('contas.controle', ["parcelas" => $parcelas->paginate(30), 'meses' => $meses, "ano" => $ano, 'mes' => $request->mes, 'medicos' => $medicos, 'medico' => $medico, 'tipos' => $tipos, 'tipo' => $request->tipo]);
+							}
+						}
+
 }
 

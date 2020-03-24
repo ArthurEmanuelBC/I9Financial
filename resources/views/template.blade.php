@@ -69,6 +69,10 @@
 								class="fa fa-mail-forward fa-fw"></i>Receita</a></li>
 					<li><a href="/contas?tipo=1" class="@if(Request::is('contas*') && @$tipo == '1') active @endif"><i
 								class="fa fa-mail-reply fa-fw"></i>Despesa</a></li>
+					@if(Auth::user()->permissao == 'Gerencial')
+					<li><a href="/parcelas_controle" class="@if(Request::is('parcelas_controle*')) active @endif"><i
+								class="fa fa-exchange fa-fw"></i>Controle</a></li>
+					@endif
 					<li><a href="javascript:;" data-toggle="modal" data-target="#confirmModal"><i
 								class="fa fa-eject fa-fw"></i>Sair</a></li>
 				</ul>
