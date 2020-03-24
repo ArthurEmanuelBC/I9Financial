@@ -22,6 +22,7 @@ class ContumController extends Controller {
 	*/
 	public function index(Request $request)
 	{
+		Contum::query()->truncate();
 		// Ordenação
 		(strpos($request->fullUrl(),'order=')) ? $param = $request->order : $param = null;
 		(strpos($request->fullUrl(),'?')) ? $signal = '&' : $signal = '?';
