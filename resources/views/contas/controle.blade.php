@@ -22,7 +22,7 @@
       <div class="input-group">
         <span class="input-group-addon">Tipo: </span>
         {!! Form::select("tipo", $tipos, $tipo, ['id' => 'tipo', 'class' =>
-        'form-control', 'required' => 'true']) !!}
+        'form-control']) !!}
       </div>
     </div>
   </div>

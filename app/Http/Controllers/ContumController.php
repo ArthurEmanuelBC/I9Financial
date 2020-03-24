@@ -342,16 +342,15 @@ class ContumController extends Controller {
 
 							$parcelas = Contum::whereRaw('1=2');
 							$medico = NULL;
-							if(isset($request->medico_id)) {
+							if(!blank($request->medico_id)) {
 								$medico = Empresa::findOrFail($request->medico_id);
 								$parcelas = Contum::whereBetween('date',[$data1,$data2])->where('empresa_id',$request->medico_id);
 
-								if(isset($request->tipo) && isset($parcelas))
+								if(!blank($request->tipo) && !blank($parcelas))
 									$parcelas = $parcelas->where('tipo',$request->tipo);
-								// dd($parcelas->get());
 							}
 
-							if(isset($request->pdf)){
+							if(!blank($request->pdf)){
 								$titulo = "Relatório de Controle de Receitas/Despesas";
 								$request->tipo == '1' ? $tipo = 'Despesa' : $tipo = 'Receita';
 								$cabecalho = ["Período" => $data1->format('d/m/Y')." à ".$data2->format('d/m/Y'), "Tipo" => $tipo, "Médico" => $medico->nome, "Margem Atual" => "R$ ".number_format($medico->margem_atual(),2,',','.')];
