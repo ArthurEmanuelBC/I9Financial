@@ -108,6 +108,7 @@ class ContumController extends Controller {
 				$contum = new Contum();
 				$contum->date = Date::today();
 				$medicos = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
+				Auth::user()->permissao == 'Gerencial' ? $data_disabled = false : $data_disabled = true;
 
 				if($request->tipo == '0')
 					$nomes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
@@ -125,7 +126,7 @@ class ContumController extends Controller {
 				else
 					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
 
-				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
+				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled]);
 			}
 
 			/**
@@ -136,9 +137,11 @@ class ContumController extends Controller {
 			*/
 			public function store(Request $request)
 			{
-				$medico = Empresa::findOrFail($request->empresa_id);
-				if($medico->margem_atual() < floatval(str_replace(",", ".", str_replace(".", "", $request->valor))))
-					return Redirect::back()->withErrors(['Não há margem suficiente!']);
+				if($request->tipo == '0') {
+					$medico = Empresa::findOrFail($request->empresa_id);
+					if($medico->margem_atual() < floatval(str_replace(",", ".", str_replace(".", "", $request->valor))))
+						return Redirect::back()->withErrors(['Não há margem suficiente!']);
+				}
 
 				$contum = new Contum();
 				$contum->date = Date::parse($request->date);
@@ -169,6 +172,7 @@ class ContumController extends Controller {
 			{
 				$contum = Contum::findOrFail($id);
 				$medicos = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
+				Auth::user()->permissao == 'Gerencial' ? $data_disabled = false : $data_disabled = true;
 
 				if($request->tipo == '0')
 					$nomes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
@@ -183,7 +187,7 @@ class ContumController extends Controller {
 				else
 					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
 
-				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes]);
+				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled]);
 			}
 
 			/**

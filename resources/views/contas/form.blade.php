@@ -34,8 +34,8 @@
             <div class="col-md-4 col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('date', 'Data de Lançamento <span class="obrigatorio">*</span>', ['class'
                 => 'control-label'])) !!}
-                {!! Form::date('date', $contum->date, ['class' => 'form-control date','required' => 'true','readonly' =>
-                true]) !!}
+                {!! Form::date('date', $contum->date, ['class' => 'form-control date','required' => true,'readonly' =>
+                $data_disabled]) !!}
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 @if($tipo == '0')
@@ -118,8 +118,8 @@
     </div>
 
     <div class="form-group text-right">
-        <button type="submit" class="templatemo-blue-button" disabled style="background-color: gray"><i
-                class="fa fa-plus"></i> Salvar</button>
+        <button type="submit" class="templatemo-blue-button" @if(!$tipo) disabled style="background-color: gray"
+            @endif><i class="fa fa-plus"></i> Salvar</button>
         <a class="templatemo-white-button" href="{{ route('contas.index', ['tipo' => $tipo]) }}"><i
                 class="fa fa-arrow-left"></i> Voltar</a>
     </div>
@@ -262,6 +262,7 @@
             alert('Não emitir recibo!');
     }
 
+    @if(!$tipo)
     $("#valor").keyup(async function(){
         if(await tem_margem('valor')){
             $('.templatemo-blue-button').attr('disabled', false);
@@ -271,6 +272,7 @@
             $('.templatemo-blue-button').css('background-color', 'gray');
         }
     });
+    @endif
 
 </script>
 
