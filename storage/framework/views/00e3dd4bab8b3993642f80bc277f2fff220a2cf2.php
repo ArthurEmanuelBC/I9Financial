@@ -340,7 +340,7 @@
     <p class="text_pagination pull-left">Exibindo do <strong><?php echo e($contas->firstItem()); ?></strong> ao
         <strong><?php echo e($contas->lastItem()); ?></strong> de um total de <strong><?php echo e($contas->total()); ?></strong> registros</p>
     <?php echo $contas->appends(['data1' => $parametros['data1'], 'data2' => $parametros['data2'], 'medico_id' =>
-    $parametros['medico']->id, 'paciente' => $parametros['paciente'], 'tipo' => $parametros['tipo'], 'filtro' =>
+    $parametros['medico']->id, 'paciente' => @$parametros['paciente'], 'tipo' => $parametros['tipo'], 'filtro' =>
     $parametros['filtro'], 'valor' => $parametros['valor'], 'filtro_avancado' => $parametros['filtro_avancado'],
     'tipo_avancado' => $parametros['tipo_avancado'], 'valor_avancado' => $parametros['valor_avancado']])->render(); ?>
 

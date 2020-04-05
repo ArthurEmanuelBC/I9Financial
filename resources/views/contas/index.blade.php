@@ -310,10 +310,10 @@
 <div class="pagination-wrap">
     <p class="text_pagination pull-left">Exibindo do <strong>{{$contas->firstItem()}}</strong> ao
         <strong>{{$contas->lastItem()}}</strong> de um total de <strong>{{$contas->total()}}</strong> registros</p>
-    {!! $contas->appends(['data1' => $parametros['data1'], 'data2' => $parametros['data2'], 'medico_id' =>
-    $parametros['medico']->id, 'paciente' => $parametros['paciente'], 'tipo' => $parametros['tipo'], 'filtro' =>
-    $parametros['filtro'], 'valor' => $parametros['valor'], 'filtro_avancado' => $parametros['filtro_avancado'],
-    'tipo_avancado' => $parametros['tipo_avancado'], 'valor_avancado' => $parametros['valor_avancado']])->render() !!}
+    {!! $contas->appends(['data1' => @$parametros['data1'], 'data2' => @$parametros['data2'], 'medico_id' =>
+    @$parametros['medico']->id, 'paciente' => @$parametros['paciente'], 'tipo' => @$parametros['tipo'], 'filtro' =>
+    @$parametros['filtro'], 'valor' => @$parametros['valor'], 'filtro_avancado' => @$parametros['filtro_avancado'],
+    'tipo_avancado' => @$parametros['tipo_avancado'], 'valor_avancado' => @$parametros['valor_avancado']])->render() !!}
 </div>
 @else
 <div class="templatemo-content-widget no-padding">
