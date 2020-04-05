@@ -16,8 +16,46 @@
     <h2 class="margin-bottom-10">@if($tipo) Despesa @else Receita @endif</h2>
     {!! Form::open(['route' => 'contas.index', 'method' => 'GET']) !!}
     {!! Form::hidden("tipo", $tipo) !!}
+    @if(Auth::user()->permissao == 'Técnico')
     <div class="row form-group">
-        @if(Auth::user()->permissao == 'Gerencial')
+        <div class="col-md-8 col-sm-12 col-xs-12 data-search">
+            <div class="input-group">
+                <span class="input-group-addon">Data: </span>
+                {!! Form::date("data1", @$parametros['data1'], ['class' => 'form-control']) !!}
+                {!! Form::date("data2", @$parametros['data2'], ['class' => 'form-control']) !!}
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon">Médico: </span>
+                {!! Form::select("medico_id", $parametros["medicos"], NULL, ['id' => 'medico_id', 'class' =>
+                'form-control']) !!}
+            </div>
+            <p id="doctor-warning">Selecione um médico</p>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-md-8 col-sm-12 col-xs-12">
+            <div class="input-group">
+                <span class="input-group-addon">@if($tipo == '0') Paciente: @else Fornecedor: @endif</span>
+                {!! Form::text("paciente", NULL, ['id' => 'paciente_id', 'class' => 'form-control']) !!}
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-info"><i class="fa fa-check"></i></button>
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12 filtro-search">
+            <div class="pull-right">
+                <div class="pull-right"><a href="{{ route('contas.create', ['tipo' => $tipo]) }}" type="button"
+                        class="btn btn-success"><i class="fa fa-plus"></i> Nova @if($tipo == '0') Receita @else Despesa
+                        @endif</a></div>
+            </div>
+        </div>
+    </div>
+    @else
+    <div class="row form-group">
         <div class="col-md-8 col-sm-12 col-xs-12 data-search">
             <div class="input-group">
                 <span class="input-group-addon">Data: </span>
@@ -41,8 +79,7 @@
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
                 <span class="input-group-addon">Fornecedor: </span>
-                {!! Form::select("paciente_id", $parametros["fornecedores"], NULL, ['id' => 'paciente_id', 'class' =>
-                'form-control']) !!}
+                {!! Form::text("paciente", NULL, ['id' => 'paciente_id', 'class' => 'form-control']) !!}
             </div>
         </div>
     </div>
@@ -61,8 +98,7 @@
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
                 <span class="input-group-addon">Paciente: </span>
-                {!! Form::select("paciente_id", $parametros["pacientes"], NULL, ['id' => 'paciente_id', 'class' =>
-                'form-control']) !!}
+                {!! Form::text("paciente", NULL, ['id' => 'paciente_id', 'class' => 'form-control']) !!}
             </div>
         </div>
     </div>
@@ -142,8 +178,6 @@
                 </div>
             </div>
         </div>
-        @endif
-
         <div class="col-md col-sm-12 col-xs-12 filtro-search">
             <div class="pull-right">
                 <div class="pull-right"><a href="{{ route('contas.create', ['tipo' => $tipo]) }}" type="button"
@@ -151,11 +185,11 @@
                         @endif</a></div>
             </div>
         </div>
+        @endif
     </div>
     {!! Form::close() !!}
 </div>
 
-@if(Auth::user()->permissao == 'Gerencial')
 <div class="row form-group" style="margin-left:-5px">
     <div class="col-md-2 col-sm-6 col-xs-6">
         <div id="group-dropdown" class="dropdown">
@@ -260,11 +294,13 @@
                         <a href="{{ route('contas.edit', ['id' => $contum->id, 'tipo' => $tipo]) }}"><i
                                 class="fa fa-edit"></i></a>
                     </td>
+                    @if(Auth::user()->permissao == 'Gerencial')
                     <td class="table_actions" align="center" title="Deletar Contum">
                         <a onclick="confirm_delete('{{ route('contas.destroy', ['id' => $contum->id, 'tipo' => $tipo]) }}')"
                             href="javascript:;" data-toggle="modal" data-target="#confirm_delete"><i
                                 class="fa fa-remove"></i></a>
                     </td>
+                    @endif
                 </tr>
                 @endforeach
             </tbody>
@@ -274,7 +310,10 @@
 <div class="pagination-wrap">
     <p class="text_pagination pull-left">Exibindo do <strong>{{$contas->firstItem()}}</strong> ao
         <strong>{{$contas->lastItem()}}</strong> de um total de <strong>{{$contas->total()}}</strong> registros</p>
-    {!! $contas->render() !!}
+    {!! $contas->appends(['data1' => $parametros['data1'], 'data2' => $parametros['data2'], 'medico_id' =>
+    $parametros['medico']->id, 'paciente' => $parametros['paciente'], 'tipo' => $parametros['tipo'], 'filtro' =>
+    $parametros['filtro'], 'valor' => $parametros['valor'], 'filtro_avancado' => $parametros['filtro_avancado'],
+    'tipo_avancado' => $parametros['tipo_avancado'], 'valor_avancado' => $parametros['valor_avancado']])->render() !!}
 </div>
 @else
 <div class="templatemo-content-widget no-padding">
@@ -287,7 +326,6 @@
         </div>
     </div>
 </div>
-@endif
 @endif
 
 <style type="text/css">

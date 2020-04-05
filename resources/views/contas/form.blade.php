@@ -39,18 +39,25 @@
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 @if($tipo == '0')
-                {!! Html::decode(Form::label('paciente_id', 'Nome <span class="obrigatorio">*</span>', ['class' =>
-                'control-label'])) !!}
+                {!! Html::decode(Form::label('paciente_id', 'Paciente <span class="obrigatorio">*</span>', ['class' =>
+                'control-label', 'disabled' => $disabled])) !!}
                 @else
                 {!! Html::decode(Form::label('paciente_id', 'Fornecedor <span class="obrigatorio">*</span>', ['class' =>
-                'control-label'])) !!}
+                'control-label', 'disabled' => $disabled])) !!}
                 @endif
+
+                @if($disabled)
+                {!! Form::text('nome_id', @$contum->paciente_ou_fornecedor()->nome, ['class' => 'form-control',
+                'disabled' => true]) !!}
+                @else
                 {!! Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
-                'form-control select2-search paciente_id', 'required' => 'true']) !!}
+                'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]) !!}
+                @endif
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 {!! Form::label('num_doc', 'Núm Documento', ['class' => 'control-label']) !!}
-                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'readonly' => true]) !!}
+                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'readonly' => true,
+                'disabled' => $disabled]) !!}
             </div>
         </div>
 
@@ -67,12 +74,12 @@
                 'control-label'])) !!}
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao != "Imposto
-                    de Renda") checked @endif>
+                    de Renda") checked @endif disabled="{{$disabled}}">
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="imposto_de_renda" value="Imposto de Renda" @if($contum->opcao
-                    == "Imposto de Renda") checked @endif>
+                    == "Imposto de Renda") checked @endif disabled="{{$disabled}}">
                     <label for="imposto_de_renda" class="font-weight-400"><span></span>Imposto de Renda</label>
                 </div>
             </div>
@@ -81,7 +88,7 @@
                 {!! Html::decode(Form::label('tipo_conta', 'Tipo <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
                 {!! Form::select("tipo_conta", $opcoes, $contum->tipo_conta, ['id' => 'tipo_conta', 'class' =>
-                'form-control select2-search paciente_id', 'required' => 'true']) !!}
+                'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]) !!}
             </div>
             @if($method == 'post')
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
@@ -89,7 +96,7 @@
                 'control-label'])) !!}
                 <div class="input-group">
                     {!! Form::select("empresa_id", $medicos, $contum->empresa_id, ['id' => 'empresa', 'class' =>
-                    'form-control select2-search', 'required' => 'true']) !!}
+                    'form-control select2-search', 'required' => true, 'disabled' => $disabled]) !!}
                     @if($tipo == '0')
                     <span id="btn-check" class="input-group-btn hide">
                         <a href="javascript:;" class="btn btn-success" data-toggle="modal"
@@ -103,26 +110,32 @@
                 {!! Html::decode(Form::label('valor', 'Valor Total <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
                 @if($method == 'post') {!! Form::text('valor', NULL, ['class' => 'form-control valor','onKeyDown' =>
-                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor']) !!} @else {!! Form::text('valor',
+                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor', 'disabled' => $disabled]) !!} @else
+                {!! Form::text('valor',
                 number_format($contum->valor,2,',','.'), ['class' => 'form-control', 'onKeyDown' =>
-                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor']) !!} @endif
+                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor', 'disabled' => $disabled]) !!} @endif
             </div>
         </div>
         <div class="row form-group">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 {!! Form::label('descricao', 'Descrição', ['class' => 'control-label']) !!}
-                {!! Form::textarea('descricao', $contum->descricao, ['class' => 'form-control descricao','rows' => '3'])
+                {!! Form::textarea('descricao', $contum->descricao, ['class' => 'form-control descricao','rows' => '3',
+                'disabled' => $disabled])
                 !!}
             </div>
         </div>
     </div>
 
     <div class="form-group text-right">
+        @if($disabled)
+        <a class="btn btn-success" href="/contas/{{$contum->id}}/recibo" target="_blank"><i class="fa fa-print"></i>
+            Imprimir Recibo</a>
+        @else
         <button type="submit" class="templatemo-blue-button" @if(!$tipo) disabled style="background-color: gray"
             @endif><i class="fa fa-plus"></i> Salvar</button>
+        @endif
         <a class="templatemo-white-button" href="{{ route('contas.index', ['tipo' => $tipo]) }}"><i
-                class="fa fa-arrow-left"></i> Voltar</a>
-    </div>
+                class="fa fa-arrow-left"></i> Voltar para listagem</a></div>
     {!! Form::close() !!}
 
 </div>

@@ -33,7 +33,19 @@ class ContumController extends Controller {
 		if(!isset($request->data1)) $request->data1 = date('Y-m-d');
 		if(!isset($request->data2)) $request->data2 = date('Y-m-d');
 		$where .= " and date between '$request->data1' and '$request->data2'";
-		if(!blank($request->paciente_id) && $request->paciente_id != 'Todos') $where .= " and paciente_id = $request->paciente_id";
+
+		if($request->tipo == '0'){
+			$paciente_ids = Paciente::where('nome', 'LIKE', "%$request->paciente%")->pluck('id')->toArray();
+			if(blank($paciente_ids))
+				$paciente_ids = [0];
+		} else {
+			$fornecedor_ids = Fornecedor::where('nome', 'LIKE', "%$request->paciente%")->pluck('id')->toArray();
+			if(blank($fornecedor_ids))
+				$fornecedor_ids = [0];
+		}
+
+		if(isset($paciente_ids)) $where .= " and paciente_id IN (".join(',', $paciente_ids).")";
+		if(isset($fornecedor_ids)) $where .= " and fornecedor_id IN (".join(',', $fornecedor_ids).")";
 		if(!blank($request->opcao) && $request->opcao != 'Todos') $where .= " and opcao = '$request->opcao'";
 		if(!blank($request->tipo_conta) && $request->tipo_conta != 'Todos') $where .= " and tipo_conta = '$request->tipo_conta'";
 
@@ -67,8 +79,8 @@ class ContumController extends Controller {
 		$parametros["tipo"] = $request->tipo;
 		$parametros["opcao"] = $request->opcao;
 		$parametros["tipo_conta"] = $request->tipo_conta;
-		if(!blank($request->paciente_id) && $request->paciente_id != 'Todos') $parametros["paciente"] = Paciente::findOrFail($request->paciente_id)->nome;
-		if(!blank($request->fornecedor_id) && $request->fornecedor_id != 'Todos') $parametros["fornecedor"] = Paciente::findOrFail($request->fornecedor_id)->nome;
+		if(!blank($request->paciente) && $request->paciente != 'Todos') $parametros["paciente"] = $request->paciente;
+		// if(!blank($request->fornecedor_id) && $request->fornecedor_id != 'Todos') $parametros["fornecedor"] = Paciente::findOrFail($request->fornecedor_id)->nome;
 		if(!blank($request->medico_id) && $request->medico_id != 'Nenhum') $parametros["medico"] = Empresa::findOrFail($request->medico_id);
 		$parametros["tipo_relatorio"] = $request->tipo_relatorio;
 		(isset($request->data1)) ? $parametros["data1"] = $request->data1 : $parametros["data1"] = Date::now();
@@ -78,10 +90,10 @@ class ContumController extends Controller {
 		$parametros["filtro_avancado"] = $request->filtro_avancado;
 		$parametros["tipo_avancado"] = $request->tipo_avancado;
 		$parametros["valor_avancado"] = $request->valor_avancado;
-		if($request->tipo == '0')
-			$parametros["pacientes"] = [NULL => "Todos"] + Paciente::lists('nome','id')->all();
-		else
-			$parametros["fornecedores"] = [NULL => "Todos"] + Fornecedor::lists('nome','id')->all();
+		// if($request->tipo == '0')
+		// 	$parametros["pacientes"] = [NULL => "Todos"] + Paciente::lists('nome','id')->all();
+		// else
+		// 	$parametros["fornecedores"] = [NULL => "Todos"] + Fornecedor::lists('nome','id')->all();
 		$parametros["medicos"] = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
 
 		if($request->tipo == '1')
@@ -94,7 +106,7 @@ class ContumController extends Controller {
 			$cabecalho = ["Data Inicial" => date_format(date_create_from_format('Y-m-d', $parametros["data1"]), 'd/m/Y'), "Data Final" => date_format(date_create_from_format('Y-m-d', $parametros["data2"]), 'd/m/Y'), "Médico" => @$parametros["medico"]->nome, "Paciente" => @$parametros["paciente"], "Opção" => $parametros["opcao"], "Tipo" => $parametros["tipo_conta"]];
 			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'parametros' => $cabecalho])->inline();
 		} else {
-			return view('contas.index', ["contas" => $contas->paginate(30), "parametros" => $parametros, "tipo" => $request->tipo]);
+			return view('contas.index', ["contas" => $contas->paginate(3), "parametros" => $parametros, "tipo" => $request->tipo]);
 			}
 		}
 
@@ -117,7 +129,7 @@ class ContumController extends Controller {
 
 				$contum->num_doc = Contum::max('num_doc');
 				if(is_null($contum->num_doc))
-					$contum->num_doc = 1501;
+					$contum->num_doc = 47000;
 				else
 					$contum->num_doc += 1;
 
@@ -126,7 +138,7 @@ class ContumController extends Controller {
 				else
 					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
 
-				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled]);
+				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled, 'disabled' => false]);
 			}
 
 			/**
@@ -159,7 +171,7 @@ class ContumController extends Controller {
 					$contum->fornecedor_id = $request->nome_id;
 				$contum->empresa_id = $request->empresa_id;
 				$contum->save();
-				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta cadastrada com sucesso!');
+				return redirect()->route('contas.edit', ['id' => $contum->id, "tipo" => $request->tipo])->with('message', 'Conta cadastrada com sucesso!');
 			}
 
 			/**
@@ -172,7 +184,6 @@ class ContumController extends Controller {
 			{
 				$contum = Contum::findOrFail($id);
 				$medicos = [NULL => "Nenhum"] + Empresa::lists('nome','id')->all();
-				Auth::user()->permissao == 'Gerencial' ? $data_disabled = false : $data_disabled = true;
 
 				if($request->tipo == '0')
 					$nomes = [NULL => "Nenhum"] + Paciente::lists('nome','id')->all();
@@ -187,7 +198,7 @@ class ContumController extends Controller {
 				else
 					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
 
-				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled]);
+				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => true, 'disabled' => true]);
 			}
 
 			/**

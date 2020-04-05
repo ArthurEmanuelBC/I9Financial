@@ -40,4 +40,21 @@
   {{number_format($conta->valor,2,',','.')}}, referente a(s) despesa(s) decorrente do atendimento do paciente
   {{$conta->paciente_ou_fornecedor()->nome}}, neste estabelecimento.
 </p>
+
+<div class="assinatura">
+  <p>João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
+  <p>{!! Html::image($conta->medico()->anexo, "Assinatura") !!}</p>
+</div>
 @endsection
+
+<style>
+  .assinatura {
+    margin-top: 50px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .assinatura img {
+    width: 200px;
+  }
+</style>

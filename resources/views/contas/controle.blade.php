@@ -111,7 +111,7 @@
 <div class="pagination-wrap">
   <p class="text_pagination pull-left">Exibindo do <strong>{{$parcelas->firstItem()}}</strong> ao
     <strong>{{$parcelas->lastItem()}}</strong> de um total de <strong>{{$parcelas->total()}}</strong> registros</p>
-  {!! $parcelas->render() !!}
+  {!! $parcelas->appends(['ano' => $ano, 'mes' => $mes, 'tipo' => $tipo, 'medico_id' => @$medico->id])->render() !!}
 </div>
 @else
 <div class="templatemo-content-widget no-padding">

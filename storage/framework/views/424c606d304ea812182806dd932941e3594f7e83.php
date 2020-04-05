@@ -23,7 +23,7 @@
       <div class="input-group">
         <span class="input-group-addon">Tipo: </span>
         <?php echo Form::select("tipo", $tipos, $tipo, ['id' => 'tipo', 'class' =>
-        'form-control', 'required' => 'true']); ?>
+        'form-control']); ?>
 
       </div>
     </div>
@@ -116,7 +116,7 @@
 <div class="pagination-wrap">
   <p class="text_pagination pull-left">Exibindo do <strong><?php echo e($parcelas->firstItem()); ?></strong> ao
     <strong><?php echo e($parcelas->lastItem()); ?></strong> de um total de <strong><?php echo e($parcelas->total()); ?></strong> registros</p>
-  <?php echo $parcelas->render(); ?>
+  <?php echo $parcelas->appends(['ano' => $ano, 'mes' => $mes, 'tipo' => $tipo, 'medico_id' => @$medico->id])->render(); ?>
 
 </div>
 <?php else: ?>

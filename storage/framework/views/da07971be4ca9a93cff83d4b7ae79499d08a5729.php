@@ -36,28 +36,36 @@
                 <?php echo Html::decode(Form::label('date', 'Data de Lançamento <span class="obrigatorio">*</span>', ['class'
                 => 'control-label'])); ?>
 
-                <?php echo Form::date('date', $contum->date, ['class' => 'form-control date','required' => 'true','readonly' =>
-                true]); ?>
+                <?php echo Form::date('date', $contum->date, ['class' => 'form-control date','required' => true,'readonly' =>
+                $data_disabled]); ?>
 
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <?php if($tipo == '0'): ?>
-                <?php echo Html::decode(Form::label('paciente_id', 'Nome <span class="obrigatorio">*</span>', ['class' =>
-                'control-label'])); ?>
+                <?php echo Html::decode(Form::label('paciente_id', 'Paciente <span class="obrigatorio">*</span>', ['class' =>
+                'control-label', 'disabled' => $disabled])); ?>
 
                 <?php else: ?>
                 <?php echo Html::decode(Form::label('paciente_id', 'Fornecedor <span class="obrigatorio">*</span>', ['class' =>
-                'control-label'])); ?>
+                'control-label', 'disabled' => $disabled])); ?>
 
                 <?php endif; ?>
-                <?php echo Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
-                'form-control select2-search paciente_id', 'required' => 'true']); ?>
 
+                <?php if($disabled): ?>
+                <?php echo Form::text('nome_id', @$contum->paciente_ou_fornecedor()->nome, ['class' => 'form-control',
+                'disabled' => true]); ?>
+
+                <?php else: ?>
+                <?php echo Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
+                'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]); ?>
+
+                <?php endif; ?>
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 <?php echo Form::label('num_doc', 'Núm Documento', ['class' => 'control-label']); ?>
 
-                <?php echo Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'readonly' => true]); ?>
+                <?php echo Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'readonly' => true,
+                'disabled' => $disabled]); ?>
 
             </div>
         </div>
@@ -76,12 +84,12 @@
 
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" <?php if($contum->opcao != "Imposto
-                    de Renda"): ?> checked <?php endif; ?>>
+                    de Renda"): ?> checked <?php endif; ?> disabled="<?php echo e($disabled); ?>">
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="imposto_de_renda" value="Imposto de Renda" <?php if($contum->opcao
-                    == "Imposto de Renda"): ?> checked <?php endif; ?>>
+                    == "Imposto de Renda"): ?> checked <?php endif; ?> disabled="<?php echo e($disabled); ?>">
                     <label for="imposto_de_renda" class="font-weight-400"><span></span>Imposto de Renda</label>
                 </div>
             </div>
@@ -91,7 +99,7 @@
                 'control-label'])); ?>
 
                 <?php echo Form::select("tipo_conta", $opcoes, $contum->tipo_conta, ['id' => 'tipo_conta', 'class' =>
-                'form-control select2-search paciente_id', 'required' => 'true']); ?>
+                'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]); ?>
 
             </div>
             <?php if($method == 'post'): ?>
@@ -101,7 +109,7 @@
 
                 <div class="input-group">
                     <?php echo Form::select("empresa_id", $medicos, $contum->empresa_id, ['id' => 'empresa', 'class' =>
-                    'form-control select2-search', 'required' => 'true']); ?>
+                    'form-control select2-search', 'required' => true, 'disabled' => $disabled]); ?>
 
                     <?php if($tipo == '0'): ?>
                     <span id="btn-check" class="input-group-btn hide">
@@ -117,27 +125,33 @@
                 'control-label'])); ?>
 
                 <?php if($method == 'post'): ?> <?php echo Form::text('valor', NULL, ['class' => 'form-control valor','onKeyDown' =>
-                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor']); ?> <?php else: ?> <?php echo Form::text('valor',
+                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor', 'disabled' => $disabled]); ?> <?php else: ?>
+                <?php echo Form::text('valor',
                 number_format($contum->valor,2,',','.'), ['class' => 'form-control', 'onKeyDown' =>
-                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor']); ?> <?php endif; ?>
+                'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor', 'disabled' => $disabled]); ?> <?php endif; ?>
             </div>
         </div>
         <div class="row form-group">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <?php echo Form::label('descricao', 'Descrição', ['class' => 'control-label']); ?>
 
-                <?php echo Form::textarea('descricao', $contum->descricao, ['class' => 'form-control descricao','rows' => '3']); ?>
+                <?php echo Form::textarea('descricao', $contum->descricao, ['class' => 'form-control descricao','rows' => '3',
+                'disabled' => $disabled]); ?>
 
             </div>
         </div>
     </div>
 
     <div class="form-group text-right">
-        <button type="submit" class="templatemo-blue-button" disabled style="background-color: gray"><i
-                class="fa fa-plus"></i> Salvar</button>
+        <?php if($disabled): ?>
+        <a class="btn btn-success" href="/contas/<?php echo e($contum->id); ?>/recibo" target="_blank"><i class="fa fa-print"></i>
+            Imprimir Recibo</a>
+        <?php else: ?>
+        <button type="submit" class="templatemo-blue-button" <?php if(!$tipo): ?> disabled style="background-color: gray"
+            <?php endif; ?>><i class="fa fa-plus"></i> Salvar</button>
+        <?php endif; ?>
         <a class="templatemo-white-button" href="<?php echo e(route('contas.index', ['tipo' => $tipo])); ?>"><i
-                class="fa fa-arrow-left"></i> Voltar</a>
-    </div>
+                class="fa fa-arrow-left"></i> Voltar para listagem</a></div>
     <?php echo Form::close(); ?>
 
 
@@ -280,6 +294,7 @@
             alert('Não emitir recibo!');
     }
 
+    <?php if(!$tipo): ?>
     $("#valor").keyup(async function(){
         if(await tem_margem('valor')){
             $('.templatemo-blue-button').attr('disabled', false);
@@ -289,6 +304,7 @@
             $('.templatemo-blue-button').css('background-color', 'gray');
         }
     });
+    <?php endif; ?>
 
 </script>
 
