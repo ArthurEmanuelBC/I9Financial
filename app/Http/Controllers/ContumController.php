@@ -106,7 +106,7 @@ class ContumController extends Controller {
 			$cabecalho = ["Data Inicial" => date_format(date_create_from_format('Y-m-d', $parametros["data1"]), 'd/m/Y'), "Data Final" => date_format(date_create_from_format('Y-m-d', $parametros["data2"]), 'd/m/Y'), "Médico" => @$parametros["medico"]->nome, "Paciente" => @$parametros["paciente"], "Opção" => $parametros["opcao"], "Tipo" => $parametros["tipo_conta"]];
 			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'parametros' => $cabecalho])->inline();
 		} else {
-			return view('contas.index', ["contas" => $contas->paginate(3), "parametros" => $parametros, "tipo" => $request->tipo]);
+			return view('contas.index', ["contas" => $contas->paginate(30), "parametros" => $parametros, "tipo" => $request->tipo]);
 			}
 		}
 
