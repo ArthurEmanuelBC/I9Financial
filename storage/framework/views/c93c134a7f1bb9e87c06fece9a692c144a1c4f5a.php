@@ -42,7 +42,7 @@
 
 <div class="assinatura">
   <p>João Pessoa, <?php echo e(@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')); ?></p>
-  <p><?php echo Html::image($conta->medico()->anexo, "Assinatura"); ?></p>
+  <p><?php echo Html::image('/storage/empresas/'.$conta->medico()->id.'/'.$conta->medico()->anexo, "Assinatura"); ?></p>
 </div>
 <?php $__env->stopSection(); ?>
 

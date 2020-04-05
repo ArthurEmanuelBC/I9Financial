@@ -154,7 +154,7 @@
                 class="fa fa-arrow-left"></i> Voltar para listagem</a></div>
     <?php echo Form::close(); ?>
 
-
+    <p><?php echo Html::image($contum->medico()->anexo, "Assinatura"); ?></p>
 </div>
 
 <!-- Modals -->

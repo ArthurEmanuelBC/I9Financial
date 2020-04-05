@@ -137,7 +137,7 @@
         <a class="templatemo-white-button" href="{{ route('contas.index', ['tipo' => $tipo]) }}"><i
                 class="fa fa-arrow-left"></i> Voltar para listagem</a></div>
     {!! Form::close() !!}
-
+    <p>{!! Html::image($contum->medico()->anexo, "Assinatura") !!}</p>
 </div>
 
 <!-- Modals -->

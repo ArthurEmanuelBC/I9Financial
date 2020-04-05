@@ -43,7 +43,7 @@
 
 <div class="assinatura">
   <p>João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
-  <p>{!! Html::image($conta->medico()->anexo, "Assinatura") !!}</p>
+  <p>{!! Html::image('/storage/empresas/'.$conta->medico()->id.'/'.$conta->medico()->anexo, "Assinatura") !!}</p>
 </div>
 @endsection
 
