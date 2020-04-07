@@ -26,18 +26,10 @@ class PacienteController extends Controller {
 				$pacientes = Paciente::orderByRaw($order)->paginate(30);
 			}
 			else{
-				switch ($request->filtro) {
-					case 'data':
-					$valor = date_format(date_create_from_format('d/m/Y', $request->valor), 'Y-m-d');
-					break;
-					case 'valor':
-					$valor = str_replace(",", ".", str_replace(".", "", $request->valor));
-					break;
-					default:
-					$valor = $request->valor;
-					break;
-				}
-				$pacientes = Paciente::where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+				if($request->filtro == 'nome')
+					$pacientes = Paciente::where('nome', 'LIKE', "%$request->valor%")->orderByRaw($order)->paginate(30);
+				else
+					$pacientes = Paciente::where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
 			}
 		}
 		else
@@ -98,10 +90,10 @@ class PacienteController extends Controller {
 	{
 		$pagador = null;
 		$paciente = Paciente::findOrFail($id);
-		
+
 		if($paciente->pagador_id)
 			$pagador = Pagador::find($paciente->pagador_id);
-		
+
 		$paciente->nome = $request->input("nome");
 		$paciente->cpf = $request->input("cpf");
 		$paciente->pagador_id = null;
@@ -109,7 +101,7 @@ class PacienteController extends Controller {
 
 		if($pagador)
 			$pagador->delete();
-		
+
 		if($request->pagador) {
 			$pagador = Pagador::create(['nome' => $request->pagador_nome, 'cpf' => $request->pagador_cpf]);
 			$paciente->update(['pagador_id' => $pagador->id]);

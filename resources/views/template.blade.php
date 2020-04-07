@@ -63,8 +63,10 @@
 								class="fa fa-users fa-fw"></i>Pacientes</a></li>
 					<li><a href="/fornecedors" class="@if(Request::is('fornecedors*')) active @endif"><i
 								class="fa fa-truck fa-fw"></i>Fornecedores</a></li>
+					@if(Auth::user()->permissao == 'Gerencial')
 					<li><a href="/empresas" class="@if(Request::is('empresas*')) active @endif"><i
 								class="fa fa-briefcase fa-fw"></i>Médicos</a></li>
+					@endif
 					<li><a href="/contas?tipo=0" class="@if(Request::is('contas*') && @$tipo == '0') active @endif"><i
 								class="fa fa-mail-forward fa-fw"></i>Receita</a></li>
 					<li><a href="/contas?tipo=1" class="@if(Request::is('contas*') && @$tipo == '1') active @endif"><i
