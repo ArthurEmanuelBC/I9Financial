@@ -27,7 +27,7 @@ class PacienteController extends Controller {
 			}
 			else{
 				if($request->filtro == 'nome')
-					$pacientes = Paciente::where('nome', 'LIKE', "%$request->valor%")->orderByRaw($order)->paginate(30);
+					$pacientes = Paciente::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
 				else
 					$pacientes = Paciente::where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
 			}
