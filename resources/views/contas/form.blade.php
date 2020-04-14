@@ -128,8 +128,10 @@
 
     <div class="form-group text-right">
         @if($disabled)
+        @if(!$tipo)
         <a class="btn btn-success" href="/contas/{{$contum->id}}/recibo" target="_blank"><i class="fa fa-print"></i>
             Imprimir Recibo</a>
+        @endif
         @else
         <button type="submit" class="templatemo-blue-button" @if(!$tipo) disabled style="background-color: gray"
             @endif><i class="fa fa-plus"></i> Salvar</button>
