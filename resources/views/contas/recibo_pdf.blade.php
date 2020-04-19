@@ -59,6 +59,6 @@
 
 <style>
   .assinatura {
-    width: 200px;
+    max-width: 180px;
   }
 </style>
