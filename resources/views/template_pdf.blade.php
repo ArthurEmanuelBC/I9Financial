@@ -74,17 +74,8 @@
         }
 
         #footer {
-            color: #DDD;
-            font-weight: bold;
-            font-style: italic;
-            text-align: right;
-            font-size: 12px;
-            border-top: 1px solid #DDD;
-            margin-top: 30px;
-        }
-
-        #footer {
-            float: static(bottom)
+            position: absolute;
+            bottom: 0
         }
 
         .text-right {

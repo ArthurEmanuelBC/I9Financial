@@ -40,21 +40,25 @@
   {{number_format($conta->valor,2,',','.')}}, referente a(s) despesa(s) decorrente do atendimento do paciente
   {{$conta->paciente_ou_fornecedor()->nome}}, neste estabelecimento.
 </p>
-
-<div class="assinatura">
-  <p>João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
-  <p>{!! Html::image('/storage/empresas/'.$conta->medico()->id.'/'.$conta->medico()->anexo, "Assinatura") !!}</p>
+<div id="footer">
+  <p>Atendido pelo médico: {{$conta->medico()->nome}}, CRM{{$conta->medico()->crm}}, pelo qual dou plena e total
+    quitação.</p>
+  <div style="text-align: center;">
+    <div style="float: left; width: 50%;">
+      <p>João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
+      <p>Com conhecimento do paciente</p>
+    </div>
+    <div style="float: left; width: 50%;">
+      <p>{!! Html::image('/storage/empresas/'.$conta->medico()->id.'/'.$conta->medico()->anexo, "Assinatura", ['class'
+        => 'assinaturas']) !!}</p>
+      <p>Assinatura</p>
+    </div>
+  </div>
 </div>
 @endsection
 
 <style>
   .assinatura {
-    margin-top: 50px;
-    text-align: center;
-    justify-content: center;
-  }
-
-  .assinatura img {
     width: 200px;
   }
 </style>
