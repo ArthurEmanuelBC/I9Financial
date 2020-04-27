@@ -35,11 +35,11 @@ class ContumController extends Controller {
 		$where .= " and date between '$request->data1' and '$request->data2'";
 
 		if($request->tipo == '0'){
-			$paciente_ids = Paciente::where('nome', 'LIKE', "%$request->paciente%")->pluck('id')->toArray();
+			$paciente_ids = Paciente::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%'")->pluck('id')->toArray();
 			if(blank($paciente_ids))
 				$paciente_ids = [0];
 		} else {
-			$fornecedor_ids = Fornecedor::where('nome', 'LIKE', "%$request->paciente%")->pluck('id')->toArray();
+			$fornecedor_ids = Fornecedor::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%'")->pluck('id')->toArray();
 			if(blank($fornecedor_ids))
 				$fornecedor_ids = [0];
 		}
@@ -361,7 +361,7 @@ class ContumController extends Controller {
 								$medico = Empresa::findOrFail($request->medico_id);
 								$parcelas = Contum::whereBetween('date',[$data1,$data2])->where('empresa_id',$request->medico_id);
 
-								if(!blank($request->tipo) && !blank($parcelas))
+								if(isset($request->tipo) && $request->tipo != '' && !blank($parcelas))
 									$parcelas = $parcelas->where('tipo',$request->tipo);
 							}
 

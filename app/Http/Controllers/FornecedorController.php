@@ -36,7 +36,10 @@ class FornecedorController extends Controller {
 					$valor = $request->valor;
 					break;
 				}
-				$fornecedors = Fornecedor::where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+				if($request->filtro == 'nome')
+					$fornecedors = Fornecedor::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
+				else
+					$fornecedors = Fornecedor::where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
 			}
 		}
 		else
