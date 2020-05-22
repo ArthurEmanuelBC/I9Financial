@@ -46,4 +46,14 @@ class Contum extends Model
         return $this->belongsTo('App\Empresa','empresa_id')->first();
     }
 
+    /**
+    * Obtém o Tipo da Conta.
+    *
+    * @return Tipo
+    */
+    public function tipo()
+    {
+        return $this->belongsTo('App\Tipo','tipo_id')->first();
+    }
+
 }

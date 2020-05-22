@@ -8,10 +8,12 @@ use App\Empresa;
 use App\Parcela;
 use App\Paciente;
 use App\Fornecedor;
+use App\Tipo;
 use Jenssegers\Date\Date;
 use Illuminate\Http\Request;
 use Auth;
 use Redirect;
+use Storage;
 
 class ContumController extends Controller {
 
@@ -47,7 +49,7 @@ class ContumController extends Controller {
 		if(isset($paciente_ids)) $where .= " and paciente_id IN (".join(',', $paciente_ids).")";
 		if(isset($fornecedor_ids)) $where .= " and fornecedor_id IN (".join(',', $fornecedor_ids).")";
 		if(!blank($request->opcao) && $request->opcao != 'Todos') $where .= " and opcao = '$request->opcao'";
-		if(!blank($request->tipo_conta) && $request->tipo_conta != 'Todos') $where .= " and tipo_conta = '$request->tipo_conta'";
+		if(!blank($request->tipo_id) && $request->tipo_id != 'Todos') $where .= " and tipo_id = '$request->tipo_id'";
 
 		if(blank($request->medico_id) || $request->medico_id == 'Nenhum')
 			$where .= " and empresa_id IS NULL";
@@ -74,11 +76,12 @@ class ContumController extends Controller {
 		}
 
 		$contas = Contum::whereRaw($where)->orderBy("date","DESC");
+		$total = Contum::whereRaw($where)->sum('valor');
 
 		$parametros = [];
 		$parametros["tipo"] = $request->tipo;
 		$parametros["opcao"] = $request->opcao;
-		$parametros["tipo_conta"] = $request->tipo_conta;
+		$parametros["tipo_id"] = $request->tipo_id;
 		if(!blank($request->paciente) && $request->paciente != 'Todos') $parametros["paciente"] = $request->paciente;
 		// if(!blank($request->fornecedor_id) && $request->fornecedor_id != 'Todos') $parametros["fornecedor"] = Paciente::findOrFail($request->fornecedor_id)->nome;
 		if(!blank($request->medico_id) && $request->medico_id != 'Nenhum') $parametros["medico"] = Empresa::findOrFail($request->medico_id);
@@ -103,10 +106,10 @@ class ContumController extends Controller {
 
 		if(isset($request->pdf)){
 			($request->tipo == "0") ? $titulo = "Relatório de Receitas" : $titulo = "Relatório de Despesas";
-			$cabecalho = ["Data Inicial" => date_format(date_create_from_format('Y-m-d', $parametros["data1"]), 'd/m/Y'), "Data Final" => date_format(date_create_from_format('Y-m-d', $parametros["data2"]), 'd/m/Y'), "Médico" => @$parametros["medico"]->nome, "Paciente" => @$parametros["paciente"], "Opção" => $parametros["opcao"], "Tipo" => $parametros["tipo_conta"]];
-			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'parametros' => $cabecalho])->inline();
+			$cabecalho = ["Data Inicial" => date_format(date_create_from_format('Y-m-d', $parametros["data1"]), 'd/m/Y'), "Data Final" => date_format(date_create_from_format('Y-m-d', $parametros["data2"]), 'd/m/Y'), "Médico" => @$parametros["medico"]->nome, "Paciente" => @$parametros["paciente"], "Opção" => $parametros["opcao"], "Tipo" => $parametros["tipo_id"]];
+			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), 'total' => $total, "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'parametros' => $cabecalho])->inline();
 		} else {
-			return view('contas.index', ["contas" => $contas->paginate(30), "parametros" => $parametros, "tipo" => $request->tipo]);
+			return view('contas.index', ["contas" => $contas->paginate(30), 'total' => $total, "parametros" => $parametros, "tipo" => $request->tipo]);
 			}
 		}
 
@@ -134,9 +137,9 @@ class ContumController extends Controller {
 					$contum->num_doc += 1;
 
 				if($request->tipo == '1')
-					$opcoes = ['Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
+					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', true)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
 				else
-					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
+					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', false)->lists('nome','id')->all();
 
 				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled, 'disabled' => false]);
 			}
@@ -162,7 +165,7 @@ class ContumController extends Controller {
 				$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
 				$contum->descricao = $request->descricao;
 				$contum->tipo = $request->tipo;
-				$contum->tipo_conta = $request->tipo_conta;
+				$contum->tipo_id = $request->tipo_id;
 				$contum->opcao = $request->opcao;
 				$contum->user_id = Auth::user()->id;
 				if($request->tipo == '0')
@@ -171,7 +174,17 @@ class ContumController extends Controller {
 					$contum->fornecedor_id = $request->nome_id;
 				$contum->empresa_id = $request->empresa_id;
 				$contum->save();
-				return redirect()->route('contas.edit', ['id' => $contum->id, "tipo" => $request->tipo])->with('message', 'Conta cadastrada com sucesso!');
+
+				if(!is_null($request->file('recibo'))){
+					$contum->recibo = $request->file('recibo')->getClientOriginalName();
+					Storage::put("contas/$contum->id/".$request->file('recibo')->getClientOriginalName(), file_get_contents($request->file('recibo')->getRealPath()));
+					$contum->save();
+				}
+
+				if($contum->tipo)
+					return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Despesa cadastrada com sucesso!');
+				else
+					return redirect()->route('contas.edit', ['id' => $contum->id, "tipo" => $request->tipo])->with('message', 'Receita cadastrada com sucesso!');
 			}
 
 			/**
@@ -191,12 +204,9 @@ class ContumController extends Controller {
 					$nomes = [NULL => "Nenhum"] + Fornecedor::lists('nome','id')->all();
 
 				if($request->tipo == '1')
-					if($contum->opcao == 'Livro Caixa')
-						$opcoes = ['Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
-					else
-						$opcoes = ['INSS' => 'INSS', 'IRPF' => 'IRPF', 'Despesas Dedutíveis' => 'Despesas Dedutíveis', 'Saúde' => 'Saúde'];
+					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', true)->where('opcao', $contum->opcao)->lists('nome','id')->all();
 				else
-					$opcoes = ['Emissão de Recibo' => 'Emissão de Recibo', 'Aluguel' => 'Aluguel', 'Salário' => 'Salário', 'Convênio' => 'Convênio', 'Pró-labore' => 'Pró-labore', 'Outros' => 'Outros'];
+					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', false)->lists('nome','id')->all();
 
 				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => true, 'disabled' => true]);
 			}
@@ -220,9 +230,16 @@ class ContumController extends Controller {
 					$contum->paciente_id = $request->nome_id;
 				else
 					$contum->fornecedor_id = $request->nome_id;
-				$contum->tipo_conta = $request->tipo_conta;
+				$contum->tipo_id = $request->tipo_id;
 				$contum->opcao = $request->opcao;
 				$contum->save();
+
+				if(!is_null($request->file('recibo'))){
+					Storage::delete("contas/$contum->id/$contum->recibo");
+					$contum->recibo = $request->file('recibo')->getClientOriginalName();
+					Storage::put("contas/$contum->id/".$request->file('recibo')->getClientOriginalName(), file_get_contents($request->file('anexo')->getRealPath()));
+					$contum->save();
+				}
 
 				return redirect()->route('contas.index', ["tipo" => $request->tipo])->with('message', 'Conta atualizada com sucesso!');
 			}
@@ -364,15 +381,30 @@ class ContumController extends Controller {
 								if(isset($request->tipo) && $request->tipo != '' && !blank($parcelas))
 									$parcelas = $parcelas->where('tipo',$request->tipo);
 							}
+							$total = $parcelas->sum('valor');
 
 							if(!blank($request->pdf)){
 								$titulo = "Relatório de Controle de Receitas/Despesas";
 								$request->tipo == '1' ? $tipo = 'Despesa' : $tipo = 'Receita';
 								$cabecalho = ["Período" => $data1->format('d/m/Y')." à ".$data2->format('d/m/Y'), "Tipo" => $tipo, "Médico" => $medico->nome, "Margem Atual" => "R$ ".number_format($medico->margem_atual(),2,',','.')];
-								return \PDF::loadView('contas.controle_pdf', ["parcelas" => $parcelas->get(), 'meses' => $meses, "ano" => $ano, 'mes' => $request->mes, 'medicos' => $medicos, 'medico' => $medico, 'tipos' => $tipos, 'tipo' => $request->tipo, 'titulo' => $titulo, 'parametros' => $cabecalho])->inline();
+								return \PDF::loadView('contas.controle_pdf', ["parcelas" => $parcelas->get(), 'total' => $total, 'meses' => $meses, "ano" => $ano, 'mes' => $request->mes, 'medicos' => $medicos, 'medico' => $medico, 'tipos' => $tipos, 'tipo' => $request->tipo, 'titulo' => $titulo, 'parametros' => $cabecalho])->inline();
 							} else {
-								return view('contas.controle', ["parcelas" => $parcelas->paginate(30), 'meses' => $meses, "ano" => $ano, 'mes' => $request->mes, 'medicos' => $medicos, 'medico' => $medico, 'tipos' => $tipos, 'tipo' => $request->tipo]);
+								return view('contas.controle', ["parcelas" => $parcelas->paginate(30), 'total' => $total, 'meses' => $meses, "ano" => $ano, 'mes' => $request->mes, 'medicos' => $medicos, 'medico' => $medico, 'tipos' => $tipos, 'tipo' => $request->tipo]);
 							}
+						}
+
+						public function upload_recibo(Request $request, $id)
+						{
+							$contum = Contum::findOrFail($id);
+
+							if(!is_null($request->file('recibo'))){
+								Storage::delete("contas/$contum->id/$contum->recibo");
+								$contum->recibo = $request->file('recibo')->getClientOriginalName();
+								Storage::put("contas/$contum->id/".$request->file('recibo')->getClientOriginalName(), file_get_contents($request->file('recibo')->getRealPath()));
+								$contum->save();
+							}
+
+							return redirect()->route('contas.index', ["tipo" => $contum->tipo])->with('message', 'Recibo atualizado com sucesso!');
 						}
 
 }

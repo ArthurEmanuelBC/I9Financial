@@ -67,6 +67,8 @@
 					<li><a href="/empresas" class="@if(Request::is('empresas*')) active @endif"><i
 								class="fa fa-briefcase fa-fw"></i>Médicos</a></li>
 					@endif
+					<li><a href="/tipos" class="@if(Request::is('tipos*')) active @endif"><i
+								class="fa fa-at fa-fw"></i>Gerenciamento de Tipo</a></li>
 					<li><a href="/contas?tipo=0" class="@if(Request::is('contas*') && @$tipo == '0') active @endif"><i
 								class="fa fa-mail-forward fa-fw"></i>Receita</a></li>
 					<li><a href="/contas?tipo=1" class="@if(Request::is('contas*') && @$tipo == '1') active @endif"><i

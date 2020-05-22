@@ -37,18 +37,25 @@
     @if(!in_array('descricao', $ocultas)) <th class="descricao">Descrição</th> @endif
   </thead>
   <tbody>
+    <tr class="linha_total">
+      @if(!in_array('lancamento', $ocultas)) <td class="lancamento"></td>@endif
+      @if(!in_array('paciente_id', $ocultas)) <td class="paciente_id"></td>@endif
+      @if(!in_array('num_doc', $ocultas)) <td class="num_doc"></td>@endif
+      @if($tipo == '1' && !in_array('opcao', $ocultas)) <td class="opcao"></td>@endif
+      @if(!in_array('tipo', $ocultas)) <td class="tipo"></td>@endif
+      @if(!in_array('valor', $ocultas)) <td class="valor">{{number_format($total,2,',','.')}}</td>@endif
+      @if(!in_array('descricao', $ocultas)) <td class="descricao"></td>@endif
+    </tr>
     @foreach($contas as $contum)
     <tr>
       @if(!in_array('lancamento', $ocultas)) <td class="lancamento">
-        {{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}} @endif
-      </td>
+        {{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}}
+      </td>@endif
       @if(!in_array('paciente_id', $ocultas)) <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
       @endif
       @if(!in_array('num_doc', $ocultas)) <td class="num_doc">{{$contum->num_doc}}</td> @endif
-      @if($tipo == '1')
-      @if(!in_array('opcao', $ocultas)) <td class="opcao">{{$contum->opcao}}</td> @endif
-      @endif
-      @if(!in_array('tipo', $ocultas)) <td class="tipo">{{$contum->tipo_conta}}</td> @endif
+      @if($tipo == '1' && !in_array('opcao', $ocultas)) <td class="opcao">{{$contum->opcao}}</td> @endif
+      @if(!in_array('tipo', $ocultas)) <td class="tipo">{{$contum->tipo()->nome}}</td> @endif
       @if(!in_array('valor', $ocultas)) <td class="valor">{{number_format($contum->valor,2,',','.')}}</td> @endif
       @if(!in_array('descricao', $ocultas)) <td class="descricao">{{$contum->descricao}}</td> @endif
     </tr>

@@ -36,11 +36,14 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::resource("empresas","EmpresaController");
 	Route::resource("contas","ContumController");
 	Route::resource("fornecedors","FornecedorController");
+	Route::resource("tipos","TipoController");
 	Route::post("parcelas_pagar", ['as' => 'parcelas.pagar', 'uses' => 'ContumController@pagar']);
 	Route::get("parcelas_controle", ['as' => 'parcelas.controle', 'uses' => 'ContumController@controle']);
 
 	Route::get('empresas/{id}/margem', 'EmpresaController@margem');
 	Route::get('contas/{id}/recibo', 'ContumController@recibo');
+	Route::post('contas/{id}/recibo', ['as' => 'contas.recibo', 'uses' => 'ContumController@upload_recibo']);
+	Route::get('tipos_opcao', 'TipoController@find_by_opcao');
 });
 
 // Storage

@@ -39,8 +39,14 @@
     <div class="row form-group">
         <div class="col-md-8 col-sm-12 col-xs-12">
             <div class="input-group">
+                @if(Auth::user()->permissao == 'Técnico')
+                <span class="input-group-addon">@if($tipo == '0') Paciente: @else Fornecedor: @endif</span>
+                {!! Form::text("paciente", NULL, ['id' => 'paciente_id', 'class' => 'form-control', 'required' => true])
+                !!}
+                @else
                 <span class="input-group-addon">@if($tipo == '0') Paciente: @else Fornecedor: @endif</span>
                 {!! Form::text("paciente", NULL, ['id' => 'paciente_id', 'class' => 'form-control']) !!}
+                @endif
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-info"><i class="fa fa-check"></i></button>
                 </span>
@@ -107,7 +113,7 @@
         <div class="col-md-6 col-sm-12 col-xs-12">
             <div class="input-group">
                 <span class="input-group-addon">Tipo: </span>
-                {!! Form::select("tipo_conta", $parametros["opcoes"], NULL, ['id' => 'tipo_conta', 'class' =>
+                {!! Form::select("tipo_id", $parametros["opcoes"], NULL, ['id' => 'tipo_id', 'class' =>
                 'form-control', 'required' => 'true']) !!}
             </div>
         </div>
@@ -228,7 +234,7 @@
         {!! Form::hidden("paciente_id", @$parametros['paciente_id']) !!}
         {!! Form::hidden("medico_id", @$parametros['medico_id']) !!}
         {!! Form::hidden("opcao", @$parametros['opcao']) !!}
-        {!! Form::hidden("tipo_conta", @$parametros['tipo_conta']) !!}
+        {!! Form::hidden("tipo_id", @$parametros['tipo_id']) !!}
         {!! Form::hidden("data1", @$parametros['data1']) !!}
         {!! Form::hidden("data2", @$parametros['data2']) !!}
         {!! Form::hidden("filtro", @$parametros['filtro']) !!}
@@ -268,11 +274,23 @@
                     <th class="tipo">Tipo</th>
                     <th class="valor">Valor</th>
                     <th class="descricao">Descrição</th>
-                    <th colspan="3"></th>
+                    <th colspan="4"></th>
                 </tr>
             </thead>
 
             <tbody>
+                <tr class="linha_total">
+                    <td class="lancamento"></td>
+                    <td class="paciente_id"></td>
+                    <td class="num_doc"></td>
+                    @if($tipo == '1')<td class="opcao"></td>@endif
+                    <td class="tipo"></td>
+                    <td class="valor">{{number_format($total,2,',','.')}}</td>
+                    <td class="descricao"></td>
+                    <td class="table_actions" @if($tipo) colspan="2" @endif></td>
+                    <td class="table_actions"></td>
+                    @if(Auth::user()->permissao == 'Gerencial')<td></td>@endif
+                </tr>
                 @foreach($contas as $contum)
                 <tr>
                     <td class="lancamento">{{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}}
@@ -282,10 +300,31 @@
                     @if($tipo == '1')
                     <td class="opcao">{{$contum->opcao}}</td>
                     @endif
-                    <td class="tipo">{{$contum->tipo_conta}}</td>
+                    <td class="tipo">{{@$contum->tipo()->nome}}</td>
                     <td class="valor">{{number_format($contum->valor,2,',','.')}}</td>
                     <td class="descricao">{{$contum->descricao}}</td>
-                    @if(!$tipo)
+                    @if($tipo)
+                    @if($contum->recibo)
+                    <td class="table_actions" align="center" title="Recibo">
+                        <a href="{{ "storage/contas/$contum->id/$contum->recibo", $contum->recibo }}" target="_blank">
+                            {!! Html::image("images/icons/print.png", "Recibo") !!}
+                        </a>
+                    </td>
+                    <td class="table_actions" align="center" title="Recibo">
+                        <a href="javascript:;" class="link-upload-recibo" data-toggle="modal"
+                            data-target="#upload-recibo" data-id="{{$contum->id}}">
+                            {!! Html::image("images/icons/up.png", "Recibo") !!}
+                        </a>
+                    </td>
+                    @else
+                    <td class="table_actions" align="center" title="Recibo" colspan="2">
+                        <a href="javascript:;" class="link-upload-recibo" data-toggle="modal"
+                            data-target="#upload-recibo" data-id="{{$contum->id}}">
+                            {!! Html::image("images/icons/up.png", "Recibo") !!}
+                        </a>
+                    </td>
+                    @endif
+                    @else
                     <td class="table_actions" align="center" title="Recibo">
                         <a href="contas/{{$contum->id}}/recibo" target="_blank"><i class="fa fa-file"></i></a>
                     </td>
@@ -327,6 +366,36 @@
     </div>
 </div>
 @endif
+
+{{-- Modal de cadastro de recibo para despesa --}}
+<div class="modal fade" id="upload-recibo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Upload de Recibo</h4>
+            </div>
+            {!! Form::open(['route' => ['contas.recibo', 0], 'method' => 'post', 'id' => 'form-upload-recibo', 'class'
+            => 'form-horizontal', 'enctype' => 'multipart/form-data']) !!}
+            <div class="modal-body">
+                {!! Form::hidden('id') !!}
+                <div class="row form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        {!! Html::decode(Form::label('anexo', 'Recibo', ['class' => 'control-label'])) !!}
+                        {!! Form::file('recibo', ['class' => 'filestyle']) !!}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
 
 <style type="text/css">
     .data-search select,
@@ -378,17 +447,17 @@
     // Altera os campos de tipo e opções
     @if($tipo == '1')
     $("input[name=opcao]").change(function(){
-    $("#tipo_conta").val("");
+    $("#tipo_id").val("");
 
     if($(this).val() == "Livro Caixa")
         opcoes = ['Emissão de Recibo','Aluguel','Salário','Convênio','Pró-labore','Outros'];
     else
         opcoes = ['INSS','IRPF','Despesas Dedutíveis','Saúde'];
 
-    $("#tipo_conta > option").remove();
+    $("#tipo_id > option").remove();
 
     for (const key in opcoes)
-        $("#tipo_conta").append(`<option value='${opcoes[key]}'>${opcoes[key]}</option>`);
+        $("#tipo_id").append(`<option value='${opcoes[key]}'>${opcoes[key]}</option>`);
     });
     @endif
 
@@ -407,6 +476,14 @@
             event.preventDefault();
             alert('Selecione um médico!');
         }
+    });
+
+    // function id_to_modal(id) {
+    $('.link-upload-recibo').click(function() {
+        action = $('form#form-upload-recibo').attr('action').split('/');
+        action[action.length - 2] = $(this).attr('data-id');
+        $('form#form-upload-recibo').attr('action', action.join('/'));
+        console.log(action);
     });
 </script>
 

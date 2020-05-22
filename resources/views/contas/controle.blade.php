@@ -93,6 +93,11 @@
       </thead>
 
       <tbody>
+        <tr class="linha_total">
+          <td colspan="5"></td>
+          <td>{{number_format($total,2,',','.')}}</td>
+          <td></td>
+        </tr>
         @foreach($parcelas as $contum)
         <tr>
           <td>{{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}}</td>

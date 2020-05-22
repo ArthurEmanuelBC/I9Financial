@@ -18,6 +18,17 @@
 </div>
 @endif
 
+@if (Session::has('message'))
+<div class="templatemo-content-widget green-bg">
+    <i class="fa fa-times"></i>
+    <div class="media">
+        <div class="media-body">
+            <h2>{{Session::get('message')}}</h2>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="templatemo-content-widget white-bg">
     <h2 class="margin-bottom-10">
         @if(Request::is('*contas/create'))
@@ -27,7 +38,8 @@
         @endif
     </h2>
 
-    {!! Form::open(['route' => [$url, $contum->id], 'method' => $method, 'class' => 'form-horizontal']) !!}
+    {!! Form::open(['route' => [$url, $contum->id], 'method' => $method, 'class' => 'form-horizontal', 'enctype' =>
+    'multipart/form-data']) !!}
     {!! Form::hidden('tipo', $tipo) !!}
     <div id="formulario_0" class="formulario">
         <div class="row form-group row-multiple">
@@ -61,33 +73,33 @@
             </div>
         </div>
 
-        @if($tipo == '1' && $method == 'post')
+        @if($tipo == '1' && Auth::user()->permissao == 'Gerencial' && $method == 'post')
         @php($col = '3')
         @else
         @php($col = '4')
         @endif
 
         <div class="row form-group row-multiple">
-            @if($tipo == '1')
+            @if($tipo == '1' && Auth::user()->permissao == 'Gerencial')
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao != "Imposto
-                    de Renda") checked @endif disabled="{{$disabled}}">
+                    de Renda") checked @endif @if($disabled) disabled @endif>
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="imposto_de_renda" value="Imposto de Renda" @if($contum->opcao
-                    == "Imposto de Renda") checked @endif disabled="{{$disabled}}">
+                    == "Imposto de Renda") checked @endif @if($disabled) disabled @endif>
                     <label for="imposto_de_renda" class="font-weight-400"><span></span>Imposto de Renda</label>
                 </div>
             </div>
             @endif
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
-                {!! Html::decode(Form::label('tipo_conta', 'Tipo <span class="obrigatorio">*</span>', ['class' =>
+                {!! Html::decode(Form::label('tipo_id', 'Tipo <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
-                {!! Form::select("tipo_conta", $opcoes, $contum->tipo_conta, ['id' => 'tipo_conta', 'class' =>
+                {!! Form::select("tipo_id", $opcoes, $contum->tipo_id, ['id' => 'tipo_id', 'class' =>
                 'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]) !!}
             </div>
             @if($method == 'post')
@@ -124,6 +136,19 @@
                 !!}
             </div>
         </div>
+        @if($tipo == '1')
+        <div class="row form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                {!! Html::decode(Form::label('anexo', 'Recibo', ['class' => 'control-label'])) !!}
+                @if($method == "post")
+                {!! Form::file('recibo', ['class' => 'filestyle', 'disabled' => $disabled]) !!}
+                @else
+                {!! Form::file('recibo', ['class' => 'filestyle', 'data-placeholder' => $contum->recibo, 'disabled' =>
+                $disabled]) !!}
+                @endif
+            </div>
+        </div>
+        @endif
     </div>
 
     <div class="form-group text-right">
@@ -206,17 +231,22 @@
     // Altera os campos de tipo e opções
     @if($tipo == '1')
     $("input[name=opcao]").change(function(){
-        $("#tipo_conta").val("");
+        $("#tipo_id").val("");
 
-        if($(this).val() == "Livro Caixa")
-            opcoes = ['Pessoal','Material Médico','Material de Custeio','Marketing/divulgação','Outros'];
-        else
-            opcoes = ['INSS','IRPF','Despesas Dedutíveis','Saúde'];
+        $.ajax({
+            type: "GET",
+            url: `/tipos_opcao`,
+            dataType: "html",
+            data: "opcao=" + $(this).val(),
+            success: function(response) {
+                $("#tipo_id > option").remove();
 
-        $("#tipo_conta > option").remove();
+                opcoes = JSON.parse(response);
+                for (const key in opcoes)
+                    $("#tipo_id").append(`<option value='${opcoes[key].id}'>${opcoes[key].nome}</option>`);
+            }
+        });
 
-        for (const key in opcoes)
-            $("#tipo_conta").append(`<option value='${opcoes[key]}'>${opcoes[key]}</option>`);
     });
     @endif
 

@@ -83,9 +83,9 @@ class EmpresaController extends Controller {
 		if(!is_null($request->file('anexo'))){
 			$empresa->anexo = $request->file('anexo')->getClientOriginalName();
 			Storage::put("empresas/$empresa->id/".$request->file('anexo')->getClientOriginalName(), file_get_contents($request->file('anexo')->getRealPath()));
+			$empresa->save();
 		}
 
-		$empresa->save();
 		return redirect()->route('empresas.index')->with('message', 'Empresa cadastrado com sucesso!');
 	}
 
