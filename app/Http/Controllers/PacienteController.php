@@ -7,6 +7,8 @@ use App\Paciente;
 use App\Pagador;
 use Illuminate\Http\Request;
 
+use Auth;
+
 class PacienteController extends Controller {
 
 	/**
@@ -23,17 +25,17 @@ class PacienteController extends Controller {
 		if(isset($request->filtro)){
 			if($request->filtro == "Limpar"){
 				$request->valor = NULL;
-				$pacientes = Paciente::orderByRaw($order)->paginate(30);
+				$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 			}
 			else{
 				if($request->filtro == 'nome')
-					$pacientes = Paciente::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
+					$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
 				else
-					$pacientes = Paciente::where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
+					$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
 			}
 		}
 		else
-			$pacientes = Paciente::orderByRaw($order)->paginate(30);
+			$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 		return view('pacientes.index', ["pacientes" => $pacientes, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 
@@ -63,6 +65,7 @@ class PacienteController extends Controller {
 			$pagador = Pagador::create(['nome' => $request->pagador_nome, 'cpf' => $request->pagador_cpf]);
 			$paciente->pagador_id = $pagador->id;
 		}
+		$paciente->grupo = Auth::user()->grupo_id;
 		$paciente->save();
 		return redirect()->route('pacientes.index')->with('message', 'Paciente cadastrado com sucesso!');
 	}

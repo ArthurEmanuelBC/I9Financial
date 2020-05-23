@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Fornecedor;
 use Illuminate\Http\Request;
 
+use Auth;
+
 class FornecedorController extends Controller {
 
 	/**
@@ -22,7 +24,7 @@ class FornecedorController extends Controller {
 		if(isset($request->filtro)){
 			if($request->filtro == "Limpar"){
 				$request->valor = NULL;
-				$fornecedors = Fornecedor::orderByRaw($order)->paginate(30);
+				$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 			}
 			else{
 				switch ($request->filtro) {
@@ -37,13 +39,13 @@ class FornecedorController extends Controller {
 					break;
 				}
 				if($request->filtro == 'nome')
-					$fornecedors = Fornecedor::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
+					$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
 				else
-					$fornecedors = Fornecedor::where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+					$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
 			}
 		}
 		else
-			$fornecedors = Fornecedor::orderByRaw($order)->paginate(30);
+			$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 		return view('fornecedors.index', ["fornecedors" => $fornecedors, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 
@@ -68,7 +70,8 @@ class FornecedorController extends Controller {
 	{
 		$fornecedor = new Fornecedor();
 		$fornecedor->nome = $request->input("nome");
-        $fornecedor->cnpj = $request->input("cnpj");
+		$fornecedor->cnpj = $request->input("cnpj");
+		$fornecedor->grupo = Auth::user()->grupo_id;
 		$fornecedor->save();
 		return redirect()->route('fornecedors.index')->with('message', 'Fornecedor cadastrado com sucesso!');
 	}

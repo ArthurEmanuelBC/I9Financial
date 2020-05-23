@@ -7,6 +7,7 @@ use App\Empresa;
 use Illuminate\Http\Request;
 
 use Storage;
+use Auth;
 
 class EmpresaController extends Controller {
 
@@ -24,7 +25,7 @@ class EmpresaController extends Controller {
 		if(isset($request->filtro)){
 			if($request->filtro == "Limpar"){
 				$request->valor = NULL;
-				$empresas = Empresa::orderByRaw($order)->paginate(30);
+				$empresas = Empresa::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 			}
 			else{
 				switch ($request->filtro) {
@@ -38,11 +39,11 @@ class EmpresaController extends Controller {
 					$valor = $request->valor;
 					break;
 				}
-				$empresas = Empresa::where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+				$empresas = Empresa::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
 			}
 		}
 		else
-			$empresas = Empresa::orderByRaw($order)->paginate(30);
+			$empresas = Empresa::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 		return view('empresas.index', ["empresas" => $empresas, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 
@@ -78,6 +79,7 @@ class EmpresaController extends Controller {
 		$empresa->complemento = $request->input("complemento");
 		$empresa->telefone = $request->input("telefone");
 		$empresa->margem = str_replace(",", ".", str_replace(".", "", $request->margem));
+		$empresa->grupo = Auth::user()->grupo_id;
 		$empresa->save();
 
 		if(!is_null($request->file('anexo'))){

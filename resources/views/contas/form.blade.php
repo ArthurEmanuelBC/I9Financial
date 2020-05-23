@@ -79,7 +79,7 @@
         @php($col = '4')
         @endif
 
-        <div class="row form-group row-multiple">
+        <div class="row form-group row-multiple" style="margin-bottom: 0">
             @if($tipo == '1' && Auth::user()->permissao == 'Gerencial')
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' =>
@@ -128,17 +128,9 @@
                 'Formata(this,20,event,2)', 'required' => 'true', 'id' => 'valor', 'disabled' => $disabled]) !!} @endif
             </div>
         </div>
-        <div class="row form-group">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                {!! Form::label('descricao', 'Descrição', ['class' => 'control-label']) !!}
-                {!! Form::textarea('descricao', $contum->descricao, ['class' => 'form-control descricao','rows' => '3',
-                'disabled' => $disabled])
-                !!}
-            </div>
-        </div>
         @if($tipo == '1')
         <div class="row form-group">
-            <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('anexo', 'Recibo', ['class' => 'control-label'])) !!}
                 @if($method == "post")
                 {!! Form::file('recibo', ['class' => 'filestyle', 'disabled' => $disabled]) !!}
@@ -147,8 +139,28 @@
                 $disabled]) !!}
                 @endif
             </div>
+            @if($method == 'post')
+            <div class="col-md-3 col-sm-12 col-xs-12">
+                <div class="templatemo-block" style="padding-top: 30px">
+                    <input type="checkbox" id="repetir-parcelas">
+                    <label for="repetir-parcelas" class="font-weight-400"><span></span>Repetir Parcelas</label>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-12 col-xs-12 col-parcelas hide">
+                {!! Html::decode(Form::label('parcelas', 'Quantidade de Parcelas', ['class' => 'control-label'])) !!}
+                {!! Form::number('parcelas', NULL, ['class' => 'form-control']) !!}
+            </div>
+            @endif
         </div>
         @endif
+        <div class="row form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                {!! Form::label('descricao', 'Descrição', ['class' => 'control-label']) !!}
+                {!! Form::textarea('descricao', $contum->descricao, ['class' => 'form-control descricao','rows' => '3',
+                'disabled' => $disabled])
+                !!}
+            </div>
+        </div>
     </div>
 
     <div class="form-group text-right">
@@ -316,6 +328,15 @@
             $('.templatemo-blue-button').attr('disabled', true);
             $('.templatemo-blue-button').css('background-color', 'gray');
         }
+    });
+    @endif
+
+    @if($tipo && $method == 'post')
+    $("#repetir-parcelas").change(function(){
+        if($(this).attr('checked'))
+            $('.col-parcelas').removeClass('hide');
+        else
+            $('.col-parcelas').addClass('hide');
     });
     @endif
 

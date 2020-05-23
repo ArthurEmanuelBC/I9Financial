@@ -45,8 +45,9 @@
           {!! Form::email('email', $user->email, ['required' => 'true', 'class' => 'form-control']) !!}
         </div>
       </div>
+      @if(!$config)
       <div class="row">
-        {!! Html::decode(Form::label('permissao', 'Permiss&atilde;o <span class="obrigatorio">*</span>', ['class' =>
+        {!! Html::decode(Form::label('permissao', 'Perfil <span class="obrigatorio">*</span>', ['class' =>
         'control-label'])) !!}
         <div class="col-md-12 col-sm-12 form-group">
           <input type="radio" name="permissao" id="gerencial" value="Gerencial" @if($user->permissao ==
@@ -56,8 +57,13 @@
           <input type="radio" name="permissao" id="tecnico" value="T&eacute;cnico" @if(strpos($user->permissao,'cnico'))
           checked @endif>
           <label for="tecnico" class="font-weight-400"><span></span>T&eacute;cnico</label>
+          <br>
+          <input type="radio" name="permissao" id="contador" value="Contador" @if($user->permissao == 'Contador')
+          checked @endif>
+          <label for="contador" class="font-weight-400"><span></span>Contador</label>
         </div>
       </div>
+      @endif
     </div>
   </div>
 

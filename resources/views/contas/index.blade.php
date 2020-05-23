@@ -52,6 +52,7 @@
                 </span>
             </div>
         </div>
+        @if(Auth::user()->permissao != 'Contador')
         <div class="col-md-4 col-sm-12 col-xs-12 filtro-search">
             <div class="pull-right">
                 <div class="pull-right"><a href="{{ route('contas.create', ['tipo' => $tipo]) }}" type="button"
@@ -59,6 +60,7 @@
                         @endif</a></div>
             </div>
         </div>
+        @endif
     </div>
     @else
     <div class="row form-group">
@@ -184,6 +186,7 @@
                 </div>
             </div>
         </div>
+        @if(Auth::user()->permissao != 'Contador')
         <div class="col-md col-sm-12 col-xs-12 filtro-search">
             <div class="pull-right">
                 <div class="pull-right"><a href="{{ route('contas.create', ['tipo' => $tipo]) }}" type="button"
@@ -191,6 +194,7 @@
                         @endif</a></div>
             </div>
         </div>
+        @endif
         @endif
     </div>
     {!! Form::close() !!}

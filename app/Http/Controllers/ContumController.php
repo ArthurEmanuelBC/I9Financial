@@ -11,9 +11,9 @@ use App\Fornecedor;
 use App\Tipo;
 use Jenssegers\Date\Date;
 use Illuminate\Http\Request;
-use Auth;
 use Redirect;
 use Storage;
+use Auth;
 
 class ContumController extends Controller {
 
@@ -35,6 +35,7 @@ class ContumController extends Controller {
 		if(!isset($request->data1)) $request->data1 = date('Y-m-d');
 		if(!isset($request->data2)) $request->data2 = date('Y-m-d');
 		$where .= " and date between '$request->data1' and '$request->data2'";
+		$where .= " and grupo_id = ".Auth::user()->grupo_id;
 
 		if($request->tipo == '0'){
 			$paciente_ids = Paciente::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%'")->pluck('id')->toArray();
@@ -158,22 +159,40 @@ class ContumController extends Controller {
 						return Redirect::back()->withErrors(['Não há margem suficiente!']);
 				}
 
-				$contum = new Contum();
-				$contum->date = Date::parse($request->date);
-				$contum->fornecedor = $request->fornecedor;
-				$contum->num_doc = $request->num_doc;
-				$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
-				$contum->descricao = $request->descricao;
-				$contum->tipo = $request->tipo;
-				$contum->tipo_id = $request->tipo_id;
-				$contum->opcao = $request->opcao;
-				$contum->user_id = Auth::user()->id;
-				if($request->tipo == '0')
-					$contum->paciente_id = $request->nome_id;
+				if(blank($request->parcelas))
+					$request->parcelas = 0;
 				else
-					$contum->fornecedor_id = $request->nome_id;
-				$contum->empresa_id = $request->empresa_id;
-				$contum->save();
+					$request->parcelas = intval($request->parcelas) - 1;
+
+				foreach (range(0, $request->parcelas) as $parcela) {
+					$date = Date::parse($request->date)->addDays(30 * $parcela);
+
+					$contum = new Contum();
+					$contum->date = $date;
+					$contum->fornecedor = $request->fornecedor;
+					$contum->num_doc = intval($request->num_doc) + $parcela;
+					$contum->valor = str_replace(",", ".", str_replace(".", "", $request->valor));
+
+					if($request->parcelas > 0) {
+						$atual = $parcela + 1;
+						$ultima = $request->parcelas + 1;
+						$contum->descricao = $request->descricao." (parcela $atual/$ultima)";
+					} else {
+						$contum->descricao = $request->descricao;
+					}
+
+					$contum->tipo = $request->tipo;
+					$contum->tipo_id = $request->tipo_id;
+					$contum->opcao = $request->opcao;
+					$contum->user_id = Auth::user()->id;
+					if($request->tipo == '0')
+						$contum->paciente_id = $request->nome_id;
+					else
+						$contum->fornecedor_id = $request->nome_id;
+					$contum->empresa_id = $request->empresa_id;
+					$contum->grupo = Auth::user()->grupo_id;
+					$contum->save();
+				}
 
 				if(!is_null($request->file('recibo'))){
 					$contum->recibo = $request->file('recibo')->getClientOriginalName();
@@ -372,11 +391,11 @@ class ContumController extends Controller {
 								$data2 = Date::parse("$ano-12-31");
 							}
 
-							$parcelas = Contum::whereRaw('1=2');
+							$parcelas = Contum::whereRaw('grupo_id = '.Auth::user()->grupo_id);
 							$medico = NULL;
 							if(!blank($request->medico_id)) {
 								$medico = Empresa::findOrFail($request->medico_id);
-								$parcelas = Contum::whereBetween('date',[$data1,$data2])->where('empresa_id',$request->medico_id);
+								$parcelas = Contum::whereBetween('date',[$data1,$data2])->where('empresa_id',$request->medico_id)->where('grupo_id', Auth::user()->grupo_id);
 
 								if(isset($request->tipo) && $request->tipo != '' && !blank($parcelas))
 									$parcelas = $parcelas->where('tipo',$request->tipo);

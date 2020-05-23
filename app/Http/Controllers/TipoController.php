@@ -24,7 +24,7 @@ class TipoController extends Controller {
 		if(isset($request->filtro)){
 			if($request->filtro == "Limpar"){
 				$request->valor = NULL;
-				$tipos = Tipo::orderByRaw($order)->paginate(30);
+				$tipos = Tipo::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 			}
 			else{
 				switch ($request->filtro) {
@@ -38,11 +38,11 @@ class TipoController extends Controller {
 					$valor = $request->valor;
 					break;
 				}
-				$tipos = Tipo::where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+				$tipos = Tipo::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
 			}
 		}
 		else
-			$tipos = Tipo::orderByRaw($order)->paginate(30);
+			$tipos = Tipo::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 		return view('tipos.index', ["tipos" => $tipos, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 
@@ -71,6 +71,7 @@ class TipoController extends Controller {
 		if($tipo->tipo == '1')
 			$tipo->opcao = $request->input("opcao");
 		$tipo->perfil = $request->input("perfil");
+		$tipo->grupo = Auth::user()->grupo_id;
 		$tipo->save();
 		return redirect()->route('tipos.index')->with('message', 'Tipo cadastrado com sucesso!');
 	}

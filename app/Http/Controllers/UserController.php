@@ -25,17 +25,17 @@ class UserController extends Controller
         if(isset($request->filtro)){
             if($request->filtro == "Limpar"){
                 $request->valor = NULL;
-                $users = User::paginate(30);
+                $users = User::where('grupo_id', Auth::user()->grupo_id)->paginate(30);
             }
             else{
                 if(strpos($request->filtro,"nome"))
-                    $users = User::where($request->filtro, 'LIKE', "%$request->valor%")->orderByRaw($order)->paginate(30);
+                    $users = User::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, 'LIKE', "%$request->valor%")->orderByRaw($order)->paginate(30);
                 else
-                    $users = User::where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
+                    $users = User::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
             }
         }
         else
-            $users = User::paginate(30);
+            $users = User::where('grupo_id', Auth::user()->grupo_id)->paginate(30);
         return view('users.index', ["users" => $users, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
     }
 
@@ -64,6 +64,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->permissao = $request->permissao;
         $user->password = bcrypt($request->password);
+        $user->grupo = Auth::user()->grupo_id;
         $user->save();
         return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
     }
