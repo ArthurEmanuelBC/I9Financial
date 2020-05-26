@@ -23,4 +23,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+    * ObtÃ©m o Grupo da Conta.
+    *
+    * @return Grupo
+    */
+    public function grupo()
+    {
+        return $this->belongsTo('App\Grupo','grupo_id')->first();
+    }
 }

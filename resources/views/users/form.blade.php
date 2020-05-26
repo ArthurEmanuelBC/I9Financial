@@ -106,8 +106,29 @@
         </div>
       </div>
     </div>
+
+    @if(Auth::user()->id == 1 && Request::is('users/create'))
+    <div class="panel-heading border-radius-10 margin-bottom-10">
+      <h2>Grupo</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-12 form-group">
+        <div class="templatemo-block">
+          <input type="checkbox" name="grupo" id="grupo" value="true">
+          <label for="grupo" class="font-weight-400"><span></span>Usuário Pertence a um Novo Grupo</label>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body panel-grupo hide">
+      <div class="col-md-4 col-sm-12 form-group">
+        {!! Html::decode(Form::label('grupo_nome', 'Nome do Grupo <span class="obrigatorio">*</span>',
+        ['class' => 'control-label'])) !!}
+        <input type="text" class="form-control" name="grupo_nome" type="grupo_nome" id="grupo_nome">
+      </div>
+    </div>
     @endif
   </div>
+  @endif
   <div class="form-group text-right">
     <button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
     @if(empty($config))
@@ -135,6 +156,17 @@
     $(".panel-credenciais .form-group input").attr("disabled",false);
     @endif
 
+    // Habilita e desabilita o grupo
+    $("#grupo").change(function(){
+    if($(this).is(':checked')){
+      $(".panel-grupo .form-group input").attr("required",true);
+      $(".panel-grupo").removeClass('hide');
+    } else {
+      $(".panel-grupo .form-group input").attr("required",false);
+      $(".panel-grupo").addClass('hide');
+    }
+    });
+
     // Verifica o password antigo e os dois novos
     $("input[type=password]").keyup(function(){
         if($(this).attr('id') == "password_antigo"){
@@ -155,11 +187,15 @@
             });
         } else {
             if($("#password").val() == $("#password_confirmation").val()){
-                $("").removeClass('has-error');
-                $("").addClass('has-success');
+                $("#password").parent().parent().removeClass('has-error');
+                $("#password").parent().parent().addClass('has-success');
+                $("#password_confirmation").parent().parent().removeClass('has-error');
+                $("#password_confirmation").parent().parent().addClass('has-success');
             } else {
-                $("").removeClass('has-success');
-                $("").addClass('has-error');
+                $("#password").parent().parent().removeClass('has-success');
+                $("#password").parent().parent().addClass('has-error');
+                $("#password_confirmation").parent().parent().removeClass('has-success');
+                $("#password_confirmation").parent().parent().addClass('has-error');
             }
         }
     });

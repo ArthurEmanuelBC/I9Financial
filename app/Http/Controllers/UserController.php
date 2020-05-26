@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\UserPermission;
+use App\Grupo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Hash;
@@ -59,12 +60,18 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $this->validar($request, 'store');
+
+        if(blank($request->grupo))
+            $grupo = Auth::user()->grupo();
+        else
+            $grupo = Grupo::create(['nome' => $request->grupo_nome]);
+
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->permissao = $request->permissao;
         $user->password = bcrypt($request->password);
-        $user->grupo_id = Auth::user()->grupo_id;
+        $user->grupo_id = $grupo->id;
         $user->save();
         return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
     }
