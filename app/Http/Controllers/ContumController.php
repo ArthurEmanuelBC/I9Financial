@@ -190,7 +190,7 @@ class ContumController extends Controller {
 					else
 						$contum->fornecedor_id = $request->nome_id;
 					$contum->empresa_id = $request->empresa_id;
-					$contum->grupo = Auth::user()->grupo_id;
+					$contum->grupo_id = Auth::user()->grupo_id;
 					$contum->save();
 				}
 

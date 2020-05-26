@@ -71,7 +71,7 @@ class TipoController extends Controller {
 		if($tipo->tipo == '1')
 			$tipo->opcao = $request->input("opcao");
 		$tipo->perfil = $request->input("perfil");
-		$tipo->grupo = Auth::user()->grupo_id;
+		$tipo->grupo_id = Auth::user()->grupo_id;
 		$tipo->save();
 		return redirect()->route('tipos.index')->with('message', 'Tipo cadastrado com sucesso!');
 	}

@@ -71,7 +71,7 @@ class FornecedorController extends Controller {
 		$fornecedor = new Fornecedor();
 		$fornecedor->nome = $request->input("nome");
 		$fornecedor->cnpj = $request->input("cnpj");
-		$fornecedor->grupo = Auth::user()->grupo_id;
+		$fornecedor->grupo_id = Auth::user()->grupo_id;
 		$fornecedor->save();
 		return redirect()->route('fornecedors.index')->with('message', 'Fornecedor cadastrado com sucesso!');
 	}

@@ -79,7 +79,7 @@ class EmpresaController extends Controller {
 		$empresa->complemento = $request->input("complemento");
 		$empresa->telefone = $request->input("telefone");
 		$empresa->margem = str_replace(",", ".", str_replace(".", "", $request->margem));
-		$empresa->grupo = Auth::user()->grupo_id;
+		$empresa->grupo_id = Auth::user()->grupo_id;
 		$empresa->save();
 
 		if(!is_null($request->file('anexo'))){

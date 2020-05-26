@@ -64,7 +64,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->permissao = $request->permissao;
         $user->password = bcrypt($request->password);
-        $user->grupo = Auth::user()->grupo_id;
+        $user->grupo_id = Auth::user()->grupo_id;
         $user->save();
         return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
     }

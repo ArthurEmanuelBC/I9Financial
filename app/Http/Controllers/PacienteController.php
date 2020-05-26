@@ -65,7 +65,7 @@ class PacienteController extends Controller {
 			$pagador = Pagador::create(['nome' => $request->pagador_nome, 'cpf' => $request->pagador_cpf]);
 			$paciente->pagador_id = $pagador->id;
 		}
-		$paciente->grupo = Auth::user()->grupo_id;
+		$paciente->grupo_id = Auth::user()->grupo_id;
 		$paciente->save();
 		return redirect()->route('pacientes.index')->with('message', 'Paciente cadastrado com sucesso!');
 	}
