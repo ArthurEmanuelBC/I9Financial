@@ -112,16 +112,22 @@ footer { padding: 15px; }
 	height: 15px;
 	border-radius: 50%;
 }
-.templatemo-site-header { margin: 25px 30px; }
+.templatemo-site-header {
+	margin: 15px 20px;
+	height: 60px;
+}
 .templatemo-site-header h1 {
 	color: white;
 	display: inline-block;
-	font-size: 1.8em;
+	font-size: 1.9em;
 	font-weight: 300;
 	letter-spacing: 1.5px;
 	margin: 0 5px;
 	text-transform: uppercase;
 	vertical-align: middle;
+	position: absolute;
+	float: right;
+	width: 200px;
 }
 .profile-photo-container { position: relative; }
 .profile-photo-overlay {
@@ -607,11 +613,12 @@ input[type="radio"]:checked + label span {
 .logo {
 	display: inline-block;
 	vertical-align: middle;
+	width: 70px;
 }
 
 .logo img {
-	width: 25px;
-	height: 25px;
+	width: 60px;
+	height: 60px;
 }
 
 .submenu ul li:first-child {

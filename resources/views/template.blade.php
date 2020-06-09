@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>I9Financial</title>
+	<title>Livro Caixa Inteligente</title>
 	<meta name="description" content="">
 	<meta name="author" content="templatemo">
 	<!--
@@ -18,7 +18,7 @@
 	<link href="/css/templatemo-style.css" rel="stylesheet">
 	<link href="/css/chosen.css" rel="stylesheet">
 	<link href="/css/select2.css" rel="stylesheet" />
-	<link rel="icon" href="/images/logo.png">
+	<link rel="icon" href="/images/icone.png">
 
 	<!-- jQuery -->
 	<script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
@@ -41,7 +41,7 @@
 			<header class="templatemo-site-header">
 				<!-- <div class="square"></div> -->
 				<div class="logo"><img src="/images/logo.png"></div>
-				<h1>I9Financial</h1>
+				<h1>Livro Caixa Inteligente</h1>
 			</header>
 			<!-- <div class="profile-photo-container">
 					<img src="images/profile-photo.jpg" alt="Profile Photo" class="img-responsive">
@@ -109,7 +109,7 @@
 					<p>
 						Copyright &copy; 2018 I9 Technology
 						<a href="http://www.i9technology.com.br" target="_blank">
-							{!! Html::image("/images/logo.png", "I9 Technology", ['id' => 'logo']) !!}
+							{!! Html::image("/images/logoi9.png", "I9 Technology", ['id' => 'logo']) !!}
 						</a>
 					</p>
 				</footer>

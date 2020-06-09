@@ -108,11 +108,12 @@
     </div>
 
     @if(Auth::user()->id == 1 && Request::is('users/create'))
+    <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     <div class="panel-heading border-radius-10 margin-bottom-10">
       <h2>Grupo</h2>
     </div>
     <div class="row">
-      <div class="col-md-6 col-sm-12 form-group">
+      <div class="col-md-12 col-sm-12 form-group">
         <div class="templatemo-block">
           <input type="checkbox" name="grupo" id="grupo" value="true">
           <label for="grupo" class="font-weight-400"><span></span>Usuário Pertence a um Novo Grupo</label>
@@ -120,10 +121,12 @@
       </div>
     </div>
     <div class="panel-body panel-grupo hide">
-      <div class="col-md-4 col-sm-12 form-group">
-        {!! Html::decode(Form::label('grupo_nome', 'Nome do Grupo <span class="obrigatorio">*</span>',
-        ['class' => 'control-label'])) !!}
-        <input type="text" class="form-control" name="grupo_nome" type="grupo_nome" id="grupo_nome">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 form-group">
+          {!! Html::decode(Form::label('grupo_nome', 'Nome do Grupo <span class="obrigatorio">*</span>',
+          ['class' => 'control-label'])) !!}
+          <input type="text" class="form-control" name="grupo_nome" type="grupo_nome" id="grupo_nome">
+        </div>
       </div>
     </div>
     @endif
@@ -156,6 +159,7 @@
     $(".panel-credenciais .form-group input").attr("disabled",false);
     @endif
 
+    @if(Auth::user()->id == 1 && Request::is('users/create'))
     // Habilita e desabilita o grupo
     $("#grupo").change(function(){
     if($(this).is(':checked')){
@@ -166,6 +170,7 @@
       $(".panel-grupo").addClass('hide');
     }
     });
+    @endif
 
     // Verifica o password antigo e os dois novos
     $("input[type=password]").keyup(function(){
