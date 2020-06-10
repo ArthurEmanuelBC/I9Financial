@@ -24,7 +24,7 @@ class UserController extends Controller
         (strpos($param,'desc')) ? $caret = 'up' : $caret = 'down';
         (isset($request->order)) ? $order = $request->order : $order = "id";
         if(isset($request->filtro)){
-            if($request->filtro == "Limpar"){
+            if(blank($request->valor)){
                 $request->valor = NULL;
                 $users = User::where('grupo_id', Auth::user()->grupo_id)->paginate(30);
             }

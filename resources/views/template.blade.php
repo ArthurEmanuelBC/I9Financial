@@ -55,21 +55,19 @@
 			<nav class="templatemo-left-nav">
 				<ul>
 					<li><a href="/" class="@if(Request::is('/')) active @endif"><i class="fa fa-home fa-fw"></i>Início</a></li>
+					@if(Auth::user()->permissao == 'Gerencial')
 					<li class="submenu cadastro">
 						<a href="#"><i class="fa fa-plus"></i> Cadastro <i class="caret-down fa fa-arrow-circle-down"></i></a>
 						<ul>
-							@if(Auth::user()->permissao == 'Gerencial')
 							<li><a href="/users" class="@if(Request::is('users*')) active @endif"><i
 										class="fa fa-user fa-fw"></i>Usuários</a></li>
 							<li><a href="/empresas" class="@if(Request::is('empresas*')) active @endif"><i
 										class="fa fa-briefcase fa-fw"></i>Médicos</a></li>
-							@endif
-							@if(Auth::user()->permissao != 'Contador')
 							<li><a href="/tipos" class="@if(Request::is('tipos*')) active @endif"><i class="fa fa-at fa-fw"></i>Tipo
 									Receita/Despesa</a></li>
-							@endif
 						</ul>
 					</li>
+					@endif
 					@if(Auth::user()->permissao != 'Contador')
 					<li><a href="/pacientes" class="@if(Request::is('pacientes*')) active @endif"><i
 								class="fa fa-users fa-fw"></i>Pacientes</a></li>

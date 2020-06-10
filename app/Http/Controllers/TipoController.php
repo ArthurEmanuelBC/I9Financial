@@ -22,7 +22,7 @@ class TipoController extends Controller {
 		(strpos($param,'desc')) ? $caret = 'up' : $caret = 'down';
 		(isset($request->order)) ? $order = $request->order : $order = "id";
 		if(isset($request->filtro)){
-			if($request->filtro == "Limpar"){
+			if(blank($request->valor)){
 				$request->valor = NULL;
 				$tipos = Tipo::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
 			}

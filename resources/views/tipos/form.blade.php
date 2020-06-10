@@ -20,7 +20,7 @@
 
 <div class="templatemo-content-widget white-bg">
     <h2 class="margin-bottom-10">
-        Novo {{substr_replace("Tipos", "", -1)}}
+        @if(Request::is('*tipos/create')) Cadastrar @else Editar @endif Tipo
     </h2>
 
     {!! Form::open(['route' => [$url, $tipo->id], 'method' => $method, 'class' => 'form-horizontal']) !!}
@@ -57,8 +57,8 @@
                 <label for="tipo_gerencial" class="font-weight-400"><span></span>Gerencial</label>
             </div>
             <div class="templatemo-block margin-bottom-5">
-                <input type="checkbox" name="perfil[]" id="tipo_tecnico" value="Técnico" @if(preg_match('/\bTécnico\b/',
-                    $tipo->perfil)) checked @endif>
+                <input type="checkbox" name="perfil[]" id="tipo_tecnico" value="Técnico"
+                    @if(preg_match('/\bTécnico\b/', $tipo->perfil)) checked @endif>
                 <label for="tipo_tecnico" class="font-weight-400"><span></span>Técnico</label>
             </div>
             <div class="templatemo-block margin-bottom-5">

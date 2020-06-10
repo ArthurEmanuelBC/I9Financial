@@ -19,8 +19,7 @@
             <form role="form" class="form-search" method="get">
                 <div class="input-group">
                     <select class="form-control search-filtro" name="filtro">
-                        <option>Limpar</option>
-                        <option value="nome" @if ($filtro=="users.nome" ) selected @endif>Nome</option>
+                        <option value="name" @if ($filtro=="users.name" ) selected @endif>Nome</option>
                         <option value="email" @if ($filtro=="email" ) selected @endif>Email</option>
                         <option value="permissao" @if ($filtro=="permissao" ) selected @endif>Permissão</option>
                     </select>

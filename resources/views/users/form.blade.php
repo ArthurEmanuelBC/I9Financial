@@ -20,11 +20,7 @@
 
 <div class="templatemo-content-widget white-bg">
   <h2 class="margin-bottom-10">
-    @if(Request::is('users/create'))
-    Novo {{substr_replace("Usuários", "", -1)}}
-    @else
-    Editar {{substr_replace("Usuários", "", -1)}} #{{ $user->id }}
-    @endif
+    @if(Request::is('*users/create')) Cadastrar @else Editar @endif Usuário
   </h2>
   {!! Form::open(['route' => [$url, $user->id], 'method' => $method, 'enctype' => 'multipart/form-data']) !!}
   <div class="panel panel-default no-border">
@@ -33,23 +29,23 @@
     </div>
     <div class="panel-body">
       <input type="hidden" name="config" value="true">
-      <div class="row">
-        <div class="col-md-8 col-sm-12 form-group">
+      <div class="row form-group">
+        <div class="col-md-8 col-sm-12">
           {!! Html::decode(Form::label('name', 'Nome <span class="obrigatorio">*</span>', ['class' =>
           'control-label'])) !!}
           {!! Form::text('name', $user->name, ['required' => 'true', 'class' => 'form-control']) !!}
         </div>
-        <div class="col-md-4 col-sm-12 form-group">
+        <div class="col-md-4 col-sm-12">
           {!! Html::decode(Form::label('email', 'Email <span class="obrigatorio">*</span>', ['class' =>
           'control-label'])) !!}
           {!! Form::email('email', $user->email, ['required' => 'true', 'class' => 'form-control']) !!}
         </div>
       </div>
       @if(!$config)
-      <div class="row">
-        {!! Html::decode(Form::label('permissao', 'Perfil <span class="obrigatorio">*</span>', ['class' =>
-        'control-label'])) !!}
-        <div class="col-md-12 col-sm-12 form-group">
+      <div class="row form-group">
+        <div class="col-md-12 col-sm-12">
+          {!! Html::decode(Form::label('permissao', 'Perfil <span class="obrigatorio">*</span>', ['class' =>
+          'control-label'])) !!}<br>
           <input type="radio" name="permissao" id="gerencial" value="Gerencial" @if($user->permissao ==
           'Gerencial') checked @endif>
           <label for="gerencial" class="font-weight-400"><span></span>Gerencial</label>

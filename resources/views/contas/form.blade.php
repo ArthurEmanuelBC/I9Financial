@@ -34,7 +34,7 @@
         @if(Request::is('*contas/create'))
         Cadastrar @if($tipo == '0') Receita @else Despesa @endif
         @else
-        Editar @if($tipo == '0') Receita @else Despesa @endif #{{$contum->id}}
+        Editar @if($tipo == '0') Receita @else Despesa @endif
         @endif
     </h2>
 
@@ -80,7 +80,6 @@
         @endif
 
         <div class="row form-group row-multiple" style="margin-bottom: 0">
-            @if(Auth::user()->permissao == 'Gerencial')
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
@@ -95,7 +94,6 @@
                     <label for="imposto_de_renda" class="font-weight-400"><span></span>Imposto de Renda</label>
                 </div>
             </div>
-            @endif
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('tipo_id', 'Tipo <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}

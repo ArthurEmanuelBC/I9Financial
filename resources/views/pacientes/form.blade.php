@@ -20,7 +20,7 @@
 
 <div class="templatemo-content-widget white-bg">
   <h2 class="margin-bottom-10">
-    Novo {{substr_replace("Pacientes", "", -1)}}
+    @if(Request::is('*pacientes/create')) Cadastrar @else Editar @endif Paciente
   </h2>
 
   {!! Form::open(['route' => [$url, $paciente->id], 'method' => $method, 'class' => 'form-horizontal']) !!}

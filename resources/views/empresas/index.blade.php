@@ -19,7 +19,6 @@
             <form role="form" class="form-search" method="get">
                 <div class="input-group">
                     <select class="form-control search-filtro" name="filtro">
-                        <option>Limpar</option>
                         <option value="nome" @if ($filtro=="nome" ) selected @endif>Nome</option>
                         <option value="cpf" @if ($filtro=="cpf" ) selected @endif>CPF</option>
                         <option value="crm" @if ($filtro=="crm" ) selected @endif>CRM</option>
