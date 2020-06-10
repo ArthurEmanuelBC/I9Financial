@@ -70,7 +70,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->permissao = $request->permissao;
-        $user->password = bcrypt($request->password);
+        $user->password = bcrypt('I9livrocaixa');
         $user->grupo_id = $grupo->id;
         $user->save();
         return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');

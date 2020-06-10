@@ -215,10 +215,8 @@
                             Fornecedor @else Paciente @endif</label></li>
                     <li><input type="checkbox" id="check_num_doc" class="dropdown-check" data-column="num_doc" checked>
                         <label for="check_num_doc" class="font-weight-400"><span></span>Número do Documento</label></li>
-                    @if($tipo == '1')
                     <li><input type="checkbox" id="check_opcao" class="dropdown-check" data-column="opcao" checked>
                         <label for="check_opcao" class="font-weight-400"><span></span>Opção</label></li>
-                    @endif
                     <li><input type="checkbox" id="check_tipo" class="dropdown-check" data-column="tipo" checked>
                         <label for="check_tipo" class="font-weight-400"><span></span>Tipo</label></li>
                     <li><input type="checkbox" id="check_valor" class="dropdown-check" data-column="valor" checked>
@@ -272,9 +270,7 @@
                     <th class="lancamento">Data de Lançamento</th>
                     <th class="paciente_id">@if($tipo) Fornecedor @else Paciente @endif</th>
                     <th class="num_doc">Número do Documento</th>
-                    @if($tipo == '1')
                     <th class="opcao">Opção</th>
-                    @endif
                     <th class="tipo">Tipo</th>
                     <th class="valor">Valor</th>
                     <th class="descricao">Descrição</th>
@@ -287,7 +283,7 @@
                     <td class="lancamento"></td>
                     <td class="paciente_id"></td>
                     <td class="num_doc"></td>
-                    @if($tipo == '1')<td class="opcao"></td>@endif
+                    <td class="opcao"></td>
                     <td class="tipo"></td>
                     <td class="valor">{{number_format($total,2,',','.')}}</td>
                     <td class="descricao"></td>
@@ -301,9 +297,7 @@
                     </td>
                     <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
                     <td class="num_doc">{{$contum->num_doc}}</td>
-                    @if($tipo == '1')
                     <td class="opcao">{{$contum->opcao}}</td>
-                    @endif
                     <td class="tipo">{{@$contum->tipo()->nome}}</td>
                     <td class="valor">{{number_format($contum->valor,2,',','.')}}</td>
                     <td class="descricao">{{$contum->descricao}}</td>
@@ -449,7 +443,6 @@
     });
 
     // Altera os campos de tipo e opções
-    @if($tipo == '1')
     $("input[name=opcao]").change(function(){
     $("#tipo_id").val("");
 
@@ -463,7 +456,6 @@
     for (const key in opcoes)
         $("#tipo_id").append(`<option value='${opcoes[key]}'>${opcoes[key]}</option>`);
     });
-    @endif
 
     // Oculta/exibe o warning de selecionar médico
     $("#medico_id").change(function(){

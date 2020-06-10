@@ -39,7 +39,7 @@
             'true']) !!}
         </div>
     </div>
-    <div class="row row-opcao form-group @if(!$tipo->tipo) hide @endif">
+    <div class="row row-opcao form-group">
         <div class="col-md-12">
             {!! Html::decode(Form::label('opcao', 'Opcao <span class="obrigatorio">*</span>', ['class' =>
             'control-label'])) !!}
@@ -51,8 +51,21 @@
         <div class="col-md-12">
             {!! Html::decode(Form::label('perfil', 'Perfil <span class="obrigatorio">*</span>', ['class' =>
             'control-label'])) !!}
-            {!! Form::select('perfil', ['Gerencial' => 'Gerencial', 'Técnico' => 'Técnico', 'Contador' => 'Contador'],
-            $tipo->perfil, ['class' => 'form-control', 'required' => 'true']) !!}
+            <div class="templatemo-block margin-bottom-5">
+                <input type="checkbox" name="perfil[]" id="tipo_gerencial" value="Gerencial"
+                    @if(preg_match('/\bGerencial\b/', $tipo->perfil)) checked @endif>
+                <label for="tipo_gerencial" class="font-weight-400"><span></span>Gerencial</label>
+            </div>
+            <div class="templatemo-block margin-bottom-5">
+                <input type="checkbox" name="perfil[]" id="tipo_tecnico" value="Técnico" @if(preg_match('/\bTécnico\b/',
+                    $tipo->perfil)) checked @endif>
+                <label for="tipo_tecnico" class="font-weight-400"><span></span>Técnico</label>
+            </div>
+            <div class="templatemo-block margin-bottom-5">
+                <input type="checkbox" name="perfil[]" id="tipo_contador" value="Contador"
+                    @if(preg_match('/\bContador\b/', $tipo->perfil)) checked @endif>
+                <label for="tipo_contador" class="font-weight-400"><span></span>Contador</label>
+            </div>
         </div>
     </div>
     <div class="form-group text-right">
@@ -62,13 +75,4 @@
     {!! Form::close() !!}
 
 </div>
-
-<script>
-    $('#tipo').change(function() {
-        if($(this).val() == '1')
-            $('.row-opcao').removeClass('hide');
-        else
-            $('.row-opcao').addClass('hide');
-    });
-</script>
 @endsection

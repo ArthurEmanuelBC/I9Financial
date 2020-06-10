@@ -67,13 +67,12 @@
     </div>
   </div>
 
-  @if($config || Request::is('users/create'))
+  @if($config)
   <div class="panel panel-default no-border">
     <div class="panel-heading border-radius-10">
       <h2>Credenciais</h2>
     </div>
     <div class="panel-body panel-credenciais">
-      @if($config)
       <div class="row">
         <div class="col-md-6 col-sm-12 form-group">
           <div class="templatemo-block margin-bottom-5">
@@ -82,16 +81,13 @@
           </div>
         </div>
       </div>
-      @endif
       <div class="row has-error">
-        @if($config)
         <div class="col-md-4 col-sm-12 form-group col-password has-error">
           {!! Html::decode(Form::label('password_antigo', 'Senha Antiga <span class="obrigatorio">*</span>',
           ['class' => 'control-label'])) !!}
           <input type="password" required="true" class="form-control" disabled="true" name="password_antigo"
             type="password_antigo" value="" id="password_antigo">
         </div>
-        @endif
         <div class="col-md-4 col-sm-12 row-password form-group">
           {!! Html::decode(Form::label('password', 'Nova Senha <span class="obrigatorio">*</span>', ['class'
           => 'control-label'])) !!}
@@ -108,7 +104,6 @@
     </div>
 
     @if(Auth::user()->id == 1 && Request::is('users/create'))
-    <script src="//cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     <div class="panel-heading border-radius-10 margin-bottom-10">
       <h2>Grupo</h2>
     </div>

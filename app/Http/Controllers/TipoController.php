@@ -68,9 +68,8 @@ class TipoController extends Controller {
 		$tipo = new Tipo();
 		$tipo->nome = $request->input("nome");
 		$tipo->tipo = $request->input("tipo");
-		if($tipo->tipo == '1')
-			$tipo->opcao = $request->input("opcao");
-		$tipo->perfil = $request->input("perfil");
+		$tipo->opcao = $request->input("opcao");
+		$tipo->perfil = implode(',', $request->input("perfil"));
 		$tipo->grupo_id = Auth::user()->grupo_id;
 		$tipo->save();
 		return redirect()->route('tipos.index')->with('message', 'Tipo cadastrado com sucesso!');
@@ -101,10 +100,8 @@ class TipoController extends Controller {
 		$tipo->nome = $request->input("nome");
 		$tipo->tipo = $request->input("tipo");
 		$tipo->opcao = $request->input("opcao");
-		$tipo->perfil = $request->input("perfil");
+		$tipo->perfil = implode(',', $request->input("perfil"));
 
-		if($tipo->tipo == '0')
-			$tipo->opcao = null;
 		$tipo->save();
 		return redirect()->route('tipos.index')->with('message', 'Tipo atualizado com sucesso!');
 	}
@@ -130,7 +127,7 @@ class TipoController extends Controller {
 	 */
 	public function find_by_opcao(Request $request)
 	{
-		$tipos = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', true)->where('opcao', $request->opcao)->get();
+		$tipos = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', $request->tipo)->where('opcao', $request->opcao)->get();
 		return response()->json($tipos);
 	}
 }

@@ -73,20 +73,20 @@
             </div>
         </div>
 
-        @if($tipo == '1' && Auth::user()->permissao == 'Gerencial' && $method == 'post')
+        @if(Auth::user()->permissao == 'Gerencial' && $method == 'post')
         @php($col = '3')
         @else
         @php($col = '4')
         @endif
 
         <div class="row form-group row-multiple" style="margin-bottom: 0">
-            @if($tipo == '1' && Auth::user()->permissao == 'Gerencial')
+            @if(Auth::user()->permissao == 'Gerencial')
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
                 {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' =>
                 'control-label'])) !!}
                 <div class="templatemo-block">
-                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao != "Imposto
-                    de Renda") checked @endif @if($disabled) disabled @endif>
+                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao == "Livro
+                    Caixa") checked @endif @if($disabled) disabled @endif>
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
@@ -170,8 +170,8 @@
             Imprimir Recibo</a>
         @endif
         @else
-        <button type="submit" class="templatemo-blue-button" @if(!$tipo) disabled style="background-color: gray"
-            @endif><i class="fa fa-plus"></i> Salvar</button>
+        <button type="submit" class="templatemo-blue-button" @if($disabled) disabled
+            style="background-colbackgroundor: gray" @endif><i class="fa fa-plus"></i> Salvar</button>
         @endif
         <a class="templatemo-white-button" href="{{ route('contas.index', ['tipo' => $tipo]) }}"><i
                 class="fa fa-arrow-left"></i> Voltar para listagem</a>
@@ -241,15 +241,14 @@
 
 <script type="text/javascript">
     // Altera os campos de tipo e opções
-    @if($tipo == '1')
     $("input[name=opcao]").change(function(){
         $("#tipo_id").val("");
 
         $.ajax({
             type: "GET",
-            url: `/tipos_opcao`,
+            url: '/tipos_opcao',
             dataType: "html",
-            data: "opcao=" + $(this).val(),
+            data: "opcao=" + $(this).val() + "&tipo={{$tipo}}",
             success: function(response) {
                 $("#tipo_id > option").remove();
 
@@ -260,7 +259,6 @@
         });
 
     });
-    @endif
 
     $('#empresa').change(function(){
         if($(this).val()) {

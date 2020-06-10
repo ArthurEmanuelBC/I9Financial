@@ -138,9 +138,9 @@ class ContumController extends Controller {
 					$contum->num_doc += 1;
 
 				if($request->tipo == '1')
-					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', true)->where('grupo_id', Auth::user()->grupo_id)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
+					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', true)->where('grupo_id', Auth::user()->grupo_id)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
 				else
-					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', false)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
+					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', false)->where('grupo_id', Auth::user()->grupo_id)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
 
 				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled, 'disabled' => false]);
 			}
@@ -223,11 +223,16 @@ class ContumController extends Controller {
 					$nomes = [NULL => "Nenhum"] + Fornecedor::where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
 
 				if($request->tipo == '1')
-					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', true)->where('opcao', $contum->opcao)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
+					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', true)->where('opcao', $contum->opcao)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
 				else
-					$opcoes = Tipo::where('perfil', Auth::user()->permissao)->where('tipo', false)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
+					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', false)->where('opcao', $contum->opcao)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
 
-				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => true, 'disabled' => true]);
+				if(preg_match('/\bGerencial\b/', Auth::user()->permissao))
+					$disabled = false;
+				else
+					$disabled = true;
+
+				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.update", "method" => "put", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => true, 'disabled' => $disabled]);
 			}
 
 			/**
@@ -391,16 +396,18 @@ class ContumController extends Controller {
 								$data2 = Date::parse("$ano-12-31");
 							}
 
-							$parcelas = Contum::whereRaw('grupo_id = '.Auth::user()->grupo_id);
-							$medico = NULL;
 							if(!blank($request->medico_id)) {
 								$medico = Empresa::findOrFail($request->medico_id);
 								$parcelas = Contum::whereBetween('date',[$data1,$data2])->where('empresa_id',$request->medico_id)->where('grupo_id', Auth::user()->grupo_id);
 
 								if(isset($request->tipo) && $request->tipo != '' && !blank($parcelas))
-									$parcelas = $parcelas->where('tipo',$request->tipo);
+								$parcelas = $parcelas->where('tipo',$request->tipo);
+								$total = $parcelas->sum('valor');
+							} else {
+								$parcelas = Contum::whereRaw('1=2');
+								$medico = NULL;
+								$total = 0;
 							}
-							$total = $parcelas->sum('valor');
 
 							if(!blank($request->pdf)){
 								$titulo = "Relatório de Controle de Receitas/Despesas";
