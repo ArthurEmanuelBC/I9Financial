@@ -9,6 +9,7 @@ use App\Grupo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Hash;
+use Mail;
 
 class UserController extends Controller
 {
@@ -64,7 +65,7 @@ class UserController extends Controller
         if(blank($request->grupo))
             $grupo = Auth::user()->grupo();
         else
-            $grupo = Grupo::create(['nome' => $request->grupo_nome]);
+            $grupo = Grupo::create(['nome' => "Grupo de $request->name"]);
 
         $user = new User();
         $user->name = $request->name;
@@ -72,8 +73,13 @@ class UserController extends Controller
         $user->permissao = $request->permissao;
         $user->password = bcrypt('I9livrocaixa');
         $user->grupo_id = $grupo->id;
-        $user->save();
-        return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
+        // $user->save();
+        if(!blank($request->grupo)){
+            $this->enviarEmailCadastro($user);
+            return redirect()->with('message', 'Obrigado pelo cadastro. Você receberá um email indicando os próximos passos!');
+        } else {
+            return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
+        }
     }
 
     /**
@@ -176,5 +182,13 @@ class UserController extends Controller
                 'name' => 'required|max:255',
                 'email' => 'required|max:255|unique:users',
             ]);
+    }
+
+    private function enviarEmailCadastro(User $user)
+    {
+        Mail::send('emails.payment_link', ['user' => $user], function ($message) use ($user) {
+            $message->from('arthuzinho.brandao@gmail.com', 'Livro Caixa Inteligente');
+            $message->to($user->email)->subject('Cadastro concluído!');
+        });
     }
 }

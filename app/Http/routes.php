@@ -46,6 +46,9 @@ Route::group(['middleware' => 'auth'], function() {
 	Route::get('tipos_opcao', 'TipoController@find_by_opcao');
 });
 
+// Cadastrar usuário
+Route::post("user_group", ['as' => 'user_group.store', 'uses' => 'UserController@store']);
+
 // Storage
 Route::get('storage/{model}/{id}/{filename}', function ($model,$id,$filename){
 	$path = storage_path("app/$model/$id/$filename");

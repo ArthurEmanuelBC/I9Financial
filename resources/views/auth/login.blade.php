@@ -17,6 +17,11 @@
 	<link href="/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/css/templatemo-style.css" rel="stylesheet">
 
+	<script src="/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js">
+	</script>
+	<script src="/js/bootstrap.min.js"></script>
+
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -82,6 +87,46 @@
 		</div>
 		<div class="form-group">
 			<button type="submit" class="templatemo-blue-button width-100">Login</button>
+		</div>
+		{!! Form::close() !!}
+		<div class="row form-group">
+			<div class="col-md-12">
+				Ainda não tem cadastro? <a href=javascript:; data-toggle="modal" data-target="#cadastro">Cadastre-se aqui!</a>
+			</div>
+		</div>
+	</div>
+
+	{{-- Modal --}}
+	<div class="modal fade" id="cadastro" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		{!! Form::open(['route' => 'user_group.store', 'method' => 'POST']) !!}
+		{!! Form::hidden('grupo', true) !!}
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+							class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">Novo Usuário</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row form-group">
+						<div class="col-md-6">
+							{!! Html::decode(Form::label('name', 'Nome <span class="obrigatorio">*</span>', ['class' =>
+							'control-label'])) !!}
+							<input id="name" name="name" class="form-control" type="text" required>
+						</div>
+						<div class="col-md-6">
+							{!! Html::decode(Form::label('email', 'Email <span class="obrigatorio">*</span>', ['class' =>
+							'control-label'])) !!}
+							<input id="email" name="email" class="form-control" type="email" required>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="templatemo-blue-button"><i class="fa fa-plus"></i> Salvar</button>
+					<button type="button" class="templatemo-white-button" data-dismiss="modal"><i class="fa fa-close"></i>
+						Fechar</button>
+				</div>
+			</div>
 		</div>
 		{!! Form::close() !!}
 	</div>
