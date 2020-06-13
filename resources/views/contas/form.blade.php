@@ -85,7 +85,7 @@
                 'control-label'])) !!}
                 <div class="templatemo-block">
                     <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao == "Livro
-                    Caixa") checked @endif @if($disabled) disabled @endif>
+                    Caixa" || $method == 'post') checked @endif @if($disabled) disabled @endif>
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
@@ -162,14 +162,12 @@
     </div>
 
     <div class="form-group text-right">
-        @if(!$tipo)
+        @if(!$tipo && $method == 'put')
         <a class="btn btn-success" href="/contas/{{$contum->id}}/recibo" target="_blank"><i class="fa fa-print"></i>
             Imprimir Recibo</a>
         @endif
-        @if(!$disabled)
         <button type="submit" class="templatemo-blue-button" @if($disabled) disabled
-            style="background-colbackgroundor: gray" @endif><i class="fa fa-plus"></i> Salvar</button>
-        @endif
+            style="background-color: gray" @endif><i class="fa fa-plus"></i> Salvar</button>
         <a class="templatemo-white-button" href="{{ route('contas.index', ['tipo' => $tipo]) }}"><i
                 class="fa fa-arrow-left"></i> Voltar para listagem</a>
     </div>
