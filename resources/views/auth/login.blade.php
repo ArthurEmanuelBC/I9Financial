@@ -89,11 +89,11 @@
 			<button type="submit" class="templatemo-blue-button width-100">Login</button>
 		</div>
 		{!! Form::close() !!}
-		<div class="row form-group">
+		<!-- <div class="row form-group">
 			<div class="col-md-12">
 				Ainda não tem cadastro? <a href=javascript:; data-toggle="modal" data-target="#cadastro">Cadastre-se aqui!</a>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	{{-- Modal --}}

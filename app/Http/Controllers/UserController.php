@@ -62,10 +62,16 @@ class UserController extends Controller
     {
         $this->validar($request, 'store');
 
-        if(blank($request->grupo))
+        if(blank($request->grupo)){
             $grupo = Auth::user()->grupo();
-        else
-            $grupo = Grupo::create(['nome' => "Grupo de $request->name"]);
+        } else {
+            if(isset($request->grupo_nome))
+                $grupo_nome = $request->grupo_nome;
+            else
+                $grupo_nome = "Grupo de $request->name";
+
+            $grupo = Grupo::create(['nome' => $grupo_nome]);
+        }
 
         $user = new User();
         $user->name = $request->name;
@@ -73,13 +79,13 @@ class UserController extends Controller
         $user->permissao = $request->permissao;
         $user->password = bcrypt('I9livrocaixa');
         $user->grupo_id = $grupo->id;
-        // $user->save();
-        if(!blank($request->grupo)){
-            $this->enviarEmailCadastro($user);
-            return redirect()->with('message', 'Obrigado pelo cadastro. Você receberá um email indicando os próximos passos!');
-        } else {
+        $user->save();
+        // if(!blank($request->grupo)){
+        //     $this->enviarEmailCadastro($user);
+        //     return redirect()->with('message', 'Obrigado pelo cadastro. Você receberá um email indicando os próximos passos!');
+        // } else {
             return redirect()->route('users.index')->with('message', 'Usuário cadastrado com sucesso!');
-        }
+        // }
     }
 
     /**
