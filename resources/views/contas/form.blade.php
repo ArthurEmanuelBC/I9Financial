@@ -67,8 +67,13 @@
                 @endif
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
-                {!! Form::label('num_doc', @if($tipo == '0') 'Núm Documento' @else 'Número da Nota Fiscal' @endif, ['class' => 'control-label']) !!}
+                @if($tipo == '0')
+                {!! Form::label('num_doc', 'Núm Documento', ['class' => 'control-label']) !!}
                 {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'disabled' => $disabled]) !!}
+                @else
+                {!! Form::label('num_doc', 'Número da Nota Fiscal', ['class' => 'control-label']) !!}
+                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc']) !!}
+                @endif
             </div>
         </div>
 

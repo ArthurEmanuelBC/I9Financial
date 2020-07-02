@@ -131,11 +131,13 @@ class ContumController extends Controller {
 				else
 					$nomes = [NULL => "Nenhum"] + Fornecedor::where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
 
-				$contum->num_doc = Contum::max('num_doc');
-				if(is_null($contum->num_doc))
-					$contum->num_doc = 47000;
-				else
-					$contum->num_doc += 1;
+				if($request->tipo == '0') {
+					$contum->num_doc = Contum::where('tipo',0)->max('num_doc');
+					if(is_null($contum->num_doc))
+						$contum->num_doc = 47000;
+					else
+						$contum->num_doc += 1;
+				}
 
 				if($request->tipo == '1')
 					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', true)->where('grupo_id', Auth::user()->grupo_id)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
