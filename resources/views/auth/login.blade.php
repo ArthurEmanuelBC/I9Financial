@@ -64,6 +64,7 @@
 		</div>
 		@endif
 		{!! Form::open(['url'=>'/auth/login']) !!}
+		{!! csrf_field() !!}
 		<div class="row form-group">
 			<div class="col-md-12">
 				<div class="input-group">
