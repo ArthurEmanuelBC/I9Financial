@@ -213,6 +213,8 @@
                     <li><input type="checkbox" id="check_paciente_id" class="dropdown-check" data-column="paciente_id"
                             checked> <label for="check_paciente_id" class="font-weight-400"><span></span>@if($tipo)
                             Fornecedor @else Paciente @endif</label></li>
+                    <li><input type="checkbox" id="check_cnpj_cpf" class="dropdown-check" data-column="cnpj_cpf" checked>
+                        <label for="check_cnpj_cpf" class="font-weight-400"><span></span>@if($tipo) CNPJ @else CPF @endif</label></li>
                     <li><input type="checkbox" id="check_num_doc" class="dropdown-check" data-column="num_doc" checked>
                         <label for="check_num_doc" class="font-weight-400"><span></span>Número do Documento</label></li>
                     <li><input type="checkbox" id="check_opcao" class="dropdown-check" data-column="opcao" checked>
@@ -269,6 +271,7 @@
                 <tr>
                     <th class="lancamento">Data de Lançamento</th>
                     <th class="paciente_id">@if($tipo) Fornecedor @else Paciente @endif</th>
+                    <th class="cnpj_cpf">@if($tipo) Fornecedor @else Paciente @endif</th>
                     <th class="num_doc">Número do Documento</th>
                     <th class="opcao">Opção</th>
                     <th class="tipo">Tipo</th>
@@ -282,6 +285,7 @@
                 <tr class="linha_total">
                     <td class="lancamento"></td>
                     <td class="paciente_id"></td>
+                    <td class="cnpj_cpf"></td>
                     <td class="num_doc"></td>
                     <td class="opcao"></td>
                     <td class="tipo"></td>
@@ -296,6 +300,7 @@
                     <td class="lancamento">{{@date_format(date_create_from_format('Y-m-d', $contum->date), 'd/m/Y')}}
                     </td>
                     <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
+                    <td class="cnpj_cpf">@if($tipo) {{@$contum->paciente_ou_fornecedor()->cnpj}} @else {{@$contum->paciente_ou_fornecedor()->cpf}} @endif </td>
                     <td class="num_doc">{{$contum->num_doc}}</td>
                     <td class="opcao">{{$contum->opcao}}</td>
                     <td class="tipo">{{@$contum->tipo()->nome}}</td>

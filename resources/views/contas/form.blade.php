@@ -47,7 +47,7 @@
                 {!! Html::decode(Form::label('date', 'Data de Lançamento <span class="obrigatorio">*</span>', ['class'
                 => 'control-label'])) !!}
                 {!! Form::date('date', $contum->date, ['class' => 'form-control date','required' => true,'readonly' =>
-                $data_disabled]) !!}
+                $disabled]) !!}
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 @if($tipo == '0')
@@ -67,9 +67,8 @@
                 @endif
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
-                {!! Form::label('num_doc', 'Núm Documento', ['class' => 'control-label']) !!}
-                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'readonly' => true,
-                'disabled' => $disabled]) !!}
+                {!! Form::label('num_doc', @if($tipo == '0') 'Núm Documento' @else 'Número da Nota Fiscal' @endif, ['class' => 'control-label']) !!}
+                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'disabled' => $disabled]) !!}
             </div>
         </div>
 

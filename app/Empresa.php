@@ -18,7 +18,7 @@ class Empresa extends Model
         $ano = date('Y');
         $margem = $this->margem * $mes;
 
-        foreach(Contum::where('empresa_id', $this->id)->whereBetween('date',["$ano-01-01","$ano-12-31"])->get() as $contum) {
+        foreach(Contum::where('empresa_id', $this->id)->where('date','<=',date("Y-m-t")->get() as $contum) {
             if($contum->tipo)
                 $margem += $contum->valor;
             else
