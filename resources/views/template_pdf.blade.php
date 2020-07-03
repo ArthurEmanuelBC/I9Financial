@@ -113,7 +113,7 @@
 </head>
 
 <body>
-    <div id="header">
+    <!-- <div id="header">
         <h1>{{$titulo}}</h1>
         @if(@$parametros)
         @foreach($parametros as $key => $value)
@@ -122,7 +122,7 @@
         @endforeach
         @endif
         <hr>
-    </div>
+    </div> -->
     <div id="body">
         @yield('content')
     </div>
