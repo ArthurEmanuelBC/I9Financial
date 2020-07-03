@@ -405,10 +405,14 @@ class ContumController extends Controller {
 								if(isset($request->tipo) && $request->tipo != '' && !blank($parcelas))
 								$parcelas = $parcelas->where('tipo',$request->tipo);
 
-								if($request->tipo == 'Todos')
-								$total = $parcelas->where('tipo',0)->sum('valor') - $parcelas->where('tipo',1)->sum('valor');
-								else
-								$total = $parcelas->sum('valor');
+								if($request->tipo == '') {
+									$total = 0;
+									foreach($parcelas->get() as $parcela)
+									$parcela->tipo == 0 ? $total += $parcela->valor : $total -= $parcela->valor;
+
+								} else {
+									$total = $parcelas->sum('valor');
+								}
 							} else {
 								$parcelas = Contum::whereRaw('1=2');
 								$medico = NULL;

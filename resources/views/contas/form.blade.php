@@ -53,23 +53,20 @@
                 @if($tipo == '0')
                 {!! Html::decode(Form::label('paciente_id', 'Paciente <span class="obrigatorio">*</span>', ['class' =>
                 'control-label', 'disabled' => $disabled])) !!}
+                {!! Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
+                'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]) !!}
                 @else
                 {!! Html::decode(Form::label('paciente_id', 'Fornecedor <span class="obrigatorio">*</span>', ['class' =>
                 'control-label', 'disabled' => $disabled])) !!}
+                {!! Form::select("nome_id", $nomes, $contum->fornecedor_id, ['id' => 'paciente', 'class' =>
+                'form-control select2-search fornecedor_id', 'required' => true, 'disabled' => $disabled]) !!}
                 @endif
 
-                @if($disabled)
-                {!! Form::text('nome_id', @$contum->paciente_ou_fornecedor()->nome, ['class' => 'form-control',
-                'disabled' => true]) !!}
-                @else
-                {!! Form::select("nome_id", $nomes, $contum->paciente_id, ['id' => 'paciente', 'class' =>
-                'form-control select2-search paciente_id', 'required' => true, 'disabled' => $disabled]) !!}
-                @endif
             </div>
             <div class="col-md-4 col-sm-12 col-xs-12">
                 @if($tipo == '0')
                 {!! Form::label('num_doc', 'Núm Documento', ['class' => 'control-label']) !!}
-                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'disabled' => $disabled]) !!}
+                {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc', 'readonly' => true]) !!}
                 @else
                 {!! Form::label('num_doc', 'Número da Nota Fiscal', ['class' => 'control-label']) !!}
                 {!! Form::text('num_doc', $contum->num_doc, ['class' => 'form-control num_doc']) !!}
@@ -85,16 +82,13 @@
 
         <div class="row form-group row-multiple" style="margin-bottom: 0">
             <div class="col-md-{{$col}} col-sm-12 col-xs-12">
-                {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' =>
-                'control-label'])) !!}
+                {!! Html::decode(Form::label('opcao', 'Opção <span class="obrigatorio">*</span>', ['class' => 'control-label'])) !!}
                 <div class="templatemo-block">
-                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao == "Livro
-                    Caixa" || $method == 'post') checked @endif @if($disabled) disabled @endif>
+                    <input type="radio" name="opcao" id="livro_caixa" value="Livro Caixa" @if($contum->opcao == "Livro Caixa" || $method == 'post') checked @endif @if($disabled) disabled @endif>
                     <label for="livro_caixa" class="font-weight-400"><span></span>Livro Caixa</label>
                 </div>
                 <div class="templatemo-block">
-                    <input type="radio" name="opcao" id="imposto_de_renda" value="Imposto de Renda" @if($contum->opcao
-                    == "Imposto de Renda") checked @endif @if($disabled) disabled @endif>
+                    <input type="radio" name="opcao" id="imposto_de_renda" value="Imposto de Renda" @if($contum->opcao == "Imposto de Renda") checked @endif @if($disabled) disabled @endif>
                     <label for="imposto_de_renda" class="font-weight-400"><span></span>Imposto de Renda</label>
                 </div>
             </div>

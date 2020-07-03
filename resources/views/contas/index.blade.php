@@ -271,7 +271,7 @@
                 <tr>
                     <th class="lancamento">Data de Lançamento</th>
                     <th class="paciente_id">@if($tipo) Fornecedor @else Paciente @endif</th>
-                    <th class="cnpj_cpf">@if($tipo) Fornecedor @else Paciente @endif</th>
+                    <th class="cnpj_cpf">@if($tipo) CNPJ @else CPF @endif</th>
                     <th class="num_doc">Número do Documento</th>
                     <th class="opcao">Opção</th>
                     <th class="tipo">Tipo</th>
