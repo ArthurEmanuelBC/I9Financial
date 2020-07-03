@@ -15,10 +15,12 @@ class Empresa extends Model
     public function margem_atual()
     {
         $mes = intval(date('m'));
+        $ano = intval(date('Y'));
+        $data_inicio = "$ano-01-01";
         $data_fim = new DateTime();
         $margem = $this->margem * $mes;
 
-        foreach(Contum::where('empresa_id', $this->id)->where('date','<=',$data_fim->format('Y-m-t'))->get() as $contum) {
+        foreach(Contum::where('empresa_id', $this->id)->whereBetween('date',[$data_inicio,$data_fim->format('Y-m-t')])->get() as $contum) {
             if($contum->tipo)
                 $margem += $contum->valor;
             else
