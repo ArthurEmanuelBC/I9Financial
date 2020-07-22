@@ -1,14 +1,16 @@
 @extends('template_pdf')
 @section('content')
+
+@if(isset($medico))
 <table>
   <thead>
     <tr>
-      <th colspan="6">Margem Mensal de {{@$medico->nome}}</th>
+      <th colspan="6">Margem Mensal de {{$medico->nome}}</th>
     </tr>
   </thead>
   <tbody>
     @php($ano = date('Y'))
-    @foreach(@$medico->margem_mensal() as $mes => $valor)
+    @foreach($medico->margem_mensal() as $mes => $valor)
     @if(in_array($mes, ["01/$ano","04/$ano","07/$ano","10/$ano"])) <tr> @endif
       <td align="right"><strong>{{$mes}}: </strong></td>
       <td>{{number_format($valor,2,',','.')}}</td>
@@ -18,10 +20,11 @@
 
     <tr>
       <td align="right" colspan="5"><strong>Valor Real da Margem Atual: </strong></td>
-      <td>{{number_format(@$medico->margem_atual(),2,',','.')}}</td>
+      <td>{{number_format($medico->margem_atual(),2,',','.')}}</td>
     </tr>
   </tbody>
 </table>
+@endif
 
 <table style="margin-top: 20px">
   <thead>

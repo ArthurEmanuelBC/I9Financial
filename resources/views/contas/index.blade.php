@@ -236,7 +236,7 @@
         {!! Form::hidden("tipo", $tipo) !!}
         {!! Form::hidden("pdf", true) !!}
         {!! Form::hidden("paciente_id", @$parametros['paciente_id']) !!}
-        {!! Form::hidden("medico_id", @$parametros['medico_id']) !!}
+        {!! Form::hidden("medico_id", @$parametros['medico_id'], ['id' => 'hidden_medico_id']) !!}
         {!! Form::hidden("opcao", @$parametros['opcao']) !!}
         {!! Form::hidden("tipo_id", @$parametros['tipo_id']) !!}
         {!! Form::hidden("data1", @$parametros['data1']) !!}
@@ -473,7 +473,7 @@
 
     // Verifica se existe algum médico selecionado ao criar relatório
     $('#form-print').submit(function(event) {
-        if(!$("#medico_id").val()){
+        if(!$("#hidden_medico_id").val()){
             event.preventDefault();
             alert('Selecione um médico!');
         }
