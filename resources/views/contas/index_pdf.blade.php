@@ -61,7 +61,7 @@
       @endif
       @if(!in_array('num_doc', $ocultas)) <td class="num_doc">{{$contum->num_doc}}</td> @endif
       @if(!in_array('opcao', $ocultas)) <td class="opcao">{{$contum->opcao}}</td> @endif
-      @if(!in_array('tipo', $ocultas)) <td class="tipo">{{$contum->tipo()->nome}}</td> @endif
+      @if(!in_array('tipo', $ocultas)) <td class="tipo">{{@$contum->tipo()->nome}}</td> @endif
       @if(!in_array('valor', $ocultas)) <td class="valor">{{number_format($contum->valor,2,',','.')}}</td> @endif
       @if(!in_array('descricao', $ocultas)) <td class="descricao">{{$contum->descricao}}</td> @endif
     </tr>
