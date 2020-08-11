@@ -1,10 +1,8 @@
 @extends('template_pdf')
 @section('content')
 <style type="text/css">
-  p,
-  table tr td {
-    font-size: 24px;
-  }
+  table tr td { font-size: 24px; }
+  p { font-size: 18px; }
 </style>
 
 <table class="no-border">
@@ -22,9 +20,9 @@
   </tr>
 </table>
 
-<div style="padding-top: 50px; padding-bottom: 50px">
+<div style="margin-top: 100px; margin-bottom: 100px">
   <strong>
-    <h2 align="center" style="float: left; width: 80%;">RECIBO</h2>
+    <h1 align="center" style="float: left; width: 80%;">RECIBO</h1>
     <h2 align="right" style="float: right; width: 20%;">Nº {{$conta->num_doc}}</h2>
   </strong>
 </div>
@@ -42,9 +40,8 @@
   <p>Atendido pelo médico: {{$conta->medico()->nome}}, CRM/PB {{$conta->medico()->crm}}, pelo qual dou plena e total
     quitação. Com conhecimento do(a) paciente.</p>
   <div style="text-align: center">
-    <p style="padding-top: 30px; padding-bottom: 30px">João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
+    <p style="margin-top: 30px; margin-bottom: 30px">João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
     <p>{!! Html::image('/storage/empresas/'.$conta->medico()->id.'/'.$conta->medico()->anexo, "Assinatura", ['class' => 'assinaturas']) !!}</p>
-    <p>Assinatura</p>
   </div>
 </div>
 @endsection
@@ -52,5 +49,8 @@
 <style>
   .assinatura {
     max-width: 100px;
+  }
+  p {
+    text-align: justify;
   }
 </style>
