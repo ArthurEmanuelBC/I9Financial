@@ -63,8 +63,9 @@
     </div>
   </div>
 
-  @if($config)
+  @if($config || (Auth::user()->id == 1 && Request::is('users/create')))
   <div class="panel panel-default no-border">
+    @if($config)
     <div class="panel-heading border-radius-10">
       <h2>Credenciais</h2>
     </div>
@@ -98,6 +99,7 @@
         </div>
       </div>
     </div>
+    @endif
 
     @if(Auth::user()->id == 1 && Request::is('users/create'))
     <div class="panel-heading border-radius-10 margin-bottom-10">
