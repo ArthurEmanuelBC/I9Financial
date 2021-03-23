@@ -36,8 +36,12 @@ class UserController extends Controller
                     $users = User::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
             }
         }
-        else
-            $users = User::where('grupo_id', Auth::user()->grupo_id)->paginate(30);
+        else {
+            if(Auth::user()->id == 1)
+                $users = User::all()->paginate(30);    
+            else
+                $users = User::where('grupo_id', Auth::user()->grupo_id)->paginate(30);
+        }
         return view('users.index', ["users" => $users, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
     }
 

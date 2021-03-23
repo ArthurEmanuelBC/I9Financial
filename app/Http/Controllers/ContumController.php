@@ -108,7 +108,7 @@ class ContumController extends Controller {
 		if(isset($request->pdf)){
 			($request->tipo == "0") ? $titulo = "Relatório de Receitas" : $titulo = "Relatório de Despesas";
 			$cabecalho = ["Data Inicial" => date_format(date_create_from_format('Y-m-d', $parametros["data1"]), 'd/m/Y'), "Data Final" => date_format(date_create_from_format('Y-m-d', $parametros["data2"]), 'd/m/Y'), "Médico" => @$parametros["medico"]->nome, "Paciente" => @$parametros["paciente"], "Opção" => $parametros["opcao"], "Tipo" => $parametros["tipo_id"]];
-			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), 'total' => $total, "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'parametros' => $cabecalho])->inline();
+			return \PDF::loadView('contas.index_pdf', ["contas" => $contas->get(), 'total' => $total, "tipo" => $request->tipo, "ocultas" => $ocultas, 'titulo' => $titulo, 'medico' => @$parametros["medico"], 'margem' => $request->margem, 'parametros' => $cabecalho])->inline();
 		} else {
 			return view('contas.index', ["contas" => $contas->paginate(30), 'total' => $total, "parametros" => $parametros, "tipo" => $request->tipo]);
 			}

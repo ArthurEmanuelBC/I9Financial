@@ -1,7 +1,7 @@
 @extends('template_pdf')
 @section('content')
 
-@if(isset($medico))
+@if(isset($medico) && $margem == 'true')
 <table>
   <thead>
     <tr>
@@ -33,6 +33,10 @@
     @endif
     @if(!in_array('cnpj_cpf', $ocultas)) <th class="cnpj_cpf">@if($tipo) CNPJ @else CPF @endif</th>
     @endif
+    @if(!$tipo)
+    @if(!in_array('pagador_nome', $ocultas)) <th class="pagador_nome">Nome do Pagador</th>@endif
+    @if(!in_array('pagador_cpf', $ocultas)) <th class="pagador_cpf">CPF do Pagador</th>@endif
+    @endif
     @if(!in_array('num_doc', $ocultas)) <th class="num_doc">Número do Documento</th> @endif
     @if(!in_array('opcao', $ocultas)) <th class="opcao">Opção</th> @endif
     @if(!in_array('tipo', $ocultas)) <th class="tipo">Tipo</th> @endif
@@ -44,6 +48,10 @@
       @if(!in_array('lancamento', $ocultas)) <td class="lancamento"></td>@endif
       @if(!in_array('paciente_id', $ocultas)) <td class="paciente_id"></td>@endif
       @if(!in_array('cnpj_cpf', $ocultas)) <td class="cnpj_cpf"></td>@endif
+      @if(!$tipo)
+      @if(!in_array('pagador_nome', $ocultas)) <td class="pagador_nome"></td>@endif
+      @if(!in_array('pagador_cpf', $ocultas)) <td class="pagador_cpf"></td>@endif
+      @endif
       @if(!in_array('num_doc', $ocultas)) <td class="num_doc"></td>@endif
       @if(!in_array('opcao', $ocultas)) <td class="opcao"></td>@endif
       @if(!in_array('tipo', $ocultas)) <td class="tipo"></td>@endif
@@ -58,6 +66,10 @@
       @if(!in_array('paciente_id', $ocultas)) <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
       @endif
       @if(!in_array('cnpj_cpf', $ocultas)) <td class="cnpj_cpf">@if($tipo) {{@$contum->paciente_ou_fornecedor()->cnpj}} @else {{@$contum->paciente_ou_fornecedor()->cpf}} @endif</td>
+      @endif
+      @if(!$tipo)
+      @if(!in_array('pagador_nome', $ocultas)) <td class="pagador_nome">{{@$contum->paciente_ou_fornecedor()->pagador()->nome}}</td>@endif
+      @if(!in_array('pagador_cpf', $ocultas)) <td class="pagador_cpf">{{@$contum->paciente_ou_fornecedor()->pagador()->cpf}}</td>@endif
       @endif
       @if(!in_array('num_doc', $ocultas)) <td class="num_doc">{{$contum->num_doc}}</td> @endif
       @if(!in_array('opcao', $ocultas)) <td class="opcao">{{$contum->opcao}}</td> @endif

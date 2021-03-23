@@ -32,7 +32,7 @@
     </div>
     <div class="col-md-4 col-sm-12 col-xs-12">
       {!! Html::decode(Form::label('cpf', 'CPF', ['class' => 'control-label'])) !!}
-      {!! Form::text('cpf', $paciente->cpf, ['class' => 'form-control']) !!}
+      {!! Form::text('cpf', $paciente->cpf, ['class' => 'form-control cpf']) !!}
     </div>
   </div>
   <div class="row form-group">
@@ -85,6 +85,25 @@
             $("#row_pagador").find("input").attr('required', true);
         else
             $("#row_pagador").find("input").attr('required', false);
+    });
+
+    $("#cpf, #pagador_cpf").keydown(function(){
+        try {
+            $("#cpf, #pagador_cpf").unmask();
+        } catch (e) {}
+
+        $("#cpf, #pagador_cpf").mask("999.999.999-99");
+
+        // ajustando foco
+        var elem = this;
+        setTimeout(function(){
+            // mudo a posição do seletor
+            elem.selectionStart = elem.selectionEnd = 10000;
+        }, 0);
+        // reaplico o valor para mudar o foco
+        var currentValue = $(this).val();
+        $(this).val('');
+        $(this).val(currentValue);
     });
 </script>
 @endsection

@@ -215,6 +215,12 @@
                             Fornecedor @else Paciente @endif</label></li>
                     <li><input type="checkbox" id="check_cnpj_cpf" class="dropdown-check" data-column="cnpj_cpf" checked>
                         <label for="check_cnpj_cpf" class="font-weight-400"><span></span>@if($tipo) CNPJ @else CPF @endif</label></li>
+                    @if(!$tipo)
+                    <li><input type="checkbox" id="check_pagador_nome" class="dropdown-check" data-column="pagador_nome"
+                            checked> <label for="check_pagador_nome" class="font-weight-400"><span></span>Nome do Pagador</label></li>
+                    <li><input type="checkbox" id="check_pagador_cpf" class="dropdown-check" data-column="pagador_cpf" checked>
+                        <label for="check_pagador_cpf" class="font-weight-400"><span></span>CPF do Pagador</label></li>
+                    @endif
                     <li><input type="checkbox" id="check_num_doc" class="dropdown-check" data-column="num_doc" checked>
                         <label for="check_num_doc" class="font-weight-400"><span></span>Número do Documento</label></li>
                     <li><input type="checkbox" id="check_opcao" class="dropdown-check" data-column="opcao" checked>
@@ -230,9 +236,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-2 col-sm-6 col-xs-6 form-group">
-        {!! Form::open(['route' => 'contas.index', 'method' => 'GET', 'target' => '_blank', 'id' =>
-        'form-print']) !!}
+    <div class="col-md-4 col-sm-6 col-xs-6 form-group">
+        {!! Form::open(['route' => 'contas.index', 'method' => 'GET', 'target' => '_blank', 'id' => 'form-print']) !!}
         {!! Form::hidden("tipo", $tipo) !!}
         {!! Form::hidden("pdf", true) !!}
         {!! Form::hidden("paciente_id", @$parametros['paciente_id']) !!}
@@ -258,7 +263,15 @@
         <input type="hidden" name="valor_avancado[]" value="{{$valor}}">
         @endforeach
         @endif
-        <button type="submit" class="btn btn-success pull-right"><i class="fa fa-print"></i> Imprimir</button>
+        <div class="input-group">
+            <select name="margem" class="form-control">
+                <option value="true">Com Margem</option>
+                <option value="false">Sem Margem</option>
+            </select>
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-success"><i class="fa fa-print"></i> Imprimir</button>
+            </span>
+        </div>
         {!! Form::close() !!}
     </div>
 </div>
@@ -272,6 +285,10 @@
                     <th class="lancamento">Data de Lançamento</th>
                     <th class="paciente_id">@if($tipo) Fornecedor @else Paciente @endif</th>
                     <th class="cnpj_cpf">@if($tipo) CNPJ @else CPF @endif</th>
+                    @if(!$tipo)
+                    <th class="pagador_nome">Nome do Pagador</th>
+                    <th class="pagador_cpf">CPF do Pagador</th>
+                    @endif
                     <th class="num_doc">Número do Documento</th>
                     <th class="opcao">Opção</th>
                     <th class="tipo">Tipo</th>
@@ -286,6 +303,10 @@
                     <td class="lancamento"></td>
                     <td class="paciente_id"></td>
                     <td class="cnpj_cpf"></td>
+                    @if(!$tipo)
+                    <td class="pagador_nome"></td>
+                    <td class="pagador_cpf"></td>
+                    @endif
                     <td class="num_doc"></td>
                     <td class="opcao"></td>
                     <td class="tipo"></td>
@@ -301,6 +322,10 @@
                     </td>
                     <td class="paciente_id">{{@$contum->paciente_ou_fornecedor()->nome}}</td>
                     <td class="cnpj_cpf">@if($tipo) {{@$contum->paciente_ou_fornecedor()->cnpj}} @else {{@$contum->paciente_ou_fornecedor()->cpf}} @endif </td>
+                    @if(!$tipo)
+                    <td class="pagador_nome">{{@$contum->paciente_ou_fornecedor()->pagador()->nome}}</td>
+                    <td class="pagador_cpf">{{@$contum->paciente_ou_fornecedor()->pagador()->cpf}}</td>
+                    @endif
                     <td class="num_doc">{{$contum->num_doc}}</td>
                     <td class="opcao">{{$contum->opcao}}</td>
                     <td class="tipo">{{@$contum->tipo()->nome}}</td>

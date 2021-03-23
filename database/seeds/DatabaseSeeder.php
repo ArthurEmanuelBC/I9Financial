@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Grupo;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
-        User::create(['name' => 'Administrador', 'email' => 'i9tech@hotmail.com', 'password' => bcrypt('I9Solutions')]);
+        $grupo = Grupo::create(['nome' => 'Greupo inicial']);
+        User::create(['name' => 'Administrador', 'permissao' => 'Master', 'grupo_id' => $grupo->id, 'email' => 'i9tech@hotmail.com', 'password' => bcrypt('I9Solutions')]);
     }
 }

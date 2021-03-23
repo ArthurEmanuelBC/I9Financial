@@ -123,8 +123,8 @@ $(document).on('change','select.pesquisa-avancada-filtro, input.pesquisa-avancad
 });
 
 // Masks
-$('input#cpf,input.cpf').mask('000.000.000-00');
-$('input#cnpj,input.cnpj').mask('00.000.000/0000-00');
+// $('input#cpf,input.cpf').mask('000.000.000-00');
+// $('input#cnpj,input.cnpj').mask('00.000.000/0000-00');
 $('input#cep,input.cep').mask('00000-000');
 $('input#celular,input.celular,input#whats,input.whats').mask('(00) 00000-0000');
 $('input#telefone,input.telefone').mask('(00) 0000-0000');
