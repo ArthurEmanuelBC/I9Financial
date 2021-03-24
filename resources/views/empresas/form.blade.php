@@ -32,7 +32,7 @@
             {!! Form::text('nome', $empresa->nome, ['class' => 'form-control','required' => 'true']) !!}
         </div>
         <div class="col-md-3 col-sm-12 col-xs-12">
-            {!! Html::decode(Form::label('cpf', 'CPF <span class="obrigatorio">*</span>', ['class' => 'control-label']))
+            {!! Html::decode(Form::label('cpf', 'CPF/CNPJ <span class="obrigatorio">*</span>', ['class' => 'control-label']))
             !!}
             {!! Form::text('cpf', $empresa->cpf, ['class' => 'form-control cpf','required' => 'true']) !!}
         </div>

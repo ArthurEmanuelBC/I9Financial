@@ -38,7 +38,7 @@ class UserController extends Controller
         }
         else {
             if(Auth::user()->id == 1)
-                $users = User::all()->paginate(30);    
+                $users = User::paginate(30);
             else
                 $users = User::where('grupo_id', Auth::user()->grupo_id)->paginate(30);
         }

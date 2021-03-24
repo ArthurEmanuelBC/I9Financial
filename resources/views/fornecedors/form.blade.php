@@ -31,7 +31,7 @@
             {!! Form::text('nome', $fornecedor->nome, ['class' => 'form-control','required' => 'true']) !!}
         </div>
         <div class="col-md-6">
-            {!! Html::decode(Form::label('cnpj', 'CNPJ <span class="obrigatorio">*</span>', ['class' =>
+            {!! Html::decode(Form::label('cnpj', 'CPF/CNPJ <span class="obrigatorio">*</span>', ['class' =>
             'control-label'])) !!}
             {!! Form::text('cnpj', $fornecedor->cnpj, ['class' => 'form-control','required' => 'true']) !!}
         </div>

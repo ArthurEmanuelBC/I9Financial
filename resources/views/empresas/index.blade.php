@@ -20,7 +20,7 @@
                 <div class="input-group">
                     <select class="form-control search-filtro" name="filtro">
                         <option value="nome" @if ($filtro=="nome" ) selected @endif>Nome</option>
-                        <option value="cpf" @if ($filtro=="cpf" ) selected @endif>CPF</option>
+                        <option value="cpf" @if ($filtro=="cpf" ) selected @endif>CPF/CNPJ</option>
                         <option value="crm" @if ($filtro=="crm" ) selected @endif>CRM</option>
                         <option value="cidade" @if ($filtro=="cidade" ) selected @endif>Cidade</option>
                         <option value="estado" @if ($filtro=="estado" ) selected @endif>Estado</option>
@@ -67,16 +67,16 @@
                     @endif
 
                     @if(is_null($param))
-                    <th><a href="{{Request::fullUrl()}}{{$signal}}order=cpf" class="white-text templatemo-sort-by">CPF
+                    <th><a href="{{Request::fullUrl()}}{{$signal}}order=cpf" class="white-text templatemo-sort-by">CPF/CNPJ
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     @if(strpos($param,'desc') !== false)
                     <th><a href="{{str_replace(str_replace(' ','%20',$param),'cpf',Request::fullUrl())}}"
-                            class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF
+                            class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF/CNPJ
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     <th><a href="{{str_replace('order='.$param,'order=cpf',Request::fullUrl())}} @if($param == 'cpf')desc @endif"
-                            class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF
+                            class="white-text templatemo-sort-by @if(strpos($param,'cpf') !== false)active @endif">CPF/CNPJ
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @endif
                     @endif

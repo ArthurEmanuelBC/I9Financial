@@ -20,7 +20,7 @@
                 <div class="input-group">
                     <select class="form-control search-filtro" name="filtro">
                         <option value="nome" @if ($filtro=="nome" ) selected @endif>Nome</option>
-                        <option value="cnpj" @if ($filtro=="cnpj" ) selected @endif>Cnpj</option>
+                        <option value="cnpj" @if ($filtro=="cnpj" ) selected @endif>CPF/CNPJ</option>
                     </select>
                     <input type="text" class="form-control search-valor" name="valor" value="{{$valor}}">
                     <span class="input-group-btn">
@@ -63,16 +63,16 @@
                     @endif
 
                     @if(is_null($param))
-                    <th><a href="{{Request::fullUrl()}}{{$signal}}order=cnpj" class="white-text templatemo-sort-by">Cnpj
+                    <th><a href="{{Request::fullUrl()}}{{$signal}}order=cnpj" class="white-text templatemo-sort-by">CPF/CNPJ
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     @if(strpos($param,'desc') !== false)
                     <th><a href="{{str_replace(str_replace(' ','%20',$param),'cnpj',Request::fullUrl())}}"
-                            class="white-text templatemo-sort-by @if(strpos($param,'cnpj') !== false)active @endif">Cnpj
+                            class="white-text templatemo-sort-by @if(strpos($param,'cnpj') !== false)active @endif">CPF/CNPJ
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @else
                     <th><a href="{{str_replace('order='.$param,'order=cnpj',Request::fullUrl())}} @if($param == 'cnpj')desc @endif"
-                            class="white-text templatemo-sort-by @if(strpos($param,'cnpj') !== false)active @endif">Cnpj
+                            class="white-text templatemo-sort-by @if(strpos($param,'cnpj') !== false)active @endif">CPF/CNPJ
                             <span class="fa fa-caret-{{$caret}}"></span></a></th>
                     @endif
                     @endif
