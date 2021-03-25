@@ -22,12 +22,15 @@ class EmpresaController extends Controller {
 		(strpos($request->fullUrl(),'?')) ? $signal = '&' : $signal = '?';
 		(strpos($param,'desc')) ? $caret = 'up' : $caret = 'down';
 		(isset($request->order)) ? $order = $request->order : $order = "id";
-		if(isset($request->filtro)){
-			if(blank($request->valor)){
-				$request->valor = NULL;
-				$empresas = Empresa::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
-			}
-			else{
+		$where = '1 = 1';
+
+        if(Auth::user()->permissao != 'Master')
+			$where .= ' and grupo_id = '.Auth::user()->grupo_id;
+
+        if(isset($request->filtro)) {
+            if(blank($request->valor))
+                $request->valor = NULL;
+            else {
 				switch ($request->filtro) {
 					case 'data':
 					$valor = date_format(date_create_from_format('d/m/Y', $request->valor), 'Y-m-d');
@@ -39,11 +42,11 @@ class EmpresaController extends Controller {
 					$valor = $request->valor;
 					break;
 				}
-				$empresas = Empresa::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+				$where .= " and $request->filtro = '$valor'";
 			}
 		}
-		else
-			$empresas = Empresa::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
+
+        $empresas = Empresa::whereRaw($where)->orderByRaw($order)->paginate(30);
 		return view('empresas.index', ["empresas" => $empresas, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 

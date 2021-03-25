@@ -21,12 +21,15 @@ class FornecedorController extends Controller {
 		(strpos($request->fullUrl(),'?')) ? $signal = '&' : $signal = '?';
 		(strpos($param,'desc')) ? $caret = 'up' : $caret = 'down';
 		(isset($request->order)) ? $order = $request->order : $order = "id";
-		if(isset($request->filtro)){
-			if(blank($request->valor)){
+		$where = '1 = 1';
+
+        if(Auth::user()->permissao != 'Master')
+			$where .= ' and grupo_id = '.Auth::user()->grupo_id;
+
+		if(isset($request->filtro)) {
+			if(blank($request->valor))
 				$request->valor = NULL;
-				$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
-			}
-			else{
+			else {
 				switch ($request->filtro) {
 					case 'data':
 					$valor = date_format(date_create_from_format('d/m/Y', $request->valor), 'Y-m-d');
@@ -39,13 +42,13 @@ class FornecedorController extends Controller {
 					break;
 				}
 				if($request->filtro == 'nome')
-					$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
+					$where .= " and UPPER(nome) LIKE '%".strtoupper($valor)."%'";
 				else
-					$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $valor)->orderByRaw($order)->paginate(30);
+					$where .= " and $request->filtro = '$valor'";
 			}
 		}
-		else
-			$fornecedors = Fornecedor::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
+
+		$fornecedors = Fornecedor::whereRaw($where)->orderByRaw($order)->paginate(30);
 		return view('fornecedors.index', ["fornecedors" => $fornecedors, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 

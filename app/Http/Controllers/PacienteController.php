@@ -22,20 +22,35 @@ class PacienteController extends Controller {
 		(strpos($request->fullUrl(),'?')) ? $signal = '&' : $signal = '?';
 		(strpos($param,'desc')) ? $caret = 'up' : $caret = 'down';
 		(isset($request->order)) ? $order = $request->order : $order = "id";
-		if(isset($request->filtro)){
-			if(blank($request->valor)){
+		// if(isset($request->filtro)){
+		// 	if(blank($request->valor)){
+		// 		$request->valor = NULL;
+		// 		$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
+		// 	}
+		// 	else{
+		// 		if($request->filtro == 'nome')
+		// 			$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
+		// 		else
+		// 			$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
+		// 	}
+		// }
+		// else
+		// 	$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
+		$where = '1 = 1';
+
+        if(Auth::user()->permissao != 'Master')
+			$where .= ' and grupo_id = '.Auth::user()->grupo_id;
+		
+		if(isset($request->filtro))
+			if(blank($request->valor))
 				$request->valor = NULL;
-				$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
-			}
-			else{
-				if($request->filtro == 'nome')
-					$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->whereRaw("UPPER(nome) LIKE '%".strtoupper($request->valor)."%'")->orderByRaw($order)->paginate(30);
+			else
+				if(strpos($request->filtro,"nome"))
+					$where .= " and UPPER(nome) LIKE '%".strtoupper($request->valor)."%'";
 				else
-					$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->where($request->filtro, $request->valor)->orderByRaw($order)->paginate(30);
-			}
-		}
-		else
-			$pacientes = Paciente::where('grupo_id', Auth::user()->grupo_id)->orderByRaw($order)->paginate(30);
+					$where .= " and $request->filtro = '$request->valor'";
+
+        $pacientes = Paciente::whereRaw($where)->orderByRaw($order)->paginate(30);
 		return view('pacientes.index', ["pacientes" => $pacientes, "filtro" => $request->filtro, "valor" => $request->valor, "signal" => $signal, "param" => $param, "caret" => $caret]);
 	}
 

@@ -55,7 +55,7 @@
 			<nav class="templatemo-left-nav">
 				<ul>
 					<li><a href="/" class="@if(Request::is('/')) active @endif"><i class="fa fa-home fa-fw"></i>Início</a></li>
-					@if(Auth::user()->permissao == 'Gerencial')
+					@if(in_array(Auth::user()->permissao, ['Gerencial', 'Master']))
 					<li class="submenu cadastro">
 						<a href="#"><i class="fa fa-plus"></i> Cadastro <i class="caret-down fa fa-arrow-circle-down"></i></a>
 						<ul>
@@ -78,7 +78,7 @@
 								class="fa fa-mail-forward fa-fw"></i>Receita</a></li>
 					<li><a href="/contas?tipo=1" class="@if(Request::is('contas*') && @$tipo == '1') active @endif"><i
 								class="fa fa-mail-reply fa-fw"></i>Despesa</a></li>
-					@if(Auth::user()->permissao == 'Gerencial')
+					@if(in_array(Auth::user()->permissao, ['Gerencial', 'Master']))
 					<li><a href="/parcelas_controle" class="@if(Request::is('parcelas_controle*')) active @endif"><i
 								class="fa fa-exchange fa-fw"></i>Controle</a></li>
 					@endif

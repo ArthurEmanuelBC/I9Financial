@@ -314,7 +314,7 @@
                     <td class="descricao"></td>
                     <td class="table_actions" @if($tipo) colspan="2" @endif></td>
                     <td class="table_actions"></td>
-                    @if(Auth::user()->permissao == 'Gerencial')<td></td>@endif
+                    @if(in_array(Auth::user()->permissao, ['Gerencial', 'Master']))<td></td>@endif
                 </tr>
                 @foreach($contas as $contum)
                 <tr>
@@ -361,7 +361,7 @@
                         <a href="{{ route('contas.edit', ['id' => $contum->id, 'tipo' => $tipo]) }}"><i
                                 class="fa fa-edit"></i></a>
                     </td>
-                    @if(Auth::user()->permissao == 'Gerencial')
+                    @if(in_array(Auth::user()->permissao, ['Gerencial', 'Master']))
                     <td class="table_actions" align="center" title="Deletar Contum">
                         <a onclick="confirm_delete('{{ route('contas.destroy', ['id' => $contum->id, 'tipo' => $tipo]) }}')"
                             href="javascript:;" data-toggle="modal" data-target="#confirm_delete"><i

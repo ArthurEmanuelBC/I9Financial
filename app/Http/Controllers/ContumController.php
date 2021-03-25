@@ -35,14 +35,19 @@ class ContumController extends Controller {
 		if(!isset($request->data1)) $request->data1 = date('Y-m-d');
 		if(!isset($request->data2)) $request->data2 = date('Y-m-d');
 		$where .= " and date between '$request->data1' and '$request->data2'";
-		$where .= " and grupo_id = ".Auth::user()->grupo_id;
+
+		$where_grupo = '';
+		if(Auth::user()->permissao != 'Master'){
+			$where_grupo = " and grupo_id = ".Auth::user()->grupo_id;
+			$where .= $where_grupo;
+		}
 
 		if($request->tipo == '0'){
-			$paciente_ids = Paciente::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%' and grupo_id = ".Auth::user()->grupo_id)->pluck('id')->toArray();
+			$paciente_ids = Paciente::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%'$where_grupo")->pluck('id')->toArray();
 			if(blank($paciente_ids))
 				$paciente_ids = [0];
 		} else {
-			$fornecedor_ids = Fornecedor::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%' and grupo_id = ".Auth::user()->grupo_id)->pluck('id')->toArray();
+			$fornecedor_ids = Fornecedor::whereRaw("UPPER(nome) LIKE '%".strtoupper($request->paciente)."%'$where_grupo")->pluck('id')->toArray();
 			if(blank($fornecedor_ids))
 				$fornecedor_ids = [0];
 		}
@@ -98,7 +103,7 @@ class ContumController extends Controller {
 		// 	$parametros["pacientes"] = [NULL => "Todos"] + Paciente::lists('nome','id')->all();
 		// else
 		// 	$parametros["fornecedores"] = [NULL => "Todos"] + Fornecedor::lists('nome','id')->all();
-		$parametros["medicos"] = [NULL => "Nenhum"] + Empresa::where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
+		$parametros["medicos"] = [NULL => "Nenhum"] + Empresa::whereRaw("1 = 1$where_grupo")->lists('nome','id')->all();
 
 		if($request->tipo == '1')
 					$parametros["opcoes"] = ['Todos' => 'Todos', 'Pessoal' => 'Pessoal', 'Material Médico' => 'Material Médico', 'Material de Custeio' => 'Material de Custeio', 'Marketing/divulgação' => 'Marketing/divulgação', 'Outros' => 'Outros'];
@@ -124,7 +129,7 @@ class ContumController extends Controller {
 				$contum = new Contum();
 				$contum->date = Date::today();
 				$medicos = [NULL => "Nenhum"] + Empresa::where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
-				Auth::user()->permissao == 'Gerencial' ? $data_disabled = false : $data_disabled = true;
+				in_array(Auth::user()->permissao, ['Gerencial', 'Master']) ? $data_disabled = false : $data_disabled = true;
 
 				if($request->tipo == '0')
 					$nomes = [NULL => "Nenhum"] + Paciente::where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();

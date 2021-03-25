@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        @if(Auth::user()->permissao == 'Gerencial' && $method == 'post')
+        @if(in_array(Auth::user()->permissao, ['Gerencial', 'Master']) && $method == 'post')
         @php($col = '3')
         @else
         @php($col = '4')
