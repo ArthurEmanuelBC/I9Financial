@@ -30,7 +30,7 @@
 </div>
 
 <p style="font-align: justify; position: absolute; top: 30%">
-  Recebemos do(a) Sr(a). @if($conta->paciente_ou_fornecedor()->pagador()) {{$conta->paciente_ou_fornecedor()->pagador()->nome}}, CPF nº {{$conta->paciente_ou_fornecedor()->pagador()->cpf}}, @else {{$conta->paciente_ou_fornecedor()->nome}}, CPF nº {{$conta->paciente_ou_fornecedor()->cpf}}, @endif a quantia de R$ {{number_format($conta->valor,2,',','.')}}, referente a(s) despesa(s) decorrente de atendimento do(a) paciente: {{$conta->paciente_ou_fornecedor()->nome}}, CPF nº {{$conta->paciente_ou_fornecedor()->cpf}}, neste estabelecimento.
+  Recebemos do(a) Sr(a). @if(@$conta->paciente_ou_fornecedor()->pagador()) {{@$conta->paciente_ou_fornecedor()->pagador()->nome}}, CPF nº {{@$conta->paciente_ou_fornecedor()->pagador()->cpf}}, @else {{@$conta->paciente_ou_fornecedor()->nome}}, CPF nº {{@$conta->paciente_ou_fornecedor()->cpf}}, @endif a quantia de R$ {{number_format($conta->valor,2,',','.')}}, referente a(s) despesa(s) decorrente de atendimento do(a) paciente: {{@$conta->paciente_ou_fornecedor()->nome}}, CPF nº {{@$conta->paciente_ou_fornecedor()->cpf}}, neste estabelecimento.
 </p>
 <div id="footer">
   <p style="text-align: justify">Atendido pelo médico: {{$conta->medico()->nome}}, CRM/PB {{$conta->medico()->crm}}, pelo qual dou plena e total quitação. Com conhecimento do(a) paciente.</p>
