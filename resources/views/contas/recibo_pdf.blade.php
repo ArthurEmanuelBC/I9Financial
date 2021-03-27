@@ -35,6 +35,9 @@
 <div id="footer">
   <p style="text-align: justify">Atendido pelo médico: {{$conta->medico()->nome}}, CRM/PB {{$conta->medico()->crm}}, pelo qual dou plena e total quitação. Com conhecimento do(a) paciente.</p>
   <p style="margin-top: 30px; margin-bottom: 60px">João Pessoa, {{@date_format(date_create_from_format('Y-m-d', $conta->date), 'd/m/Y')}}</p>
+  @if(isset($conta->medico()->anexo))
+  <p style="text-align: center">{!! Html::image('/storage/empresas/'.$conta->medico()->id.'/'.$conta->medico()->anexo, "Assinatura", ['class' => 'assinaturas']) !!}</p>
+  @endif
 </div>
 @endsection
 
