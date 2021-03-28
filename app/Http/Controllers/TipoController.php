@@ -130,7 +130,17 @@ class TipoController extends Controller {
 	 */
 	public function find_by_opcao(Request $request)
 	{
-		$tipos = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', $request->tipo)->where('opcao', $request->opcao)->get();
+		$where = "grupo_id = ".Auth::user()->grupo_id." and opcao = '$request->opcao'";
+
+		if(Auth::user()->permissao != 'Master')
+			$where .= " and perfil LIKE '%".Auth::user()->permissao."%'";
+
+		if($request->tipo == '1')
+			$where .= ' and tipo = true';
+		else
+			$where .= ' and tipo = false';
+
+		$tipos = Tipo::whereRaw($where)->get();
 		return response()->json($tipos);
 	}
 }

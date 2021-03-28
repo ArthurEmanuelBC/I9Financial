@@ -144,10 +144,17 @@ class ContumController extends Controller {
 						$contum->num_doc += 1;
 				}
 
+				$where = "grupo_id = ".Auth::user()->grupo_id." and opcao = 'Livro Caixa'";
+
+				if(Auth::user()->permissao != 'Master')
+					$where .= " and perfil LIKE '%".Auth::user()->permissao."%'";
+
 				if($request->tipo == '1')
-					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', true)->where('grupo_id', Auth::user()->grupo_id)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
+					$where .= ' and tipo = true';
 				else
-					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', false)->where('grupo_id', Auth::user()->grupo_id)->where('opcao', 'Livro Caixa')->lists('nome','id')->all();
+					$where .= ' and tipo = false';
+
+				$opcoes = Tipo::whereRaw($where)->lists('nome','id')->all();
 
 				return view('contas.form', ["contum" => $contum, "nomes" => $nomes, "medicos" => $medicos, "url" => "contas.store", "method" => "post", "tipo" => $request->tipo, 'opcoes' => $opcoes, 'data_disabled' => $data_disabled, 'disabled' => false]);
 			}
@@ -229,10 +236,17 @@ class ContumController extends Controller {
 				else
 					$nomes = [NULL => "Nenhum"] + Fornecedor::where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
 
+				$where = "grupo_id = ".Auth::user()->grupo_id." and opcao = 'Livro Caixa'";
+
+				if(Auth::user()->permissao != 'Master')
+					$where .= " and perfil LIKE '%".Auth::user()->permissao."%'";
+
 				if($request->tipo == '1')
-					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', true)->where('opcao', $contum->opcao)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
+					$where .= ' and tipo = true';
 				else
-					$opcoes = Tipo::where('perfil', 'LIKE', '%'.Auth::user()->permissao.'%')->where('tipo', false)->where('opcao', $contum->opcao)->where('grupo_id', Auth::user()->grupo_id)->lists('nome','id')->all();
+					$where .= ' and tipo = false';
+
+				$opcoes = Tipo::whereRaw($where)->lists('nome','id')->all();
 
 				if(preg_match('/\bGerencial\b/', Auth::user()->permissao))
 					$disabled = false;
